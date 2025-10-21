@@ -52,7 +52,10 @@ jobs:
       run: |
         python - <<EOF
         from backend.connection import create_app, db
-        app = create_app()
+        app = create_app({
+              'SQLALCHEMY_DATABASE_URI': 'mysql+pymysql://root:' + ${{ secretes.MYSQL_ROOT_PASSWORD }} + '@localhost:3306/' + ${{ secrets.MYSQL_DATABASE }},
+              'TESTING': True
+        })
         with app.app_context():
             db.create_all()
         EOF
