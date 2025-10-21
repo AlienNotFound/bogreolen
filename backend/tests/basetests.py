@@ -24,3 +24,15 @@ def test_book_creation(test_db):
         fetched = Bookstb.query.first()
         assert fetched.title == "Test book"
         assert fetched.year == 2000
+
+def test_book_get_all():
+    pass
+
+def test_book_get_by_id():
+    pass
+
+def test_book_edit():
+    pass
+
+def test_book_delete():
+    pass
