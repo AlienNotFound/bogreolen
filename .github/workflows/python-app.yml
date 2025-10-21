@@ -50,8 +50,8 @@ jobs:
 
     - name: Initialize MySQL Database
       run: |
-        mysql -h 127.0.0.1 -uroot -proot bogreolen < backend/sql/bogreolen_database_bookstb.sql
-        mysql -h 127.0.0.1 -uroot -proot bogreolen < backend/sql/bogreolen_database_routines.sql
+        mysql -h 127.0.0.1 -uroot -prootpass bogreolen_database < backend/sql/bogreolen_database_bookstb.sql
+        mysql -h 127.0.0.1 -uroot -prootpass bogreolen_database < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
