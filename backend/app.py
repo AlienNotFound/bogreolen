@@ -1,7 +1,5 @@
-from flask import Flask
+from connection import app, db
+from models import *
 
-app = Flask(__name__)
-
-@app.route('/')
-def main():
-    return 'Hello Flask!'
+with app.app_context():
+    db.create_all()
