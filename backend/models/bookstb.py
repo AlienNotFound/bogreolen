@@ -11,3 +11,6 @@ class Bookstb(db.Model):
     summary: Mapped[str] = mapped_column(String(200))
     year: Mapped[int]
     categoryid: Mapped[int]
+
+    def create_book():
+        print("book")
