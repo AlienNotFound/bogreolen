@@ -11,6 +11,7 @@ db = SQLAlchemy(model_class=Base)
 
 load_dotenv()
 
+MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
 MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 MYSQL_DATABASE= os.getenv('MYSQL_DATABASE')
 
