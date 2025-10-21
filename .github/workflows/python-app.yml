@@ -16,7 +16,6 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_DATABASE: bogreolen_database
-          MYSQL_USER: root
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_HOST: 127.0.0.1
         ports:
@@ -44,7 +43,7 @@ jobs:
       run: |
           echo "Waiting for MySQL to start..."
           for i in {1..20}; do
-            if mysqladmin ping -h "${{ env.MYSQL_HOST }}" -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
+            if mysqladmin ping -h "${{ env.MYSQL_HOST }}" -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
               echo "MySQL is ready!"
               break
             fi
@@ -54,8 +53,8 @@ jobs:
 
     - name: Initialize MySQL Database
       run: |
-        mysql -h ${{ env.MYSQL_HOST }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        mysql -h ${{ env.MYSQL_HOST }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
@@ -64,8 +63,8 @@ jobs:
 
     - name: Prepare test database
       run: |
-        mysql -h ${{ env.MYSQL_HOST }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
-        mysql -h ${{ env.MYSQL_HOST }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
+        mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
+        mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
 
     - name: Run tests
       env:
