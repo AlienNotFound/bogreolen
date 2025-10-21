@@ -56,8 +56,8 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
       run: |
-        docker exex mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        docker exec mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        docker exex -i mysql sh -c "mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql"
+        docker exec -i mysql sh -c "mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql"
 
     - name: Lint with flake8
       run: |
@@ -70,8 +70,8 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
       run: |
-        docker exec mysql mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
-        docker exec mysql mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
+        docker exec -i mysql sh -c "mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
+        docker exec -i mysql sh -c "mysql mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
 
     - name: Run tests
       env:
