@@ -1,11 +1,14 @@
 import pytest
-from backend.connection import app, db
+from backend.connection import db, create_app
 from backend.models.bookstb import Bookstb
 
 @pytest.fixture
 def test_db():
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
-    app.config['TESTING'] = True
+
+    app = create_app({
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+        'TESTING': True
+    })
 
     with app.app_context():
         db.create_all()

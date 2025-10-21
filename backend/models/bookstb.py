@@ -9,5 +9,5 @@ class Bookstb(db.Model):
     authorid: Mapped[int]
     image: Mapped[str] = mapped_column(String(30))
     summary: Mapped[str] = mapped_column(String(200))
-    year: Mapped[int] = mapped_column(YEAR)
+    year: Mapped[int]
     categoryid: Mapped[int]
