@@ -17,7 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: bogreolen_database
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_HOST: 127.0.0.1
+          MYSQL_HOST: mysql
         ports:
           - 3306:3306
         options: >-
@@ -42,7 +42,7 @@ jobs:
     - name: Wait for MySQL
       env:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: 127.0.0.1
+        MYSQL_HOST: mysql
       run: |
         echo "Waiting for MySQL to start..."
         for i in {1..20}; do
@@ -58,7 +58,7 @@ jobs:
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: 127.0.0.1
+        MYSQL_HOST: mysql
       run: |
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
@@ -72,14 +72,15 @@ jobs:
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: 127.0.0.1
+        MYSQL_HOST: mysql
       run: |
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
 
     - name: Run tests
       env:
-        MYSQL_ROOT_PASSWORD: rootpass
         MYSQL_DATABASE: bogreolen_database
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_HOST: mysql
       run: |
         pytest ./backend/tests/basetests.py -v

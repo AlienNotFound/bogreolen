@@ -1,8 +1,15 @@
 services:
   backend:
     build: ./backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST=db
+    depends_on:
+      - db
     ports:
       - "8000:5000"
+      
   db:
     image: mysql:latest
     container_name: bogreolen_container
