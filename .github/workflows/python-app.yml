@@ -53,7 +53,7 @@ jobs:
         python - <<EOF
         from backend.connection import db
         app = Flask(__name__)
-        app.config.['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:' + ${{ secrets.MYSQL_ROOT_PASSWORD }} + '@localhost:3306/' + ${{ secrets.MYSQL_DATABASE }}
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:' + ${{ secrets.MYSQL_ROOT_PASSWORD }} + '@localhost:3306/' + ${{ secrets.MYSQL_DATABASE }}
         
         with app.app_context():
             db.create_all()
