@@ -13,8 +13,8 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{secrets.MYSQL_DATABASE }}
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_DATABASE: bogreolen_database
         ports:
           - 3306:3306
         options: >-
@@ -48,17 +48,16 @@ jobs:
             sleep 5
           done
 
-    - name: Run database migrations (optional)
+    - name: Run migrations
+      env:
+        MYSQL_ROOT_PASSWORD: rootpass
+        MYSQL_DATABASE: bogreolen_database
       run: |
         python - <<EOF
-        from backend.connection import db
-        app = Flask(__name__)
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:' + ${{ secrets.MYSQL_ROOT_PASSWORD }} + '@localhost:3306/' + ${{ secrets.MYSQL_DATABASE }}
-        
+        from backend.connection import create_app, db
+        app = create_app()
         with app.app_context():
             db.create_all()
-
-        db.init_app(app)
         EOF
 
     - name: Lint with flake8
@@ -66,11 +65,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Test with pytest
+    - name: Run tests
       env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_PORT: 3306
+        MYSQL_ROOT_PASSWORD: rootpass
+        MYSQL_DATABASE: bogreolen_database
       run: |
-        pytest ./backend/tests/basetests.py
+        pytest ./backend/tests/basetests.py -v
