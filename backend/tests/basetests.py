@@ -12,10 +12,7 @@ book = Bookstb(title="Test book",
 
 @pytest.fixture
 def test_db():
-    app = create_app({
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-        'TESTING': True
-    })
+    app = create_app()
 
     with app.app_context():
         db.create_all()
@@ -33,15 +30,6 @@ def test_create_book(test_db):
             book.categoryid
         )
 
-        print(result)
-
-        # assert fetched.id == 1
-        # assert fetched.title == "Test book"
-        # assert fetched.authorid == 1
-        # assert fetched.image == "imageurl.jpg"
-        # assert fetched.summary == "This is a summary"
-        # assert fetched.year == 2000
-        # assert fetched.categoryid == 1
         assert result == "Entry succesfully added!"
 
 def test_create_duplicate_fail(test_db):
@@ -49,9 +37,6 @@ def test_create_duplicate_fail(test_db):
     # with test_db.app_context():
     #     db.session.add(book)
     #     db.session.commit()
-
-
-
 
 def test_book_get_all():
     pass
