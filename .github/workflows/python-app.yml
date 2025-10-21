@@ -17,7 +17,6 @@ jobs:
         env:
           MYSQL_DATABASE: bogreolen_database
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_HOST: mysql
         ports:
           - 3306:3306
         options: >-
@@ -40,13 +39,10 @@ jobs:
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
     - name: Wait for MySQL
-      env:
-        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: mysql
       run: |
         echo "Waiting for MySQL to start..."
         for i in {1..20}; do
-          if mysqladmin ping -h "${{ env.MYSQL_HOST }}" -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
+          if mysqladmin ping -h mysql -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
             echo "MySQL is ready!"
             break
           fi
