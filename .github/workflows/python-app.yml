@@ -9,6 +9,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      MYSQL_DATABASE: ${{secrets.MYSQL_DATABASE }}
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
