@@ -40,18 +40,25 @@ jobs:
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
     - name: Wait for MySQL
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_HOST: 127.0.0.1
       run: |
-          echo "Waiting for MySQL to start..."
-          for i in {1..20}; do
-            if mysqladmin ping -h "${{ env.MYSQL_HOST }}" -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
-              echo "MySQL is ready!"
-              break
-            fi
-            echo "MySQL not ready yet... retrying ($i/20)"
-            sleep 5
-          done
+        echo "Waiting for MySQL to start..."
+        for i in {1..20}; do
+          if mysqladmin ping -h "${{ env.MYSQL_HOST }}" -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
+            echo "MySQL is ready!"
+            break
+          fi
+          echo "MySQL not ready yet... retrying ($i/20)"
+          sleep 5
+        done
 
     - name: Initialize MySQL Database
+      env:
+        MYSQL_DATABASE: bogreolen_database
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_HOST: 127.0.0.1
       run: |
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} ${{ env.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
@@ -62,6 +69,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Prepare test database
+      env:
+        MYSQL_DATABASE: bogreolen_database
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_HOST: 127.0.0.1
       run: |
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
         mysql -h ${{ env.MYSQL_HOST }} -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
