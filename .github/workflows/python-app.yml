@@ -48,18 +48,6 @@ jobs:
             sleep 5
           done
 
-    - name: Run migrations
-      env:
-        MYSQL_ROOT_PASSWORD: rootpass
-        MYSQL_DATABASE: bogreolen_database
-      run: |
-        python - <<EOF
-        from backend.connection import create_app, db
-        app = create_app()
-        with app.app_context():
-            db.create_all()
-        EOF
-
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
