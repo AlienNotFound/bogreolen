@@ -1,6 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `bogreolen_database`
-USE `bogreolen_database`;
-
 DELIMITER ;;
 CREATE DEFINER=`root`@`%` PROCEDURE `AddBook`(
     IN p_Title VARCHAR(30),
