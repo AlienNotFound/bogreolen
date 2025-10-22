@@ -38,7 +38,7 @@ def create_book():
 
     if result > 0:
         return jsonify({"Success": "Book created!"}), 200
-    elif result is -1:
+    elif result == -1:
         return jsonify({"Error": "Book already exists."}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
@@ -59,9 +59,9 @@ def edit_book(id):
 
     if result > 0:
         return jsonify({"Success": "Book editted!"}), 200
-    elif result is -1:
+    elif result == -1:
         return jsonify({"Error": "Book not found."}), 404
-    elif result is -2:
+    elif result == -2:
         return jsonify({"Error": "Book already exists."}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
