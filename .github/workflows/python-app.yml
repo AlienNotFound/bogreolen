@@ -73,7 +73,7 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       run: |
         echo "Checking database structure..."
-        mysql -h127.0.0.1 -root -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+        mysql -h127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
 
     - name: Run tests
       env:
