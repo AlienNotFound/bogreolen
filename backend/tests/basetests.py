@@ -24,7 +24,7 @@ def clean_db(scope="function"):
 
 def test_create_book(clean_db):
     with clean_db.app_context():
-        result = BookService.create_book(
+        BookService.create_book(
             book.title,
             book.authorid,
             book.image,
