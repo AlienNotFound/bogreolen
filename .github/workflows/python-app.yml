@@ -15,8 +15,9 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_DATABASE: bogreolen_database
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE}}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
         ports:
           - 3306:3306
         options: >-
@@ -60,10 +61,10 @@ jobs:
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: mysql
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
       run: |
-        mysql -h $MYSQL_HOST -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < backend/sql/bogreolen_database_bookstb.sql
-        mysql -h $MYSQL_HOST -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < backend/sql/bogreolen_database_routines.sql
+        mysql -h ${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -h ${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
@@ -76,13 +77,13 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
       run: |
-        mysql -h MYSQL_HOST -uroot -p$MYSQL_ROOT_PASSWORD -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
-        mysql -h MYSQL_HOST -uroot -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
+        mysql -h${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e "DROP DATABASE IF EXISTS ${{ env.MYSQL_DATABASE }};"
+        mysql -h${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e "CREATE DATABASE ${{ env.MYSQL_DATABASE }};"
 
     - name: Run tests
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: mysql
+        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
       run: |
         pytest ./backend/tests/basetests.py -v
