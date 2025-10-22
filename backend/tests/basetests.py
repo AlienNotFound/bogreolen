@@ -15,8 +15,8 @@ def clean_db(scope="function"):
     app = create_app()
 
     with app.app_context():
+        db.drop_all()
         db.create_all()
-        print(db.metadata.tables)
         yield app
         for table in reversed(db.metadata.sorted_tables):
             db.session.execute(table.delete())
@@ -24,7 +24,7 @@ def clean_db(scope="function"):
 
 def test_create_book(clean_db):
     with clean_db.app_context():
-        BookService.create_book(
+        result = BookService.create_book(
             book.title,
             book.authorid,
             book.image,
@@ -32,6 +32,9 @@ def test_create_book(clean_db):
             book.year,
             book.categoryid
         )
+
+        rows = result.fetchall()
+        print(rows)
 
         assert BookService.get_book_by_id(1).title == book.title
         assert BookService.get_book_by_id(1).authorid == book.authorid
