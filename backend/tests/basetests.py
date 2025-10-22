@@ -30,7 +30,7 @@ def test_create_book(test_db):
             book.categoryid
         )
 
-        assert result == "Entry succesfully added!"
+        assert result.fetchone()[0] == "Entry succesfully added!"
 
 def test_create_duplicate_fail(test_db):
     pass
