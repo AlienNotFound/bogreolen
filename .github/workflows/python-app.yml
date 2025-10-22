@@ -21,7 +21,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h mysql"
+          --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -51,7 +51,7 @@ jobs:
         getent hosts mysql || echo "mysql host not found"
         echo
         echo "=== Try connecting to MySQL (no query) ==="
-        mysqladmin ping -h mysql -uroot -p$MYSQL_ROOT_PASSWORD || echo "Cannot connect"
+        mysqladmin ping -h127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD || echo "Cannot connect"
 
 
     - name: Initialize MySQL Database
@@ -61,8 +61,8 @@ jobs:
         MYSQL_HOST: mysql
         MYSQL_USER: testuser
       run: |
-        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        mysql -h127.0.0.1 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -h127.0.0.1 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
@@ -76,7 +76,7 @@ jobs:
         MYSQL_USER: testuser
       run: |
         echo "Checking database structure..."
-        mysql -hmysql -utestuser -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+        mysql -h127.0.0.1 -utestuser -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
 
     - name: Run tests
       env:
