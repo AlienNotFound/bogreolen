@@ -30,7 +30,7 @@ END ;;
 CREATE PROCEDURE `GetAllBooks`()
 BEGIN
 	SELECT * FROM bookstb;
-END
+END ;;
 
 CREATE PROCEDURE `UpdateBook` (
 	  IN p_BookID INT,
@@ -45,7 +45,6 @@ BEGIN
 	UPDATE bookstb
     SET title = p_Title, authorid = p_AuthorID, image = p_Image, summary = p_Summary, year = p_Year, categoryid = p_CategoryID
     WHERE bookid = p_BookID;
-END
-
+END ;;
 
 DELIMITER ;
