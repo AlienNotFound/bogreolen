@@ -38,11 +38,14 @@ jobs:
         pip install flake8 pytest
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
+    - name: Install MySQL client
+      run: sudo apt-get update && sudo apt-get install -y mysql-client
+
     - name: Wait for MySQL
       run: |
         echo "Waiting for MySQL to start..."
         for i in {1..20}; do
-          if mysqladmin ping -h mysql -uroot -p${{ env.MYSQL_ROOT_PASSWORD }} --silent; then
+          if mysqladmin ping -h mysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} --silent; then
             echo "MySQL is ready!"
             break
           fi
@@ -52,7 +55,7 @@ jobs:
 
     - name: Initialize MySQL Database
       env:
-        MYSQL_DATABASE: bogreolen_database
+        MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
       run: |
