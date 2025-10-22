@@ -25,6 +25,6 @@ CREATE DEFINER=`root`@`%` PROCEDURE `GetBookById`(
 )
 BEGIN
 	SELECT * FROM bookstb WHERE bookid = p_BookID;
-END
+END ;;
 
 DELIMITER ;
