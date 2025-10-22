@@ -45,7 +45,7 @@ jobs:
       run: |
         echo "Waiting for MySQL service to become available..."
         for i in {1..30}; do
-          if mysql -hmysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT 1;" &> /dev/null; then
+          if mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" &> /dev/null; then
             echo "✅ MySQL is ready!"
             exit 0
           fi
