@@ -1,5 +1,5 @@
 DELIMITER ;;
-CREATE DEFINER=`root`@`%` PROCEDURE `AddBook`(
+CREATE PROCEDURE `AddBook`(
     IN p_Title VARCHAR(30),
     IN p_AuthorID INT, 
     IN p_Image VARCHAR(30), 
@@ -20,7 +20,7 @@ BEGIN
 	END IF;
 END ;;
 
-CREATE DEFINER=`root`@`%` PROCEDURE `GetBookById`(
+CREATE PROCEDURE `GetBookById`(
 	  IN p_BookID INT
 )
 BEGIN
