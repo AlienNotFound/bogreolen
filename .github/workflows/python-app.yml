@@ -17,7 +17,6 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE}}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_USER: testuser
         ports:
           - 3306:3306
         options: >-
@@ -59,7 +58,6 @@ jobs:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
-        MYSQL_USER: testuser
       run: |
         mysql -h127.0.0.1 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
         mysql -h127.0.0.1 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
@@ -73,10 +71,9 @@ jobs:
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_USER: testuser
       run: |
         echo "Checking database structure..."
-        mysql -h127.0.0.1 -utestuser -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+        mysql -h127.0.0.1 -root -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
 
     - name: Run tests
       env:
