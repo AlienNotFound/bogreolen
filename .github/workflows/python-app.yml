@@ -20,7 +20,8 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -p$MYSQL_ROOT_PASSWORD"
+          --name=mysql
+          --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -39,21 +40,21 @@ jobs:
         pip install flake8 pytest
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
-    - name: Wait for MySQL to be ready
-      env:
-        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      run: |
-        echo "Waiting for MySQL service to become available..."
-        for i in {1..30}; do
-          if mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" &> /dev/null; then
-            echo "✅ MySQL is ready!"
-            exit 0
-          fi
-          echo "⏳ Attempt $i/30: MySQL not ready yet..."
-          sleep 5
-        done
-        echo "❌ MySQL failed to start in time."
-        exit 1
+    # - name: Wait for MySQL to be ready
+    #   env:
+    #     MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+    #   run: |
+    #     echo "Waiting for MySQL service to become available..."
+    #     for i in {1..30}; do
+    #       if mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" &> /dev/null; then
+    #         echo "✅ MySQL is ready!"
+    #         exit 0
+    #       fi
+    #       echo "⏳ Attempt $i/30: MySQL not ready yet..."
+    #       sleep 5
+    #     done
+    #     echo "❌ MySQL failed to start in time."
+    #     exit 1
 
     - name: Initialize MySQL Database
       env:
