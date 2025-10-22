@@ -42,11 +42,17 @@ class BookService:
     
     @staticmethod
     def get_book_by_id(id):
-        book = Bookstb.query.get(id)
+        try:
+            sql = text("""
+                        CALL GetBookById(:bookid)
+                       """)
+            result = db.session.execute(sql, {
+                "bookid": id
+            })
 
-        db.session.commit()
-
-        return book
+            return result.fetchall()[0]
+        except Exception as e:
+            print(f'Database error: ', e)
     
     @staticmethod
     def get_all_books():

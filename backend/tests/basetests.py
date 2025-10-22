@@ -21,7 +21,7 @@ def test_db():
 
 def test_create_book(test_db):
     with test_db.app_context():
-        result = BookService.create_book(
+        BookService.create_book(
             book.title,
             book.authorid,
             book.image,
@@ -30,7 +30,12 @@ def test_create_book(test_db):
             book.categoryid
         )
 
-        assert result.fetchone()[0] == "Entry succesfully added!"
+        assert BookService.get_book_by_id(1).title == book.title
+        assert BookService.get_book_by_id(1).authorid == book.authorid
+        assert BookService.get_book_by_id(1).image == book.image
+        assert BookService.get_book_by_id(1).summary == book.summary
+        assert BookService.get_book_by_id(1).year == book.year
+        assert BookService.get_book_by_id(1).categoryid == book.categoryid
 
 def test_create_duplicate_fail(test_db):
     pass
