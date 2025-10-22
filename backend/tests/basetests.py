@@ -33,9 +33,6 @@ def test_create_book(clean_db):
             book.categoryid
         )
 
-        rows = result.fetchall()
-        print(rows)
-
         assert BookService.get_book_by_id(1).title == book.title
         assert BookService.get_book_by_id(1).authorid == book.authorid
         assert BookService.get_book_by_id(1).image == book.image
