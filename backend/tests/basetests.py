@@ -16,6 +16,7 @@ def clean_db(scope="function"):
 
     with app.app_context():
         db.create_all()
+        print(db.metadata.tables)
         yield app
         for table in reversed(db.metadata.sorted_tables):
             db.session.execute(table.delete())
