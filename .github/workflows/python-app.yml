@@ -41,6 +41,20 @@ jobs:
         pip install flake8 pytest
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
+    - name: Debug network and MySQL connectivity
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      run: |
+        echo "=== Docker containers running ==="
+        docker ps -a
+        echo
+        echo "=== Check MySQL DNS resolution ==="
+        getent hosts mysql || echo "mysql host not found"
+        echo
+        echo "=== Try connecting to MySQL (no query) ==="
+        mysqladmin ping -h mysql -uroot -p$MYSQL_ROOT_PASSWORD || echo "Cannot connect"
+
+
     - name: Initialize MySQL Database
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
