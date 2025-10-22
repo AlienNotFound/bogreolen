@@ -1,14 +1,22 @@
 services:
   backend:
-    build: ./backend
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_HOST=db
+      - MYSQL_HOST=${MYSQL_HOST}
     depends_on:
       - db
     ports:
       - "8000:5000"
+    command: sh -c "/usr/local/bin/wait-for-db.sh && python -m backend.app"
+    volumes:
+      - ./wait-for-db.sh:/usr/local/bin/wait-for-db.sh
+      - ./backend:/code/backend
+    env_file:
+      - .env
       
   db:
     image: mysql:latest
@@ -18,5 +26,16 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST=${MYSQL_HOST}
     volumes:
-      - ./db:/var/lib/mysql
+      - db_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+
+volumes:
+  db_data:
