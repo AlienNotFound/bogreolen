@@ -24,7 +24,7 @@ def clean_db(scope="function"):
 
 def test_create_book(clean_db):
     with clean_db.app_context():
-        result = BookService.create_book(
+        BookService.create_book(
             book.title,
             book.authorid,
             book.image,
@@ -41,19 +41,109 @@ def test_create_book(clean_db):
         assert BookService.get_book_by_id(1).categoryid == book.categoryid
 
 def test_create_duplicate_fail(clean_db):
-    pass
-    # with test_db.app_context():
-    #     db.session.add(book)
-    #     db.session.commit()
+    with clean_db.app_context():
+        assert len(BookService.get_all_books()) == 0
 
-def test_book_get_all():
-    pass
+        BookService.create_book(
+            book.title,
+            book.authorid,
+            book.image,
+            book.summary,
+            book.year,
+            book.categoryid
+        )
 
-def test_book_get_by_id():
-    pass
+        BookService.create_book(
+            book.title,
+            book.authorid,
+            book.image,
+            book.summary,
+            book.year,
+            book.categoryid
+        )
 
-def test_book_edit():
-    pass
+        assert len(BookService.get_all_books()) == 1
 
-def test_book_delete():
+
+
+def test_book_get_all(clean_db):
+    with clean_db.app_context():
+        assert len(BookService.get_all_books()) == 0
+
+        BookService.create_book(
+            book.title,
+            book.authorid,
+            book.image,
+            book.summary,
+            book.year,
+            book.categoryid
+        )
+
+        BookService.create_book(
+            book.title + "1",
+            book.authorid + 1,
+            book.image + "1",
+            book.summary + "1",
+            book.year + 1,
+            book.categoryid + 1
+        )
+
+        assert len(BookService.get_all_books()) == 2
+
+def test_book_get_by_id(clean_db):
+    with clean_db.app_context():
+        BookService.create_book(
+            book.title,
+            book.authorid,
+            book.image,
+            book.summary,
+            book.year,
+            book.categoryid
+        )
+
+        assert BookService.get_book_by_id(1).bookid == 1
+
+def test_book_edit(clean_db):
+    with clean_db.app_context():
+        BookService.create_book(
+            book.title,
+            book.authorid,
+            book.image,
+            book.summary,
+            book.year,
+            book.categoryid
+        )
+
+    assert BookService.get_book_by_id(1).title == book.title
+    assert BookService.get_book_by_id(1).authorid == book.authorid
+    assert BookService.get_book_by_id(1).image == book.image
+    assert BookService.get_book_by_id(1).summary == book.summary
+    assert BookService.get_book_by_id(1).year == book.year
+    assert BookService.get_book_by_id(1).categoryid == book.categoryid
+
+    newtitle = "New title"
+    newauthor = 2
+    newimage = "newimage.jpg"
+    newsummary = "New summary"
+    newyear = 2015
+    newcategory = 2
+    
+    BookService.edit_book(
+        1,
+        newtitle,
+        newauthor,
+        newimage,
+        newsummary,
+        newyear,
+        newcategory
+    )
+
+    assert BookService.get_book_by_id(1).title == newtitle
+    assert BookService.get_book_by_id(1).authorid == newauthor
+    assert BookService.get_book_by_id(1).image == newimage
+    assert BookService.get_book_by_id(1).summary == newsummary
+    assert BookService.get_book_by_id(1).year == newyear
+    assert BookService.get_book_by_id(1).categoryid == newcategory
+
+def test_get_average_rating(clean_db):
     pass
