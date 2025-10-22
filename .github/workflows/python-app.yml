@@ -17,6 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE}}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_USER: testuser
           MYSQL_HOST: localhost
         ports:
           - 3306:3306
@@ -46,9 +47,10 @@ jobs:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
+        MYSQL_USER: testuser
       run: |
-        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        mysql -hmysql -u$MYSQL_USER -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -hmysql -y$MYSQL_USER -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
@@ -59,9 +61,10 @@ jobs:
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_USER: testuser
       run: |
         echo "Checking database structure..."
-        mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+        mysql -hmysql -u$MYSQL_USER -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
 
     - name: Run tests
       env:
