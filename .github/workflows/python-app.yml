@@ -20,7 +20,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -34,12 +34,10 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get update && sudo apt-get install -y mysql-client
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
-
-    - name: Install MySQL client
-      run: sudo apt-get update && sudo apt-get install -y mysql-client
 
     - name: Wait for MySQL
       run: |
