@@ -47,8 +47,8 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: mysql
       run: |
-        mysql -h mysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        mysql -h mysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -hmysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
@@ -61,7 +61,7 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       run: |
         echo "Checking database structure..."
-        mysql -h mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+        mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
 
     - name: Run tests
       env:
