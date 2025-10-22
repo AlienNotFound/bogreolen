@@ -27,4 +27,9 @@ BEGIN
 	SELECT * FROM bookstb WHERE bookid = p_BookID;
 END ;;
 
+CREATE PROCEDURE `GetAllBooks`()
+BEGIN
+	SELECT * FROM bookstb;
+END
+
 DELIMITER ;
