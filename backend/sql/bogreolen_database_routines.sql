@@ -33,7 +33,7 @@ BEGIN
 END
 
 CREATE PROCEDURE `UpdateBook` (
-	IN p_BookID INT,
+	  IN p_BookID INT,
     IN p_Title VARCHAR(30),
     IN p_AuthorID INT, 
     IN p_Image VARCHAR(30), 
