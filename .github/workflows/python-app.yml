@@ -79,6 +79,6 @@ jobs:
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: mysql
+        MYSQL_HOST: 127.0.0.1
       run: |
         pytest ./backend/tests/basetests.py -v
