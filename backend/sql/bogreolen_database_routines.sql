@@ -32,4 +32,20 @@ BEGIN
 	SELECT * FROM bookstb;
 END
 
+CREATE PROCEDURE `UpdateBook` (
+	IN p_BookID INT,
+    IN p_Title VARCHAR(30),
+    IN p_AuthorID INT, 
+    IN p_Image VARCHAR(30), 
+    IN p_Summary VARCHAR(200), 
+    IN p_Year INT, 
+    IN p_CategoryID INT
+)
+BEGIN
+	UPDATE bookstb
+    SET title = p_Title, authorid = p_AuthorID, image = p_Image, summary = p_Summary, year = p_Year, categoryid = p_CategoryID
+    WHERE bookid = p_BookID;
+END
+
+
 DELIMITER ;
