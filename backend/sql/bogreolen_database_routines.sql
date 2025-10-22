@@ -19,4 +19,12 @@ BEGIN
 		SELECT "Entry already exists!" as OUTPUT;
 	END IF;
 END ;;
+
+CREATE DEFINER=`root`@`%` PROCEDURE `GetBookById`(
+	  IN p_BookID INT
+)
+BEGIN
+	SELECT * FROM bookstb WHERE bookid = p_BookID;
+END
+
 DELIMITER ;
