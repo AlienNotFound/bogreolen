@@ -19,9 +19,8 @@ class BookService:
 
             db.session.commit()
 
-            print(result.fetchone()[0])
-
-            return result
+            return result.fetchone()[0]
+            
         except Exception as e:
             print(f'Database error: ', e)
     
@@ -31,7 +30,7 @@ class BookService:
             sql = text("""
                         CALL UpdateBook(:bookid, :title, :authorid, :image, :summary, :year, :categoryid)
                        """)
-            db.session.execute(sql, {
+            result = db.session.execute(sql, {
                 "bookid": id,
                 "title": title,
                 "authorid":authorid,
@@ -42,6 +41,9 @@ class BookService:
             })
 
             db.session.commit()
+
+            return result.fetchone()[0]
+
         except Exception as e:
             print(f'Database error: ', e)
     
