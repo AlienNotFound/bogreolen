@@ -2,7 +2,6 @@ import pytest
 from backend.connection import db, create_app
 from backend.models.bookstb import Bookstb
 from backend.services.book_service import BookService
-from sqlalchemy import delete
 
 book = Bookstb(title="Test book",
                 authorid=1,
@@ -18,7 +17,9 @@ def clean_db(scope="function"):
     with app.app_context():
         db.create_all()
         yield app
-        db.drop_all()
+        for table in reversed(db.metadata.sorted_tables):
+            db.session.execute(table.delete())
+        db.session.commit()
 
 def test_create_book(clean_db):
     with clean_db.app_context():
