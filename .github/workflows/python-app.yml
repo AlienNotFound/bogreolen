@@ -17,7 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE}}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_HOST: localhost
         ports:
           - 3306:3306
         options: >-
@@ -41,40 +41,32 @@ jobs:
         pip install flake8 pytest
         if [ -f ./backend/requirements.txt ]; then pip install -r ./backend/requirements.txt; fi
 
-    # - name: Wait for MySQL to be ready
-    #   env:
-    #     MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-    #   run: |
-    #     echo "Waiting for MySQL service to become available..."
-    #     for i in {1..30}; do
-    #       if mysql -hmysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" &> /dev/null; then
-    #         echo "✅ MySQL is ready!"
-    #         exit 0
-    #       fi
-    #       echo "⏳ Attempt $i/30: MySQL not ready yet..."
-    #       sleep 5
-    #     done
-    #     echo "❌ MySQL failed to start in time."
-    #     exit 1
-
     - name: Initialize MySQL Database
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_HOST: mysql
       run: |
-        mysql -h ${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
-        mysql -h ${{ secrets.MYSQL_HOST }} -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
+        mysql -h mysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
+        mysql -h mysql -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_routines.sql
 
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Verify MySQL tables
+      env:
+        MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      run: |
+        echo "Checking database structure..."
+        mysql -h mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SHOW TABLES IN $MYSQL_DATABASE;"
+
     - name: Run tests
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+        MYSQL_HOST: mysql
       run: |
         pytest ./backend/tests/basetests.py -v
