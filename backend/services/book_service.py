@@ -27,18 +27,23 @@ class BookService:
     
     @staticmethod
     def edit_book(id, title, authorid, image, summary, year, categoryid):
-        book = Bookstb.query.get(id)
+        try:
+            sql = text("""
+                        CALL UpdateBook(:bookid, :title, :authorid, :image, :summary, :year, :categoryid)
+                       """)
+            db.session.execute(sql, {
+                "bookid": id,
+                "title": title,
+                "authorid":authorid,
+                "image":image,
+                "summary":summary,
+                "year":year,
+                "categoryid":categoryid,
+            })
 
-        setattr(book, 'title', title)
-        setattr(book, 'authorid', authorid)
-        setattr(book, 'image', image)
-        setattr(book, 'summary', summary)
-        setattr(book, 'year', year)
-        setattr(book, 'categoryid', categoryid)
-
-        db.session.commit()
-
-        return book
+            db.session.commit()
+        except Exception as e:
+            print(f'Database error: ', e)
     
     @staticmethod
     def get_book_by_id(id):
@@ -56,9 +61,15 @@ class BookService:
     
     @staticmethod
     def get_all_books():
-        books = Bookstb.query.all()
+        try:
+            sql = text("""
+                        CALL GetAllBooks()
+                       """)
+            result = db.session.execute(sql)
 
-        db.session.commit()
-        
-        return books
+            return result.fetchall()
+        except Exception as e:
+            print(f'Database error: ', e)
 
+    def get_average_rating():
+        pass
