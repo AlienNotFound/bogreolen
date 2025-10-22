@@ -11,16 +11,22 @@ book = Bookstb(title="Test book",
                 categoryid=1)
 
 @pytest.fixture
-def test_db():
+def clean_db(scope="function"):
     app = create_app()
 
     with app.app_context():
-        db.create_all()
+        connection = db.engine.connect()
+        transaction = connection.begin()
+        options = dict(bind=connection, binds={})
+        sess = db.create_scoped_session(options=options)
+        db.session = sess
         yield app
-        db.drop_all()
+        transaction.rollback()
+        connection.close()
+        sess.remove()
 
-def test_create_book(test_db):
-    with test_db.app_context():
+def test_create_book(clean_db):
+    with clean_db.app_context():
         BookService.create_book(
             book.title,
             book.authorid,
@@ -37,7 +43,7 @@ def test_create_book(test_db):
         assert BookService.get_book_by_id(1).year == book.year
         assert BookService.get_book_by_id(1).categoryid == book.categoryid
 
-def test_create_duplicate_fail(test_db):
+def test_create_duplicate_fail(clean_db):
     pass
     # with test_db.app_context():
     #     db.session.add(book)
