@@ -1,6 +1,9 @@
 from backend.connection import db
 from backend.models import Bookstb
 from sqlalchemy.sql import text
+from sqlalchemy import func
+from statistics import mean
+
 
 class BookService:
     @staticmethod
@@ -64,5 +67,15 @@ class BookService:
         
         return None
 
-    def get_average_rating():
-        pass
+    @staticmethod
+    def get_average_rating(bookid):
+        
+        reviews = BookService.get_book_by_id(bookid).reviews
+        ratings = []
+
+        for r in reviews:
+            ratings.append(r.rating)
+
+        avg = mean(ratings)
+
+        return avg

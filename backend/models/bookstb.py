@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .authors_model import Authorstb
     from .categories_model import Categoriestb
+    from .reviews_model import Reviewstb
 
 class Bookstb(db.Model):
     bookid: Mapped[int] = mapped_column(primary_key=True)
@@ -18,8 +19,13 @@ class Bookstb(db.Model):
     categoryid: Mapped[int] = mapped_column(ForeignKey('categoriestb.categoryid'), nullable=False)
     category: Mapped['Categoriestb'] = relationship('Categoriestb', back_populates='books')
 
+    reviews: Mapped[list['Reviewstb']] = relationship('Reviewstb', back_populates='book')
+
     def to_dict(self):
         books = {field.name:getattr(self, field.name) for field in self.__table__.c}
         books['author'] = self.author.name
         books['category'] = self.category.title
+
+        books['reviews'] = [r.to_dict() for r in self.reviews]
+
         return books
