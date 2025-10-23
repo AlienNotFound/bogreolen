@@ -1,5 +1,4 @@
 from backend.connection import db
-from backend.models import Bookstb
 from sqlalchemy.sql import text
 
 class BookService:

@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from backend.services.book_service import BookService
+from backend.services.author_service import AuthorService
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -27,13 +28,25 @@ def get_books_by_id(id):
 def create_book():
     data = request.get_json()
 
+    title = data.get('title')
+    author_name = data.get('author_name')
+    image = data.get('image')
+    summary = data.get('summary')
+    year = data.get('year')
+    categoryid = data.get('categoryid')
+
+    author = AuthorService.get_author_by_name(author_name)
+
+    if author == None:
+        author = AuthorService.create_author(name=author_name)
+
     result = BookService.create_book(
-        title=data.get('title'),
-        authorid=data.get('authorid'),
-        image=data.get('image'),
-        summary=data.get('summary'),
-        year=data.get('year'),
-        categoryid=data.get('categoryid')
+        title=title,
+        authorid=author.authorid,
+        image=image,
+        summary=summary,
+        year=year,
+        categoryid=categoryid
     )
 
     if result > 0:
@@ -46,15 +59,27 @@ def create_book():
 @book_bp.route('/book/<id>', methods=['PUT'])
 def edit_book(id):
     data = request.get_json()
+
+    title = data.get('title')
+    author_name = data.get('author_name')
+    image = data.get('image')
+    summary = data.get('summary')
+    year = data.get('year')
+    categoryid = data.get('categoryid')
+
+    author = AuthorService.get_author_by_name(author_name)
+
+    if author == None:
+        author = AuthorService.create_author(name=author_name)
     
     result = BookService.edit_book(
         id=id,
-        title=data.get('title'),
-        authorid=data.get('authorid'),
-        image=data.get('image'),
-        summary=data.get('summary'),
-        year=data.get('year'),
-        categoryid=data.get('categoryid')
+        title=title,
+        authorid=author.authorid,
+        image=image,
+        summary=summary,
+        year=year,
+        categoryid=categoryid
     )
 
     if result > 0:
