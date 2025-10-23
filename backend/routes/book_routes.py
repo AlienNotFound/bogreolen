@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
+from backend.services.category_service import CategoryService
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -25,7 +26,8 @@ def get_books_by_id(id):
             "author_name": book.author.name,
             "image": book.image,
             "summary": book.summary,
-            "categoryid": book.categoryid
+            "categoryid": book.categoryid,
+            "category_title": book.category.title
         }), 200
     else:
         return jsonify({"Error": "Book not found"}), 400
@@ -39,12 +41,17 @@ def create_book():
     image = data.get('image')
     summary = data.get('summary')
     year = data.get('year')
-    categoryid = data.get('categoryid')
+    category_title = data.get('category_title')
 
     author = AuthorService.get_author_by_name(author_name)
 
     if author == None:
         author = AuthorService.create_author(name=author_name)
+
+    category = CategoryService.get_category_by_title(category_title)
+
+    if category == None:
+        category = CategoryService.create_category(title=category_title)
 
     result = BookService.create_book(
         title=title,
@@ -52,7 +59,7 @@ def create_book():
         image=image,
         summary=summary,
         year=year,
-        categoryid=categoryid
+        categoryid=category.categoryid
     )
 
     if result > 0:
@@ -71,12 +78,17 @@ def edit_book(id):
     image = data.get('image')
     summary = data.get('summary')
     year = data.get('year')
-    categoryid = data.get('categoryid')
+    category_title = data.get('category_title')
 
     author = AuthorService.get_author_by_name(author_name)
 
     if author == None:
         author = AuthorService.create_author(name=author_name)
+
+    category = CategoryService.get_category_by_title(category_title)
+
+    if category == None:
+        category = CategoryService.create_category(title=category_title)
     
     result = BookService.edit_book(
         id=id,
@@ -85,7 +97,7 @@ def edit_book(id):
         image=image,
         summary=summary,
         year=year,
-        categoryid=categoryid
+        categoryid=category.categoryid
     )
 
     if result > 0:
