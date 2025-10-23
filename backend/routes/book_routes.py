@@ -11,7 +11,7 @@ def get_all_books():
     if books != None:
         return jsonify([book.to_dict() for book in books]), 200
     else:
-        return jsonify({"Error": "There was an error"}), 500
+        return jsonify({"Error": "Books not found"}), 400
     
 @book_bp.route('/book/<id>', methods=['GET'])
 def get_books_by_id(id):
