@@ -22,6 +22,8 @@ def create_app(test_config = None):
     db.init_app(app)
     
     from backend.routes.book_routes import book_bp
+    from backend.routes.user_routes import user_bp
     app.register_blueprint(book_bp)
+    app.register_blueprint(user_bp)
 
     return app
