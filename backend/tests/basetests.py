@@ -3,6 +3,7 @@ from backend.connection import db, create_app
 from backend.models.bookstb import Bookstb
 from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
+from backend.services.category_service import CategoryService
 
 book = Bookstb(title="Test book",
                 authorid=1,
@@ -22,6 +23,10 @@ def clean_db(scope="function"):
         
         AuthorService.create_author('Test author 1')
         AuthorService.create_author('Test author 2')
+
+        CategoryService.create_category('Fantasy')
+        CategoryService.create_category('Horror')
+        
         yield app
         for table in reversed(db.metadata.sorted_tables):
             db.session.execute(table.delete())
