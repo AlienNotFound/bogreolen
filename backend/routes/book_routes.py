@@ -19,6 +19,8 @@ def get_books_by_id(id):
     book = BookService.get_book_by_id(id)
 
     if book != None:
+        average_rating = BookService.get_average_rating(id)
+        
         return jsonify({
             "bookid": book.bookid,
             "title": book.title,
@@ -27,7 +29,11 @@ def get_books_by_id(id):
             "image": book.image,
             "summary": book.summary,
             "categoryid": book.categoryid,
-            "category_title": book.category.title
+            "category_title": book.category.title,
+            "average_rating": average_rating,
+            "reviews": [
+                    r.to_dict() for r in book.reviews
+                ]
         }), 200
     else:
         return jsonify({"Error": "Book not found"}), 400
