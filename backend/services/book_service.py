@@ -49,29 +49,20 @@ class BookService:
     
     @staticmethod
     def get_book_by_id(id):
-        try:
-            sql = text("""
-                        CALL GetBookById(:bookid)
-                       """)
-            result = db.session.execute(sql, {
-                "bookid": id
-            })
-
-            return result.fetchall()[0]
-        except Exception as e:
-            print(f'Database error: ', e)
+        book = db.session.query(Bookstb).filter_by(bookid=id).first()
+        if book:
+            return book
+        
+        return None
     
     @staticmethod
     def get_all_books():
-        try:
-            sql = text("""
-                        CALL GetAllBooks()
-                       """)
-            result = db.session.execute(sql)
+        books = db.session.query(Bookstb).all()
 
-            return result.fetchall()
-        except Exception as e:
-            print(f'Database error: ', e)
+        if books:
+            return books
+        
+        return None
 
     def get_average_rating():
         pass

@@ -1,25 +1,32 @@
 from flask import Blueprint, jsonify, request
 from backend.services.book_service import BookService
+from backend.services.author_service import AuthorService
 
 book_bp = Blueprint('book_bp', __name__)
 
 @book_bp.route('/books', methods=['GET'])
 def get_all_books():
     books = BookService.get_all_books()
-    books_list = [dict(row._mapping) for row in books]
 
-    if len(books_list) > 0:
-        return jsonify([book for book in books_list]), 200
+    if books != None:
+        return jsonify([book.to_dict() for book in books]), 200
     else:
-        return jsonify({"Error": "There was an error"}), 500
+        return jsonify({"Error": "Books not found"}), 400
     
 @book_bp.route('/book/<id>', methods=['GET'])
 def get_books_by_id(id):
     book = BookService.get_book_by_id(id)
 
     if book != None:
-        book_list = dict(book._mapping)
-        return jsonify(book_list), 200
+        return jsonify({
+            "bookid": book.bookid,
+            "title": book.title,
+            "authorid": book.authorid,
+            "author_name": book.author.name,
+            "image": book.image,
+            "summary": book.summary,
+            "categoryid": book.categoryid
+        }), 200
     else:
         return jsonify({"Error": "Book not found"}), 400
     
@@ -27,13 +34,25 @@ def get_books_by_id(id):
 def create_book():
     data = request.get_json()
 
+    title = data.get('title')
+    author_name = data.get('author_name')
+    image = data.get('image')
+    summary = data.get('summary')
+    year = data.get('year')
+    categoryid = data.get('categoryid')
+
+    author = AuthorService.get_author_by_name(author_name)
+
+    if author == None:
+        author = AuthorService.create_author(name=author_name)
+
     result = BookService.create_book(
-        title=data.get('title'),
-        authorid=data.get('authorid'),
-        image=data.get('image'),
-        summary=data.get('summary'),
-        year=data.get('year'),
-        categoryid=data.get('categoryid')
+        title=title,
+        authorid=author.authorid,
+        image=image,
+        summary=summary,
+        year=year,
+        categoryid=categoryid
     )
 
     if result > 0:
@@ -46,15 +65,27 @@ def create_book():
 @book_bp.route('/book/<id>', methods=['PUT'])
 def edit_book(id):
     data = request.get_json()
+
+    title = data.get('title')
+    author_name = data.get('author_name')
+    image = data.get('image')
+    summary = data.get('summary')
+    year = data.get('year')
+    categoryid = data.get('categoryid')
+
+    author = AuthorService.get_author_by_name(author_name)
+
+    if author == None:
+        author = AuthorService.create_author(name=author_name)
     
     result = BookService.edit_book(
         id=id,
-        title=data.get('title'),
-        authorid=data.get('authorid'),
-        image=data.get('image'),
-        summary=data.get('summary'),
-        year=data.get('year'),
-        categoryid=data.get('categoryid')
+        title=title,
+        authorid=author.authorid,
+        image=image,
+        summary=summary,
+        year=year,
+        categoryid=categoryid
     )
 
     if result > 0:

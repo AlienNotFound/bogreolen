@@ -2,6 +2,7 @@ import pytest
 from backend.connection import db, create_app
 from backend.models.bookstb import Bookstb
 from backend.services.book_service import BookService
+from backend.services.author_service import AuthorService
 
 book = Bookstb(title="Test book",
                 authorid=1,
@@ -10,6 +11,7 @@ book = Bookstb(title="Test book",
                 year=2000,
                 categoryid=1)
 
+
 @pytest.fixture
 def clean_db(scope="function"):
     app = create_app()
@@ -17,6 +19,9 @@ def clean_db(scope="function"):
     with app.app_context():
         db.drop_all()
         db.create_all()
+        
+        AuthorService.create_author('Test author 1')
+        AuthorService.create_author('Test author 2')
         yield app
         for table in reversed(db.metadata.sorted_tables):
             db.session.execute(table.delete())
@@ -42,7 +47,7 @@ def test_create_book(clean_db):
 
 def test_create_duplicate_fail(clean_db):
     with clean_db.app_context():
-        assert len(BookService.get_all_books()) == 0
+        assert BookService.get_all_books() == None
 
         BookService.create_book(
             book.title,
@@ -68,7 +73,7 @@ def test_create_duplicate_fail(clean_db):
 
 def test_book_get_all(clean_db):
     with clean_db.app_context():
-        assert len(BookService.get_all_books()) == 0
+        assert BookService.get_all_books() == None
 
         BookService.create_book(
             book.title,
