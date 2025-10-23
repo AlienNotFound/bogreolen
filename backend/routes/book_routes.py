@@ -7,10 +7,9 @@ book_bp = Blueprint('book_bp', __name__)
 @book_bp.route('/books', methods=['GET'])
 def get_all_books():
     books = BookService.get_all_books()
-    books_list = [dict(row._mapping) for row in books]
 
-    if len(books_list) > 0:
-        return jsonify([book for book in books_list]), 200
+    if books != None:
+        return jsonify([book.to_dict() for book in books]), 200
     else:
         return jsonify({"Error": "There was an error"}), 500
     
@@ -19,8 +18,15 @@ def get_books_by_id(id):
     book = BookService.get_book_by_id(id)
 
     if book != None:
-        book_list = dict(book._mapping)
-        return jsonify(book_list), 200
+        return jsonify({
+            "bookid": book.bookid,
+            "title": book.title,
+            "authorid": book.authorid,
+            "author_name": book.author.name,
+            "image": book.image,
+            "summary": book.summary,
+            "categoryid": book.categoryid
+        }), 200
     else:
         return jsonify({"Error": "Book not found"}), 400
     

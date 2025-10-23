@@ -11,3 +11,8 @@ class Bookstb(db.Model):
     summary: Mapped[str] = mapped_column(String(200))
     year: Mapped[int]
     categoryid: Mapped[int]
+
+    def to_dict(self):
+        books = {field.name:getattr(self, field.name) for field in self.__table__.c}
+        books['author'] = self.author.name
+        return books

@@ -29,4 +29,11 @@ class AuthorService:
             return author
         
         return None
-
+    
+    @staticmethod
+    def get_author_by_id(id):
+        author = db.session.query(Authorstb).filter_by(authorid=id).first()
+        if author:
+            return author
+        
+        return None
