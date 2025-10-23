@@ -12,6 +12,8 @@ class Userstb(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     passwordhash: Mapped[str] = mapped_column(String(255), nullable=False)
 
+    reviews: Mapped[list['Reviewstb']] = relationship('Reviewstb', back_populates='user')
+
     def to_dict(self):
         reviews = {field.name:getattr(self, field.name) for field in self.__table__.c}
 
