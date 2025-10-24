@@ -3,6 +3,10 @@ from backend.connection import db
 
 class BaseService:
     @staticmethod
+    def get_by_latest(model, id_column):
+        return db.session.query(model).order_by(id_column.desc()).first()
+
+    @staticmethod
     def get_by_id(model, id_column, id):
         return db.session.query(model).filter(id_column == id).first()
 
@@ -14,6 +18,11 @@ class BaseService:
     def delete(model, id_column, id):
         db.session.query(model).filter(id_column == id).delete()
         BaseService.commit_session()
+
+    @staticmethod
+    def delete_by_composite(model, filters: dict):
+        db.session.query(model).filter_by(**filters).delete()
+        return BaseService.commit_session()
 
     @staticmethod
     def commit_session(instance=None):

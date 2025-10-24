@@ -1,11 +1,12 @@
 from backend.connection import db
 from backend.models import Bookstb
+from backend.services.base_service import BaseService
 from sqlalchemy.sql import text
 from sqlalchemy import func
 from statistics import mean
 
 
-class BookService:
+class BookService(BaseService):
     @staticmethod
     def create_book(title, authorid, image, summary, year, categoryid):
         try:
@@ -66,6 +67,10 @@ class BookService:
             return books
         
         return None
+    
+    @staticmethod
+    def get_latest_book():
+        return BaseService.get_by_latest(Bookstb, Bookstb.bookid)
 
     @staticmethod
     def get_average_rating(bookid):
