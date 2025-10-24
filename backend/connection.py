@@ -25,10 +25,12 @@ def create_app(test_config = None):
     from backend.routes.user_routes import user_bp
     from backend.routes.review_routes import review_bp
     from backend.routes.list_route import list_bp
+    from backend.routes.track_routes import track_bp
     
     app.register_blueprint(book_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(review_bp)
     app.register_blueprint(list_bp)
+    app.register_blueprint(track_bp)
 
     return app

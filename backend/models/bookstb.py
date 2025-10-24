@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .categories_model import Categoriestb
     from .reviews_model import Reviewstb
     from .list_model import Liststb
-
+    from .tracks_model import Trackstb
 class Bookstb(db.Model):
     bookid: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(30))
@@ -22,6 +22,7 @@ class Bookstb(db.Model):
 
     reviews: Mapped[list['Reviewstb']] = relationship('Reviewstb', back_populates='book')
     lists: Mapped[list['Liststb']] = relationship('Liststb', back_populates='book')
+    tracks: Mapped[list['Trackstb']] = relationship('Trackstb', back_populates='book')
 
     def to_dict(self):
         books = {field.name:getattr(self, field.name) for field in self.__table__.c}
