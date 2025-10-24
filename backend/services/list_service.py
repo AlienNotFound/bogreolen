@@ -1,6 +1,7 @@
 from backend.connection import db
-from backend.models.list_model import Liststb, ListName
+from backend.models.list_model import Liststb
 from backend.services.base_service import BaseService
+from backend.services.validators.list_validator import ListValidator
 
 class ListService(BaseService):
     @staticmethod
@@ -14,9 +15,7 @@ class ListService(BaseService):
         
     @staticmethod
     def move_to_list(userid, bookid, listname):
-        try:
-            listname = ListName(listname)
-        except ValueError:
+        if ListValidator.validate_listname(listname) == None:
             return f'{listname} is not a valid list name.'
         
         list = ListService.get_list_by_user_and_book(userid=userid, bookid=bookid)
