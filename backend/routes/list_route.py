@@ -12,11 +12,6 @@ def move_to_list():
     userid = 1
     bookid = 1
 
-    list = ListService.get_list_by_user_and_book(userid, bookid)
-
-    if list == None:
-        return jsonify({"Error": "Book not found in any list."}), 404
-
     result = ListService.move_to_list(userid, bookid, listname)
 
     if isinstance(result, Liststb):
