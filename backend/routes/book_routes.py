@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
+from backend.services.list_service import ListService
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -48,6 +49,7 @@ def create_book():
     summary = data.get('summary')
     year = data.get('year')
     category_title = data.get('category_title')
+    listname = data.get('listname')
 
     author = AuthorService.get_author_by_name(author_name)
 
@@ -67,6 +69,9 @@ def create_book():
         year=year,
         categoryid=category.categoryid
     )
+
+    if listname and result > 0:
+        ListService.add_book(userid=1, bookid=BookService.get_latest_book().bookid, listname=listname)
 
     if result > 0:
         return jsonify({"Success": "Book created!"}), 200
