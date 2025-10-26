@@ -81,7 +81,7 @@ class BookService(BaseService):
         for r in reviews:
             ratings.append(r.rating)
 
-        avg = mean(ratings)
+        avg = mean(ratings) if ratings else 0
 
         return avg
     
