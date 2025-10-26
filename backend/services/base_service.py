@@ -34,3 +34,7 @@ class BaseService:
             db.session.rollback()
             
             return False, str(e.orig)
+        
+    @staticmethod
+    def search_for(model, search_column, search_query):
+        return db.session.query(model).filter(search_column.like(f'%{search_query}%')).all()

@@ -119,3 +119,9 @@ def edit_book(id):
         return jsonify({"Error": "Book already exists."}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
+    
+@book_bp.route('/search/<title>', methods=['GET'])
+def serach_for_book(title):
+    book = BookService.search_for_book(title)
+
+    return jsonify([b.to_dict() for b in book])
