@@ -84,3 +84,7 @@ class BookService(BaseService):
         avg = mean(ratings)
 
         return avg
+    
+    @staticmethod
+    def search_for_book(search_query):
+        return BaseService.search_for(Bookstb, Bookstb.title, search_query)
