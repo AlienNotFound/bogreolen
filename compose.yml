@@ -37,5 +37,18 @@ services:
       interval: 10s
       retries: 10
 
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/code
+      - /code/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev -- --host
+
 volumes:
   db_data:
