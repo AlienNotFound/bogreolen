@@ -125,3 +125,13 @@ def serach_for_book(title):
     book = BookService.search_for_book(title)
 
     return jsonify([b.to_dict() for b in book])
+
+
+@book_bp.route('/books/user/<id>', methods=['GET'])
+def get_books_by_user(id):
+    books = BookService.get_all_tracks_by_user(id)
+
+    if tracks:
+        return jsonify([TrackDTO.overview_dict(t) for t in tracks]), 200
+    else:
+        return jsonify({"Error": "Track not found!"}), 400

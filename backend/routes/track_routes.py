@@ -5,12 +5,12 @@ from backend.DTOs.track_dto import TrackDTO
 
 track_bp = Blueprint('track_bp', __name__)
 
-@track_bp.route('/track', methods=['POST'])
-def track_book():
+@track_bp.route('/track/<id>', methods=['POST'])
+def track_book(id):
     data = request.get_json()
 
     user_id = 1
-    book_id = 1
+    book_id = id
 
     read_today = data.get('read_today')
     current_page = data.get('current_page')
@@ -68,5 +68,25 @@ def get_track_by_id(id):
 
     if track:
         return jsonify(TrackDTO.to_dict(track)), 200
+    else:
+        return jsonify({"Error": "Track not found!"}), 400
+    
+@track_bp.route('/tracks/user/<id>', methods=['GET'])
+def get_tracks_by_user(id):
+    # user_id = 1
+    tracks = TrackService.get_all_tracks_by_user(id)
+
+    if tracks:
+        return jsonify([TrackDTO.overview_dict(t) for t in tracks]), 200
+    else:
+        return jsonify({"Error": "Track not found!"}), 400
+
+@track_bp.route('/tracks/modal/user/<id>', methods=['GET'])
+def get_modal_info_by_user(id):
+    # user_id = 1
+    tracks = TrackService.get_status_by_user(id)
+
+    if tracks:
+        return jsonify([TrackDTO.modal_dict(t) for t in tracks]), 200
     else:
         return jsonify({"Error": "Track not found!"}), 400

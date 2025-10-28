@@ -15,6 +15,10 @@ class BaseService:
         return db.session.query(model).all()
     
     @staticmethod
+    def get_all_by_id(model, id_column, id):
+        return db.session.query(model).filter(id_column == id).all()
+    
+    @staticmethod
     def delete(model, id_column, id):
         db.session.query(model).filter(id_column == id).delete()
         BaseService.commit_session()
