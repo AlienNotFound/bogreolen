@@ -25,7 +25,7 @@
 
     let tracks = $state<Track[]>([]);
     let modalInfo = $state<Book[]>([]);
-    let showModal = $state(true)
+    let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
     let current_page = $state();
