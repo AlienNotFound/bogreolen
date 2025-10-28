@@ -38,3 +38,7 @@ class ListService(BaseService):
     @staticmethod
     def get_list_by_user_and_book(userid, bookid):
         return db.session.get(Liststb, {"userid": userid, "bookid": bookid})
+    
+    @staticmethod
+    def get_lists_by_user(user_id):
+        return BaseService.get_all_by_id(Liststb, Liststb.userid, user_id)

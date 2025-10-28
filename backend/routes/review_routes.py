@@ -22,6 +22,15 @@ def get_review_by_id(id):
         return jsonify(ReviewDTO.to_dict(review)), 200
     else:
         return jsonify({"Error": "Review not found!"}), 400
+
+@review_bp.route('/reviews/book/<id>', methods=['GET'])
+def get_reviews_based_on_user_list(id):
+    reviews = ReviewService.get_reviews_based_on_user_list(id)
+
+    if reviews:
+        return jsonify([review for review in reviews]), 200
+    else:
+        return jsonify({"Error": "Reviews not found!"}), 400
     
 @review_bp.route('/review', methods=['POST'])
 def create_review():

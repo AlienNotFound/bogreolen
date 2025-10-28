@@ -1,5 +1,3 @@
-from backend.models import Reviewstb
-
 class ReviewDTO:
     @staticmethod
     def to_dict(review):
@@ -9,4 +7,11 @@ class ReviewDTO:
             "userid": review.userid,
             "rating": review.rating,
             "review": review.review,
+        }
+    
+    @staticmethod
+    def overview_dict(review):
+        return {
+            "reviewid": review.reviewid,
+            "booktitle": review.book.title
         }
