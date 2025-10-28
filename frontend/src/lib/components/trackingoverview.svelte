@@ -141,13 +141,19 @@
     {:else}
         {#each week as day}
         <div class="trackCard {day.isToday ? 'today' : ''}">
-            <h3>{day.name}</h3>
-            <p>Books you read:</p>
-            {#each matchTrackToDate(day.raw_date) as track}
+            <h3>{day.name} {day.date}</h3>
+            <div class="trackList">
+                <p>Books you've read:</p>
+                {#each matchTrackToDate(day.raw_date) as track}
                 <p>{track.title}</p>
-            {/each}
-            <p>{day.date}</p>
-            <button onclick={() => (showModal = !showModal)} style="display: {day.isToday ? 'inline' : 'none'};">Read today</button>
+                {/each}
+                <button onclick={() => 
+                            (showModal = !showModal)
+                        }
+                        style="display: {day.isToday ? 'inline' : 'none'};
+                                width: 100%;
+                                margin-top: 10px">Read today</button>
+            </div>
         </div>
         {/each}
     {/if}
@@ -181,20 +187,29 @@
 
 <style>
     div {
-        border: 1px #000 solid;
         display: flex;
         justify-content: space-between;
     }
-
+    
     .trackCard {
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 2%;
+        /* border: 1px #000 solid; */
     }
 
     .trackCard.today {
-        background-color: #999;
+        background-color: #e9edc9;
+        box-shadow:  0px 0px 5px 4px #e9edc9 ;
+    }
+
+    .trackList {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: flex-start;
+        height: 100%;
     }
 
     .books {

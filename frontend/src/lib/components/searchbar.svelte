@@ -23,31 +23,76 @@
         }
     }
 </script>
-<div>
-    <input type="text"
-            onkeyup={
-                async (e) => {
-                    searchInput = e.currentTarget.value;
-                    fetchSearch(searchInput);
-                    if (e.currentTarget.value == "") {
-                        showSuggestions = false;
+<div id="searchbar">
+    <div id=searchbarwrapper>
+
+        <input type="text"
+                onkeyup={
+                    async (e) => {
+                            searchInput = e.currentTarget.value;
+                            fetchSearch(searchInput);
+                            if (e.currentTarget.value == "") {
+                                showSuggestions = false;
+                            }
+                        }
                     }
-                }
-            }
+                style="border-radius: {showSuggestions ? '5px 0 0 0' : '5px 0 0 5px'}"
+                    
             >
-    <button>Search</button>
-    {#if showSuggestions}
-        <div id="searchSuggestions">
-            {#each searchSuggestions as suggestion}
+            <button>Search</button>
+            {#if showSuggestions}
+            <div id="searchSuggestions">
+                {#each searchSuggestions as suggestion}
                 <a href="/">{suggestion.title}</a>
             {/each}
         </div>
-    {/if}
+        {/if}
+    </div>
 </div>
 
 <style>
+    #searchbarwrapper {
+        position: relative;
+        display: flex;
+    }   
+    #searchbar {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+    }
+
+    #searchbar input {
+        width: 25vw;
+        box-sizing: border-box;
+        padding: 4px 10px;
+        font-size: 1em;
+        border: none;
+    }
+
+    #searchbar button {
+        border-radius: 0 5px 5px 0;
+        width: 6vw
+    }
     #searchSuggestions {
         display: flex;
         flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        padding: 1%;
+        width: 25vw;
+        box-sizing: border-box;
+        border-radius: 0 0 5px 5px;
+    }
+
+    #searchSuggestions a {
+        color: #000;
+        text-decoration: none;
+        padding: 4px 0;
+    }
+
+    #searchSuggestions a:hover {
+        background-color: #eee;
     }
 </style>
