@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { json } from "@sveltejs/kit";
     import { onMount } from "svelte";
 
     type Day = {
