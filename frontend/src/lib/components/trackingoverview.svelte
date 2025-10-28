@@ -96,7 +96,6 @@
                 }
             })
             const result = await response.json();
-            // console.log(result);
         } catch (err) {
             console.error(err);
         } finally {
@@ -124,10 +123,13 @@
         })
     }
 
-    function modalFilter(tracks: any) {
-        const result = Array.from(tracks.map(t => (t.book_status == "Reading" || t.book_status == "Want to read") && {book_id: t.book_id, title: t.title, image: t.image}))
+    function modalFilter(tracks: any): Book[] {
+        const result = tracks
+                        .map((t: Book) =>
+                        t.book_status == "Reading" || t.book_status == "Want to read" ?
+                        {book_id: t.book_id, title: t.title, image: t.image}
+                        : null)
                             .filter(Boolean);
-        console.log(result)
         return result
     }
 
