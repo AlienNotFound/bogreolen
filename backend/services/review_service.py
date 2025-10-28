@@ -49,7 +49,7 @@ class ReviewService(BaseService):
         lists = ListService.get_lists_by_user(user_id)
         book_ids = [list.bookid for list in lists]
 
-        reviews = Reviewstb.query.filter(Reviewstb.bookid.in_(book_ids)).all()
+        reviews = Reviewstb.query.order_by(Reviewstb.reviewid.desc()).filter(Reviewstb.bookid.in_(book_ids)).all()
 
         return [
             {
