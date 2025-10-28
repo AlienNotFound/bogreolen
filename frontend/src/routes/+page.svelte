@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+    import Searchbar from '$lib/components/searchbar.svelte';
+    import Trackingoverview from '$lib/components/trackingoverview.svelte';
+    import Reviewoverview from '$lib/components/reviewoverview.svelte';
+</script>
+
+<Searchbar />
+<Trackingoverview />
+<Reviewoverview />

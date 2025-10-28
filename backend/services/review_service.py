@@ -1,5 +1,6 @@
 from backend.connection import db
-from backend.models import Reviewstb
+from backend.models import Reviewstb, Bookstb
+from backend.services.list_service import ListService
 from backend.services.base_service import BaseService
 from backend.services.validators.uservalidator import UserValidator
 from werkzeug.security import generate_password_hash
@@ -42,3 +43,21 @@ class ReviewService(BaseService):
     @staticmethod
     def delete_review(id):
         return BaseService.delete(Reviewstb, Reviewstb.reviewid, id)
+    
+    @staticmethod
+    def get_reviews_based_on_user_list(user_id):
+        lists = ListService.get_lists_by_user(user_id)
+        book_ids = [list.bookid for list in lists]
+
+        reviews = Reviewstb.query.order_by(Reviewstb.reviewid.desc()).filter(Reviewstb.bookid.in_(book_ids)).all()
+
+        return [
+            {
+                "book_id": review.bookid,
+                "title": review.book.title,
+                "rating": review.rating,
+                "username": review.user.username,
+                "review": review.review
+            }
+            for review in reviews
+        ]

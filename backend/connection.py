@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -34,5 +35,11 @@ def create_app(test_config = None):
     app.register_blueprint(list_bp)
     app.register_blueprint(track_bp)
     app.register_blueprint(image_bp)
+
+    CORS(app, origins=['http://localhost:5173', 'https://localhost:5173'],
+    #  supports_credentials=True,
+    #  allow_headers=['Content-Type', 'Authorization'],
+     allow_headers=['Content-Type'],
+     methods=['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT'])
 
     return app
