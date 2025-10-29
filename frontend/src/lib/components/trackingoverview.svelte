@@ -8,8 +8,8 @@
     let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
-    let current_page = $state();
-    let last_page = $state();
+    let error_message = $state();
+    let formData: Record<number, {current_page: number, last_page: number, error_message: string}> = {};
 
     async function fetchTracks() {
         try {
@@ -32,12 +32,21 @@
     }
 
     async function markAsRead(book_id: number) {
+        const data = formData[book_id];
         try {
+            if (!data.current_page || !data.last_page) {
+                return;
+            }
+
+            if(data.current_page > data.last_page) {
+                data.error_message = "Current page cannot be higher than last page."
+                return;
+            }
             await fetchPostRequest('track/' + book_id,
                 {
                     "read_today": true,
-                    "current_page": current_page,
-                    "last_page": last_page
+                    "current_page": data.current_page,
+                    "last_page": data.last_page
                 }
             )
             showModal = false;
@@ -57,9 +66,31 @@
                         .map(t => ({book_id: t.book_id, title: t.title, image: t.image, book_status: t.book_status}));
         return result
     }
+
+    function updateField(book_id: number, field: 'current_page' | 'last_page', value: number) {
+		if (!formData[book_id]) {
+			formData[book_id] = {current_page: 0, last_page: 0, error_message: ''};
+		}
+		formData[book_id][field] = value;
+	}
+
+    function openModal() {
+    modalInfo.forEach(book => {
+        if (!formData[book.book_id]) {
+            formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
+        }
+    });
+    showModal = !showModal;
+    if (showModal) {
+        document.body.style.overflow = "hidden";
+    } else {
+        document.body.style.overflow = "scroll";
+
+    }
+}
 </script>
 
-<div>
+<div id="trackingOverviewBar">
     {#if loading}
         <div>loading..</div>
     {:else}
@@ -71,7 +102,7 @@
                 {#each matchTrackToDate(day.raw_date, tracks) as track}
                 <p>{track.title}</p>
                 {/each}
-                <button onclick={() => (showModal = !showModal)}
+                <button onclick={() => openModal()}
                         style="display: {day.isToday ? 'inline' : 'none'};
                                 width: 100%;
                                 margin-top: 10px">Read today</button>
@@ -82,33 +113,58 @@
 </div>
 
 {#if showModal}
-    <div class="modal">
-        {#each modalFilter(modalInfo) as info}
-        <div class="books">
-            <p>{info.title}</p>
-            <img src={info.image} alt="">
-            <h4>Current page:</h4>
-            <input type="text" bind:value={current_page}>
-            <h4>Last page:</h4>
-            <input type="text" bind:value={last_page}>
-            <button onclick={() => markAsRead(info.book_id)}>Mark as read</button>
+    <div id="modalWrapper">
+        <div class="modal">
+            {#each modalFilter(modalInfo) as info}
+            <div class="books">
+                <h3>{info.title}</h3>
+                <img src={info.image} alt="">
+                
+                <form onsubmit={() => markAsRead(info.book_id)}>
+                    <h4>Current page:</h4>
+                    <input type="number"
+                    value={formData[info.book_id].current_page ?? ''} 
+                    oninput={(e) => updateField(info.book_id, 'current_page', +e.currentTarget.value)}
+                    required>
+                    <h4>Last page:</h4>
+                    <input type="number"
+                    value={formData[info.book_id].last_page ?? ''}
+                    oninput={(e) => updateField(info.book_id, 'last_page', +e.currentTarget.value)}>
+                    {#if error_message}
+                    <p class="error">{error_message}</p>
+                    {/if}
+                    <button>Mark as read</button>
+                </form>            
+            </div>
+            {/each}
+            <button id="modalClose" onclick={() => showModal = !showModal}>X</button>
         </div>
-        {/each}
     </div>
 {/if}
 
 <style>
-    div {
+    #trackingOverviewBar,
+    .trackCard,
+    .trackList,
+    #modalWrapper,
+    .modal,
+    .books {
         display: flex;
+    }
+    
+    #trackingOverviewBar,
+    .books {
         justify-content: space-between;
+    }
+
+    .error {
+        color: rgb(173, 46, 23);
     }
     
     .trackCard {
-        display: flex;
         flex-direction: column;
         align-items: center;
         padding: 2%;
-        /* border: 1px #000 solid; */
     }
 
     .trackCard.today {
@@ -117,14 +173,50 @@
     }
 
     .trackList {
-        display: flex;
         flex-direction: column;
         align-items: start;
         justify-content: flex-start;
         height: 100%;
     }
 
+    #modalWrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0000003b;
+    }
+
+    .modal {
+		background-color: #ccd5ae;
+        height: 60vh;
+        padding: 2% 3%;
+    }
+
+    #modalClose {
+        height: 6vh;
+    }
+
     .books {
         flex-direction: column;
+        padding: 2% 3%;
+    }
+
+    .books img {
+        object-fit: contain;
+    }
+
+    .books input {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
     }
 </style>
