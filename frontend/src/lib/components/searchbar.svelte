@@ -54,6 +54,7 @@
     #searchbarwrapper {
         position: relative;
         display: flex;
+        padding-bottom: 2%;
     }   
     #searchbar {
         width: 100vw;
