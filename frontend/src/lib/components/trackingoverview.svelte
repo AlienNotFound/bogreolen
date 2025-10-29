@@ -49,7 +49,7 @@
                     "last_page": data.last_page
                 }
             )
-            showModal = false;
+            toggleModal();
         } catch (err) {
             console.error(err);
         }
@@ -74,20 +74,23 @@
 		formData[book_id][field] = value;
 	}
 
-    function openModal() {
-    modalInfo.forEach(book => {
-        if (!formData[book.book_id]) {
-            formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
+    function toggleModal() {
+        if (!showModal) {
+            modalInfo.forEach(book => {
+                if (!formData[book.book_id]) {
+                    formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
+                }
+            });
         }
-    });
-    showModal = !showModal;
-    if (showModal) {
-        document.body.style.overflow = "hidden";
-    } else {
-        document.body.style.overflow = "scroll";
+        showModal = !showModal;
 
+        if (showModal) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "scroll";
+
+        }
     }
-}
 </script>
 
 <div id="trackingOverviewBar">
@@ -102,7 +105,7 @@
                 {#each matchTrackToDate(day.raw_date, tracks) as track}
                 <p>{track.title}</p>
                 {/each}
-                <button onclick={() => openModal()}
+                <button onclick={() => toggleModal()}
                         style="display: {day.isToday ? 'inline' : 'none'};
                                 width: 100%;
                                 margin-top: 10px">Read today</button>
@@ -137,7 +140,7 @@
                 </form>            
             </div>
             {/each}
-            <button id="modalClose" onclick={() => showModal = !showModal}>X</button>
+            <button id="modalClose" onclick={() => toggleModal()}>X</button>
         </div>
     </div>
 {/if}
