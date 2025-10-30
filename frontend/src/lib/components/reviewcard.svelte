@@ -26,7 +26,6 @@
 
 <style>
   .review-card {
-    width: 25vw;
     background: #e9edc9;
     border-radius: 5px;
     padding: 1rem;
