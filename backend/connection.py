@@ -36,7 +36,7 @@ def create_app(test_config = None):
     app.register_blueprint(track_bp)
     app.register_blueprint(image_bp)
 
-    CORS(app, origins=['http://localhost:5173', 'https://localhost:5173'],
+    CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
     #  supports_credentials=True,
     #  allow_headers=['Content-Type', 'Authorization'],
      allow_headers=['Content-Type'],
