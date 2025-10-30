@@ -8,7 +8,7 @@ export const actions = {
         const listname = formData.get('listname');
 
         try {
-            const response = await fetchPOSTRequest('add-to-list', {
+            const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('add-to-list', {
                 bookid,
                 listname
             });
@@ -30,7 +30,7 @@ export const actions = {
         const listname = formData.get('listname');
         
         try {
-            const response = await fetchPUTRequest('move-to-list/' + bookid, {
+            const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('move-to-list/' + bookid, {
                 listname
             });
 
