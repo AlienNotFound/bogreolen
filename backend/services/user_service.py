@@ -55,6 +55,10 @@ class UserService(BaseService):
         return BaseService.get_by_id(Userstb, Userstb.userid, id)
     
     @staticmethod
+    def get_user_by_username(username):
+        return BaseService.get_by_id(Userstb, Userstb.username, username)
+    
+    @staticmethod
     def get_all_users():
         return BaseService.get_all(Userstb)
     

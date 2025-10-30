@@ -2,10 +2,13 @@ from flask import Blueprint, jsonify, request
 from backend.models import Userstb
 from backend.services.user_service import UserService
 from backend.DTOs.user_dto import UserDTO
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from werkzeug.security import check_password_hash
 
 user_bp = Blueprint('user_bp', __name__)
 
 @user_bp.route('/users', methods=['GET'])
+@jwt_required()
 def get_all_users():
     users = UserService.get_all_users()
 
@@ -96,3 +99,22 @@ def delete_user(id):
         return jsonify({"Success": "User succesfully deleted!"}), 200
     else:
         return jsonify({"Error": "Could not delete user."}), 500
+    
+@user_bp.route('/login', methods=['POST'])
+def user_login():
+    data = request.get_json()
+
+    username = data.get('username')
+    password = data.get('password')
+
+    user = UserService.get_user_by_username(username)
+
+    if not user:
+        return jsonify({'Error': 'User not found.'}), 404
+    
+    if not user or not check_password_hash(user.passwordhash, password):
+        return jsonify({'error': f'Wrong username or password'}), 401
+
+    access_token = create_access_token(identity = username)
+
+    return jsonify({'access_token': access_token})
