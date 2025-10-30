@@ -23,7 +23,7 @@
 		background-color: #ccd5ae;
 	}
 
-	:global(p) {
+	:global(h2, h3, h4, p) {
 		margin: 0;
 		line-height: 1.5;
 	}

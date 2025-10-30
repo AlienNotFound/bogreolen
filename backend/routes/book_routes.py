@@ -29,6 +29,7 @@ def get_books_by_id(id):
             "author_name": book.author.name,
             "image": book.image,
             "summary": book.summary,
+            "year": book.year,
             "categoryid": book.categoryid,
             "category_title": book.category.title,
             "average_rating": average_rating,

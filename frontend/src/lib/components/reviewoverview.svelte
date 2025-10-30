@@ -1,14 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
-    type Review = {
-        bookid: number,
-        title: string,
-        rating: number,
-        username: string,
-        review: string
-    }
-
     let reviews = $state<Review[]>([]);
     let loading = $state(true);
 
