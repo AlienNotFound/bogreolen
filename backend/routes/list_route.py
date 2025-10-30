@@ -58,8 +58,6 @@ def get_book_status(book_id):
 
     result = ListService.get_book_status(userid, book_id)
 
-    print(f"[book-status] Incoming request args: {request.args}")
-
     if result:
         return jsonify({"bookid": book_id, "book_status": f"{result.listname.value}"}), 200
     else:
