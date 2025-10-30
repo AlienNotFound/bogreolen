@@ -32,7 +32,7 @@
                 <h3>·</h3>
                 <h3>{data.year}</h3>
                 <h3>·</h3>
-                <h3>{data.average_rating}</h3>
+                <h3>{Math.round(data.average_rating * 10) / 10}</h3>
             </div>
             <p>{data.summary}</p>
             <div id="addToListWrapper">
