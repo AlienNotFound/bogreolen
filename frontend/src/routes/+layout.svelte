@@ -9,7 +9,9 @@
 </svelte:head>
 
 <header>
-	<h1>Bogreolen</h1>
+	<a href="/">
+		<h1>Bogreolen</h1>
+	</a>
 	<h2>Profil</h2>
 </header>
 
@@ -23,9 +25,14 @@
 		background-color: #ccd5ae;
 	}
 
-	:global(p) {
+	:global(h2, h3, h4, p) {
 		margin: 0;
 		line-height: 1.5;
+	}
+
+	:global(a) {
+		color: #000;
+		text-decoration: none;
 	}
 
 	:global(button) {

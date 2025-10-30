@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { fetchGetRequestById, fetchPostRequest } from "$lib/api/common";
+    import { fetchGetRequestById, fetchPOSTRequest } from "$lib/api/common";
     import { getCurrentWeek, matchTrackToDate } from "$lib/utils/date";
 
     let tracks = $state<Track[]>([]);
@@ -42,7 +42,7 @@
                 data.error_message = "Current page cannot be higher than last page."
                 return;
             }
-            await fetchPostRequest('track/' + book_id,
+            await fetchPOSTRequest('track/' + book_id,
                 {
                     "read_today": true,
                     "current_page": data.current_page,

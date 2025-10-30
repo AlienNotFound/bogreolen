@@ -18,5 +18,6 @@ class Reviewstb(db.Model):
 
     def to_dict(self):
         reviews = {field.name:getattr(self, field.name) for field in self.__table__.c}
+        reviews['username'] = self.user.username
 
         return reviews

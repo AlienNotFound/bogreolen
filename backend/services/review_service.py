@@ -1,20 +1,22 @@
 from backend.connection import db
-from backend.models import Reviewstb, Bookstb
+from backend.models import Reviewstb
 from backend.services.list_service import ListService
 from backend.services.base_service import BaseService
+from backend.services.user_service import UserService
 from backend.services.validators.uservalidator import UserValidator
-from werkzeug.security import generate_password_hash
 
 class ReviewService(BaseService):
     @staticmethod
     def create_review(bookid, userid, rating, reviewtext):
+        existing_review = Reviewstb.query.filter_by(userid=userid, bookid=bookid).first()
+
+        if existing_review:
+            return "You've already reviewed this book"
+        
         review = Reviewstb(bookid=bookid, userid=userid, rating=rating, review=reviewtext)
         db.session.add(review)
 
         success, result = BaseService.commit_session(review)
-
-        if not success:
-            return UserValidator.check_for_duplicate(result)
 
         return result
         

@@ -11,6 +11,10 @@ class BaseService:
         return db.session.query(model).filter(id_column == id).first()
 
     @staticmethod
+    def get_by_composite(model, filters: dict):
+        return db.session.query(model).filter_by(**filters).first()
+
+    @staticmethod
     def get_all(model):
         return db.session.query(model).all()
     

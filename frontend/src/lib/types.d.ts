@@ -12,9 +12,31 @@ type Track = {
     date: string
 }
 
-type Book = {
+type Review = {
     book_id: number,
     title: string,
+    rating: number,
+    username: string,
+    review: string
+}
+
+type Book = {
+    book_id: number,
+    bookid: number,
+    title: string,
     image: string,
+    book_status: string
+}
+
+type BookDetails = {
+    bookid: number,
+    title: string,
+    author_name: string,
+    image: string,
+    summary: string,
+    year: number,
+    average_rating: number,
+    reviews: Review[],
+    category_title: string,
     book_status: string
 }

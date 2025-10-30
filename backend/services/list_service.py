@@ -1,11 +1,11 @@
 from backend.connection import db
-from backend.models.list_model import Liststb
+from backend.models.list_model import Liststb, ListName
 from backend.services.base_service import BaseService
 from backend.services.validators.list_validator import ListValidator
 
 class ListService(BaseService):
     @staticmethod
-    def add_book(userid, bookid, listname):
+    def add_to_list (userid, bookid, listname):
         list = Liststb(userid=userid, bookid=bookid, listname=listname)
         db.session.add(list)
 
@@ -42,3 +42,7 @@ class ListService(BaseService):
     @staticmethod
     def get_lists_by_user(user_id):
         return BaseService.get_all_by_id(Liststb, Liststb.userid, user_id)
+    
+    @staticmethod
+    def get_book_status(user_id, book_id):
+        return BaseService.get_by_composite(Liststb, {"userid": user_id, "bookid": book_id})

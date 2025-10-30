@@ -1,8 +1,4 @@
 <script lang="ts">
-    type Book = {
-        title: string
-    }
-
     let searchInput = $state<string>();
     let searchSuggestions = $state<Book[]>([]);
     let showSuggestions = $state(false);
@@ -43,7 +39,7 @@
             {#if showSuggestions}
             <div id="searchSuggestions">
                 {#each searchSuggestions as suggestion}
-                <a href="/">{suggestion.title}</a>
+                <a href="/book/{suggestion.bookid}">{suggestion.title}</a>
             {/each}
         </div>
         {/if}
@@ -78,7 +74,7 @@
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 100%;
+        top: 48%;
         left: 0;
         background-color: #fff;
         padding: 1%;

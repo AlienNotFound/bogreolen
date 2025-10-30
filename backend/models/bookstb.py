@@ -28,7 +28,6 @@ class Bookstb(db.Model):
         books = {field.name:getattr(self, field.name) for field in self.__table__.c}
         books['author'] = self.author.name
         books['category'] = self.category.title
-
         books['reviews'] = [r.to_dict() for r in self.reviews]
 
         return books
