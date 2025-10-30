@@ -3,7 +3,6 @@
     import type { PageData, ActionData } from './$types';
     let { data, form }: { data: PageData, form: ActionData } = $props();
     let listval = $state();
-    console.log(data.book_status);
     const method = data.book_status ? "?/move_to_list" : "?/add_to_list";
 
     const listMap: Record<string, string> = {
@@ -40,31 +39,40 @@
                 <form method="POST" action={method} use:enhance>
                     {#if form?.duplicate_error}<p class="error">You've already added this book to a list.</p>{/if}
                     <input type="hidden" name="bookid" value={data.bookid}>
-    
+                    
                     <select name="listname" id="lists" bind:value={listval}>
                         <option value="WANT_TO_READ">Want to read</option>
                         <option value="READING">Reading</option>
                         <option value="FINISHED">Finished</option>
                         <option value="DIDNTFINISH">Didn't finish</option>
                     </select>
-    
+                    
                     <button type="submit" disabled={!listval}>Submit</button>
                 </form>
             </div>
         </div>
         <div id="reviewsSection">
+            <h3>Skriv en anmeldelse</h3>
+            {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
+            <form method="POST" id="createReview" action="?/create_review">
+                <input type="hidden" name="bookid" value={data.bookid}>
+                <input name="rating" type="number">
+                <textarea name="reviewtext" id="" rows="10"></textarea>
+                <button>Submit</button>
+            </form>
+            
             {#if data.reviews.length > 0}
-                {#each data.reviews as review}
-                    <h2>Skrevet af {review.username}</h2>
-                    <div id="reviewStars">
-                        {#each { length: review.rating} }
-                            <h2>★</h2>
-                        {/each}
-                    </div>
-                    <div id="reaviewText">
-                        <p>{review.review}</p>
-                    </div>
-                {/each}
+            {#each data.reviews as review}
+                <h2>Skrevet af {review.username}</h2>
+                <div id="reviewStars">
+                    {#each { length: review.rating} }
+                        <h2>★</h2>
+                    {/each}
+                </div>
+                <div id="reaviewText">
+                    <p>{review.review}</p>
+                </div>
+            {/each}
             
             {:else}
                 <h2>No reviews yet.</h2>
@@ -85,6 +93,10 @@
         justify-content: space-between;
     }
 
+    #createReview {
+        display: flex;
+        flex-direction: column;
+    }
     #reviewStars {
         width: 15vw;
     }

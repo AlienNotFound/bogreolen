@@ -37,7 +37,7 @@ def create_review():
     data = request.get_json()
 
     bookid = data.get('bookid')
-    userid = data.get('userid')
+    userid = 1
     rating = data.get('rating')
     reviewtext = data.get('reviewtext')
 
@@ -50,8 +50,10 @@ def create_review():
 
     if isinstance(result, Reviewstb):
         return jsonify({"Success": "Review created!"}), 200
+    if result == 'You\'ve already reviewed this book':
+        return jsonify({"Error": f"{result}"}), 409
     else:
-        return jsonify({"Error": "An error occured"}), 500
+        return jsonify({"Error": f"{result}An error occured"}), 500
     
 @review_bp.route('/review/<id>', methods=['PUT'])
 def edit_review(id):

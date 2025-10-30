@@ -44,6 +44,31 @@ export const actions = {
             console.error(error);
             return { success: false, error: "Failed to add book to list." };
         }
+    },
+    create_review: async ({ request }) => {
+        const formData = await request.formData();
+        const bookid = formData.get('bookid');
+        const rating = formData.get('rating');
+        const reviewtext = formData.get('reviewtext');
+
+        try {
+            const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
+                bookid,
+                rating,
+                reviewtext
+            })
+
+            if (response?.Error == "Error: You've already reviewed this book") {
+                return fail(40, { success: false, duplicate_error: response?.Error });
+            } else if (response?.Error) {
+                return fail(400, { success: false, error: response?.Error });
+            }
+        } catch (error: any) {
+            if (error.message.includes("You've already reviewed this book")) {
+                return fail(409, { success: false, duplicate_error: error.message });
+            }
+            return { success: false, error: "Failed to add review." };
+        }
     }
 }
 
