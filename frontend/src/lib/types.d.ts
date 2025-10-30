@@ -13,7 +13,7 @@ type Track = {
 }
 
 type Review = {
-    bookid: number,
+    book_id: number,
     title: string,
     rating: number,
     username: string,

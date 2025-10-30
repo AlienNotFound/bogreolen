@@ -1,6 +1,7 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import type { PageData, ActionData } from './$types';
+    import Reviewcard from '$lib/components/reviewcard.svelte';
     let { data, form }: { data: PageData, form: ActionData } = $props();
     let listval = $state();
     const method = data.book_status ? "?/move_to_list" : "?/add_to_list";
@@ -63,15 +64,11 @@
             
             {#if data.reviews.length > 0}
             {#each data.reviews as review}
-                <h2>Skrevet af {review.username}</h2>
-                <div id="reviewStars">
-                    {#each { length: review.rating} }
-                        <h2>★</h2>
-                    {/each}
-                </div>
-                <div id="reaviewText">
-                    <p>{review.review}</p>
-                </div>
+            <Reviewcard
+                username={review.username}
+                rating={review.rating}
+                review={review.review}
+                />
             {/each}
             
             {:else}
@@ -96,12 +93,5 @@
     #createReview {
         display: flex;
         flex-direction: column;
-    }
-    #reviewStars {
-        width: 15vw;
-    }
-    
-    #reviewStars, #subHeader {
-        display: flex;
     }
 </style>
