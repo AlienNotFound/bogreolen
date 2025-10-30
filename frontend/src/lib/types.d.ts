@@ -22,6 +22,7 @@ type Review = {
 
 type Book = {
     book_id: number,
+    bookid: number,
     title: string,
     image: string,
     book_status: string
