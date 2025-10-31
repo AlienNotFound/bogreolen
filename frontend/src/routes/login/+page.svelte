@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { ActionData } from './$types';
   import { enhance } from '$app/forms';
-  import { redirect } from '@sveltejs/kit';
-
   export let form: ActionData;
 </script>
 
@@ -28,9 +26,9 @@
       <button type="submit">Login</button>
     </div>
 
-    {#if form?.error}
+    {#if form?.Error}
       <div class="notice error">
-        {form.error}
+        {form.Error}
       </div>
     {/if}
   </form>
