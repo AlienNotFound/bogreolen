@@ -3,10 +3,12 @@ from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
 from backend.services.list_service import ListService
+from flask_jwt_extended import jwt_required
 
 book_bp = Blueprint('book_bp', __name__)
 
 @book_bp.route('/books', methods=['GET'])
+@jwt_required()
 def get_all_books():
     books = BookService.get_all_books()
 
@@ -16,6 +18,7 @@ def get_all_books():
         return jsonify({"Error": "Books not found"}), 400
     
 @book_bp.route('/book/<id>', methods=['GET'])
+@jwt_required()
 def get_books_by_id(id):
     book = BookService.get_book_by_id(id)
 
@@ -41,6 +44,7 @@ def get_books_by_id(id):
         return jsonify({"Error": "Book not found"}), 400
     
 @book_bp.route('/book', methods=['POST'])
+@jwt_required()
 def create_book():
     data = request.get_json()
 
@@ -82,6 +86,7 @@ def create_book():
         return jsonify({"Error": "An error occured"}), 500
     
 @book_bp.route('/book/<id>', methods=['PUT'])
+@jwt_required()
 def edit_book(id):
     data = request.get_json()
 
@@ -122,6 +127,7 @@ def edit_book(id):
         return jsonify({"Error": "An error occured"}), 500
     
 @book_bp.route('/search/<title>', methods=['GET'])
+@jwt_required()
 def serach_for_book(title):
     book = BookService.search_for_book(title)
 

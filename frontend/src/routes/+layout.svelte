@@ -1,6 +1,7 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-
+	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	let { children } = $props();
 </script>
 
@@ -8,12 +9,19 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<header>
-	<a href="/">
-		<h1>Bogreolen</h1>
-	</a>
-	<h2>Profil</h2>
-</header>
+{#if page.url.pathname != "/login"}
+	<header>
+		<a href="/">
+			<h1>Bogreolen</h1>
+		</a>
+		<div id="menu-right">
+			<h2>Profil</h2>
+			<form method="POST" action="?/logout" use:enhance>
+				<button type="submit">Log ud</button>
+			</form>
+		</div>
+	</header>
+{/if}
 
 <main>
 	{@render children?.()}
@@ -52,6 +60,14 @@
 		align-content: center;
 		box-sizing: border-box;
 		padding: 0 1%;
+	}
+
+	#menu-right {
+		width: 10vw;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	main {

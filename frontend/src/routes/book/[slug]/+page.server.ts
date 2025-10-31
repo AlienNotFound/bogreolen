@@ -2,16 +2,17 @@ import { fetchGetRequestById, fetchPOSTRequest, fetchPUTRequest } from "$lib/api
 import { fail } from "@sveltejs/kit";
 
 export const actions = {
-    add_to_list: async ({ request }) => {
+    add_to_list: async ({ request, cookies }) => {
         const formData = await request.formData();
         const bookid = formData.get('bookid');
         const listname = formData.get('listname');
+        const token = cookies.get('access_token');
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('add-to-list', {
                 bookid,
                 listname
-            });
+            }, token);
                 
             if (response?.Error == 'This book is already on a list!') {
                 return fail(400, { success: false, duplicate_error: response?.Error });
@@ -24,15 +25,16 @@ export const actions = {
                 return { success: false, error: "Failed to add book to list." };
             }
         },
-    move_to_list: async ({ request }) => {
+    move_to_list: async ({ request, cookies }) => {
         const formData = await request.formData();
         const bookid = formData.get('bookid');
         const listname = formData.get('listname');
+        const token = cookies.get('access_token');
         
         try {
             const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('move-to-list/' + bookid, {
                 listname
-            });
+            }, token);
 
             console.log(response)
     
@@ -45,18 +47,19 @@ export const actions = {
             return { success: false, error: "Failed to add book to list." };
         }
     },
-    create_review: async ({ request }) => {
+    create_review: async ({ request, cookies }) => {
         const formData = await request.formData();
         const bookid = formData.get('bookid');
         const rating = formData.get('rating');
         const reviewtext = formData.get('reviewtext');
+        const token = cookies.get('access_token');
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
                 bookid,
                 rating,
                 reviewtext
-            })
+            }, token)
 
             if (response?.Error == "Error: You've already reviewed this book") {
                 return fail(40, { success: false, duplicate_error: response?.Error });
@@ -72,11 +75,11 @@ export const actions = {
     }
 }
 
-export const load = async ({ params }) => {
+export const load = async ({ params, cookies }) => {
+    const token = cookies.get('access_token');
     try {
-        const book = await fetchGetRequestById<BookDetails>('book/', params.slug);
-        const status = await fetchGetRequestById<{book_status: string}>('book-status/', params.slug);
-
+        const book = await fetchGetRequestById<BookDetails>('book/', params.slug, token);
+        const status = await fetchGetRequestById<{book_status: string}>('book-status/', params.slug, token);
         
         return { 
             ...book,

@@ -1,16 +1,18 @@
 from flask import Blueprint, jsonify, request
 from backend.models import Liststb
 from backend.services.list_service import ListService
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 list_bp = Blueprint('list_bp', __name__)
 
 @list_bp.route('/add-to-list', methods=['POST'])
+@jwt_required()
 def add_to_list():
     data = request.get_json()
     book_id = data.get('bookid')
     listname = data.get('listname')
 
-    user_id = 1
+    user_id = get_jwt_identity()
 
     if (ListService.get_list_by_user_and_book(user_id, book_id)):
         return jsonify({"Error": "This book is already on a list!"})
@@ -23,11 +25,12 @@ def add_to_list():
         return jsonify({"Error": f"{result}"}), 400
 
 @list_bp.route('/move-to-list/<id>', methods=['PUT'])
+@jwt_required()
 def move_to_list(id):
     data = request.get_json()
     listname = data.get('listname')
 
-    userid = 1
+    userid = get_jwt_identity()
     bookid = id
 
     result = ListService.move_to_list(userid, bookid, listname)
@@ -37,10 +40,11 @@ def move_to_list(id):
     else:
         return jsonify({"Error": f"{result}"}), 400
 
-@list_bp.route('/delete-from-lists', methods=['DELETE'])
-def delete_book_from_lists():
-    userid = 1
-    bookid = 1
+@list_bp.route('/delete-from-lists/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_book_from_lists(id):
+    userid = get_jwt_identity()
+    bookid = id
 
     if ListService.get_list_by_user_and_book(userid, bookid) == None:
         return jsonify({"Error": "Entry does not exist."}), 404
@@ -53,8 +57,9 @@ def delete_book_from_lists():
         return jsonify({"Error": f"{list}Could not delete entry."}), 500
     
 @list_bp.route('/book-status/<book_id>', methods=['GET'])
+@jwt_required()
 def get_book_status(book_id):
-    userid = 1
+    userid = get_jwt_identity()
 
     result = ListService.get_book_status(userid, book_id)
 

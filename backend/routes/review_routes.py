@@ -2,10 +2,12 @@ from flask import Blueprint, jsonify, request
 from backend.models import Reviewstb
 from backend.services.review_service import ReviewService
 from backend.DTOs.review_dto import ReviewDTO
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 review_bp = Blueprint('review_bp', __name__)
 
 @review_bp.route('/reviews', methods=['GET'])
+@jwt_required()
 def get_all_reviews():
     reviews = ReviewService.get_all_reviews()
 
@@ -15,17 +17,20 @@ def get_all_reviews():
         return jsonify({"Error": "Reviews not found!"}), 400
     
 @review_bp.route('/review/<id>', methods=['GET'])
+@jwt_required()
 def get_review_by_id(id):
     review = ReviewService.get_review_by_id(id)
 
     if review:
         return jsonify(ReviewDTO.to_dict(review)), 200
     else:
-        return jsonify({"Error": "Review not found!"}), 400
+        return jsonify({"Error": f"Review not found!"}), 400
 
-@review_bp.route('/reviews/book/<id>', methods=['GET'])
-def get_reviews_based_on_user_list(id):
-    reviews = ReviewService.get_reviews_based_on_user_list(id)
+@review_bp.route('/reviews/user', methods=['GET'])
+@jwt_required()
+def get_reviews_based_on_user_list():
+    user_id = get_jwt_identity()
+    reviews = ReviewService.get_reviews_based_on_user_list(user_id)
 
     if reviews:
         return jsonify([review for review in reviews]), 200
@@ -33,11 +38,12 @@ def get_reviews_based_on_user_list(id):
         return jsonify({"Error": "Reviews not found!"}), 400
     
 @review_bp.route('/review', methods=['POST'])
+@jwt_required()
 def create_review():
     data = request.get_json()
 
     bookid = data.get('bookid')
-    userid = 1
+    userid = get_jwt_identity()
     rating = data.get('rating')
     reviewtext = data.get('reviewtext')
 
@@ -56,6 +62,7 @@ def create_review():
         return jsonify({"Error": f"{result}An error occured"}), 500
     
 @review_bp.route('/review/<id>', methods=['PUT'])
+@jwt_required()
 def edit_review(id):
     if ReviewService.get_review_by_id(id) == None:
         return jsonify({"Error": "Review does not exist."}), 404
@@ -77,6 +84,7 @@ def edit_review(id):
         return jsonify({"Error": "An error occured"}), 500
 
 @review_bp.route('/review/<id>', methods=['DELETE'])
+@jwt_required()
 def delete_review(id):
     if ReviewService.get_review_by_id(id) == None:
         return jsonify({"Error": "Review does not exist."}), 404
