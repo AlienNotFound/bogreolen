@@ -1,7 +1,8 @@
 from backend.connection import db
 from backend.models import Authorstb
+from backend.services.base_service import BaseService
 
-class AuthorService:
+class AuthorService(BaseService):
     @staticmethod
     def create_author(name):
         author = Authorstb(name=name)
@@ -37,3 +38,7 @@ class AuthorService:
             return author
         
         return None
+
+    @staticmethod
+    def get_all_authors():
+        return BaseService.get_all(Authorstb)

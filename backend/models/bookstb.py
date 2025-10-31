@@ -14,7 +14,7 @@ class Bookstb(db.Model):
     title: Mapped[str] = mapped_column(String(30))
     authorid: Mapped[int] = mapped_column(ForeignKey('authorstb.authorid'), nullable=False)
     author: Mapped['Authorstb'] = relationship('Authorstb', back_populates='books')
-    image: Mapped[str] = mapped_column(String(30))
+    image: Mapped[str] = mapped_column(String(200))
     summary: Mapped[str] = mapped_column(String(200))
     year: Mapped[int]
     categoryid: Mapped[int] = mapped_column(ForeignKey('categoriestb.categoryid'), nullable=False)

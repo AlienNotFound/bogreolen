@@ -30,6 +30,7 @@ def create_app(test_config = None):
     from backend.routes.list_route import list_bp
     from backend.routes.track_routes import track_bp
     from backend.routes.image_route import image_bp
+    from backend.routes.author_routes import author_bp
     
     app.register_blueprint(book_bp)
     app.register_blueprint(user_bp)
@@ -37,6 +38,7 @@ def create_app(test_config = None):
     app.register_blueprint(list_bp)
     app.register_blueprint(track_bp)
     app.register_blueprint(image_bp)
+    app.register_blueprint(author_bp)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["JWT_COOKIE_SECURE"] = False

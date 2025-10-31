@@ -14,7 +14,7 @@ def upload_image():
     status, result = ImageService.upload_a_blob(file)
 
     if status == 'Success':
-        return jsonify({"Success": "Image succesfully uploaded!"}), 200
+        return jsonify({"Success": "Image succesfully uploaded!", "URL": result}), 200
     elif result == "Invalid filetype":
         return jsonify({"Error": "Invalid filetype"}), 403
     else:

@@ -22,8 +22,8 @@
 
     {#if data && data.title}
     <div id="bookWrapper">
-        <div id="bookCover">
-            <img src={data.image} alt="Bog cover" />
+            <div id="bookCover">
+                <img src={data.image} alt="Bog cover" />
             </div>
             <div id="bookDetails">
                 <h1>{data.title}</h1>
@@ -80,6 +80,11 @@
     {/if}
 
     <style>
+
+        #bookCover img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
         #bookWrapper {
             display: grid;
             grid-template-columns: 35% 45%;

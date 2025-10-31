@@ -10,21 +10,22 @@ class BookService(BaseService):
     @staticmethod
     def create_book(title, authorid, image, summary, year, categoryid):
         try:
-            sql = text("""
-                    CALL AddBook(:title, :authorid, :image, :summary, :year, :categoryid)""")
-            result = db.session.execute(sql, {
-                "title": title,
-                "authorid":authorid,
-                "image":image,
-                "summary":summary,
-                "year":year,
-                "categoryid":categoryid,
-            })
-
-            db.session.commit()
-
-            return result.fetchone()[0]
+            existing_book = BookService.get_book_by_id(title)
             
+            if existing_book:
+                return "Book already exists!"
+            
+            book = Bookstb(title=title,
+                           authorid=authorid,
+                           image=image,
+                           summary=summary,
+                           year=year,
+                           categoryid=categoryid)
+            db.session.add(book)
+
+            success, result = BaseService.commit_session(book)
+
+            return result
         except Exception as e:
             print(f'Database error: ', e)
     
@@ -54,6 +55,15 @@ class BookService(BaseService):
     @staticmethod
     def get_book_by_id(id):
         book = db.session.query(Bookstb).filter_by(bookid=id).first()
+        if book:
+            return book
+        
+        return None
+    
+    @staticmethod
+    def get_book_by_title(title):
+        book = BaseService.get_by_id(Bookstb, Bookstb.title, title)
+
         if book:
             return book
         
