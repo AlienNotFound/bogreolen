@@ -37,3 +37,11 @@ async function fetchModalInfo(token: string) {
     return [];
   }       
 }
+
+export const actions = {
+  logout: async ({ cookies }) => {
+    cookies.delete('access_token', { path: '/'});
+
+    throw redirect(307, '/login');
+  }
+}
