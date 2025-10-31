@@ -1,23 +1,23 @@
 <script lang="ts">
+    import { fetchGETRequest } from "$lib/api/common";
     let searchInput = $state<string>();
     let searchSuggestions = $state<Book[]>([]);
     let showSuggestions = $state(false);
-
+    
     async function fetchSearch(query: string) {
         try {
             if (query) {
-                const response = await fetch('http://localhost:8000/search/' + searchInput);
-                const result = await response.json()
+                const result = await fetchGETRequest<Book[]>('search/' + searchInput);
                 searchSuggestions = result;
-                if (result) {
+                if (searchSuggestions) {
                     showSuggestions = true;
                 }
-                console.log(result)
             }
         } catch (err) {
             console.error(err)
         }
     }
+
 </script>
 <div id="searchbar">
     <div id=searchbarwrapper>

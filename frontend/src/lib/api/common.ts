@@ -4,19 +4,41 @@ const LOCAL_API = 'http://localhost:8000/'
 const DOCKER_API = 'http://backend:5000/'
 
 export const API_BASE_URL = browser ? LOCAL_API : DOCKER_API;
+export async function fetchGetRequestById<T>(route: string, id: string, token: string = ""): Promise<T> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-export async function fetchGetRequestById<T>(route: string, id: string): Promise<T> {
-    const response = await fetch(API_BASE_URL + route + id)
+    const response = await fetch(API_BASE_URL + route + id, {
+        method: 'GET',
+        headers,
+        credentials: 'include'
+    })
+    console.log('➡️ URL:', API_BASE_URL + route + id);
+
     const result: T = await response.json();
-    // console.log(result);    
     return result
 }
 
-export async function fetchPOSTRequest<T>(route: string, body: any): Promise<T> {
+export async function fetchGETRequest<T>(route: string, token: string = ""): Promise<T> {
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(API_BASE_URL + route, {
+        method: 'GET',
+        headers,
+        credentials: 'include'
+    })
+    const result: T = await response.json();
+    return result
+}
+
+export async function fetchPOSTRequest<T>(route: string, body: any, token: string = ""): Promise<T> {
     const response = await fetch(API_BASE_URL + route, {
         method: 'POST',
+        credentials: 'include',
         body: JSON.stringify(body),
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     })
@@ -37,11 +59,13 @@ export async function fetchPOSTRequest<T>(route: string, body: any): Promise<T> 
     return result as T;
 }
 
-export async function fetchPUTRequest<T>(route: string, body: any): Promise<T> {
+export async function fetchPUTRequest<T>(route: string, body: any, token: string = ""): Promise<T> {
     const response = await fetch(API_BASE_URL + route, {
         method: 'PUT',
+        credentials: 'include',
         body: JSON.stringify(body),
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     })

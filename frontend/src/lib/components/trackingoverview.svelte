@@ -1,35 +1,15 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { fetchGetRequestById, fetchPOSTRequest } from "$lib/api/common";
+    import { fetchGetRequestById, fetchPOSTRequest, fetchGETRequest } from "$lib/api/common";
     import { getCurrentWeek, matchTrackToDate } from "$lib/utils/date";
 
-    let tracks = $state<Track[]>([]);
-    let modalInfo = $state<Book[]>([]);
+    let { tracks, modalInfo } = $props<{ tracks: Track[], modalInfo: Book[]}>();
+
     let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
     let error_message = $state();
     let formData: Record<number, {current_page: number, last_page: number, error_message: string}> = {};
-
-    async function fetchTracks() {
-        try {
-            tracks = await fetchGetRequestById<Track[]>('tracks/user/', '1');          
-        } catch (error) {
-            console.error(error);
-        } finally {
-            loading = false;
-        }
-    }
-    
-    async function fetchModalInfo() {
-        try {
-            modalInfo = await fetchGetRequestById('tracks/modal/user/', '1')
-        } catch (err) {
-            console.error(err);
-        } finally {
-            loading = false;
-        }        
-    }
 
     async function markAsRead(book_id: number) {
         const data = formData[book_id];
@@ -56,14 +36,13 @@
     }
 
     onMount(async () => {
-        await Promise.all([fetchTracks(), fetchModalInfo()]);
         loading = false;
     });
 
     function modalFilter(tracks: Book[]): Book[] {
         const result = tracks
                         .filter(t => t.book_status === "Reading" || t.book_status === "Want to read")
-                        .map(t => ({book_id: t.book_id, title: t.title, image: t.image, book_status: t.book_status}));
+                        .map(t => ({book_id: t.book_id, bookid: t.bookid, title: t.title, image: t.image, book_status: t.book_status}));
         return result
     }
 
@@ -76,7 +55,7 @@
 
     function toggleModal() {
         if (!showModal) {
-            modalInfo.forEach(book => {
+            modalInfo.forEach((book: Book) => {
                 if (!formData[book.book_id]) {
                     formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
                 }

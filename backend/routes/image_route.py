@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from backend.services.image_service import ImageService
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 image_bp = Blueprint('image_bp', __name__)
 
 @image_bp.route('/image', methods=['POST'])
+@jwt_required()
 def upload_image():
     file = request.files['file']
     if not file:
@@ -19,6 +21,7 @@ def upload_image():
         return jsonify({"Error": "An error occured"}), 500
 
 @image_bp.route('/image', methods=['DELETE'])
+@jwt_required()
 def delete_image():
     file = request.get_json()
     image = file.get('path')

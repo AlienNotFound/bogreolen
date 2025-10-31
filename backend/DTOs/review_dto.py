@@ -2,7 +2,7 @@ class ReviewDTO:
     @staticmethod
     def to_dict(review):
         return {
-            "reviewid": review.userid,
+            "reviewid": review.reviewid,
             "bookid": review.bookid,
             "userid": review.userid,
             "rating": review.rating,

@@ -1,10 +1,10 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
 load_dotenv()
 
@@ -39,11 +39,16 @@ def create_app(test_config = None):
     app.register_blueprint(image_bp)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+    app.config["JWT_COOKIE_SECURE"] = False
+    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"] 
+    app.config["JWT_ACCESS_COOKIE_NAME"] = 'access_token'
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
     JWTManager(app)
-    
+
     CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
-    #  supports_credentials=True,
-    #  allow_headers=['Content-Type', 'Authorization'],
+     supports_credentials=True,
      allow_headers=['Content-Type'],
      methods=['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT'])
 

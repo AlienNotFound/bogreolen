@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from backend.models import Userstb
 from backend.services.user_service import UserService
 from backend.DTOs.user_dto import UserDTO
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, set_access_cookies
 from werkzeug.security import check_password_hash
 
 user_bp = Blueprint('user_bp', __name__)
@@ -18,6 +18,7 @@ def get_all_users():
         return jsonify({"Error": "Users not found!"}), 400
     
 @user_bp.route('/user/<id>', methods=['GET'])
+@jwt_required()
 def get_user_by_id(id):
     user = UserService.get_user_by_id(id)
 
@@ -56,6 +57,7 @@ def create_user():
         return jsonify({"Error": "An error occured"}), 500
     
 @user_bp.route('/user/<id>', methods=['PUT'])
+@jwt_required()
 def edit_user(id):
     if UserService.get_user_by_id(id) == None:
         return jsonify({"Error": "User does not exist."}), 404
@@ -89,6 +91,7 @@ def edit_user(id):
         return jsonify({"Error": "An error occured"}), 500
 
 @user_bp.route('/user/<id>', methods=['DELETE'])
+@jwt_required()
 def delete_user(id):
     if UserService.get_user_by_id(id) == None:
         return jsonify({"Error": "User does not exist."}), 404
@@ -115,6 +118,9 @@ def user_login():
     if not user or not check_password_hash(user.passwordhash, password):
         return jsonify({'error': f'Wrong username or password'}), 401
 
-    access_token = create_access_token(identity = username)
+    access_token = create_access_token(identity = str(user.userid))
 
-    return jsonify({'access_token': access_token})
+    response = jsonify({'access_token': access_token})
+    # set_access_cookies(response, access_token)
+
+    return response

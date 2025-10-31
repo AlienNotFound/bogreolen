@@ -2,14 +2,16 @@ from flask import Blueprint, jsonify, request
 from backend.models import Trackstb
 from backend.services.track_service import TrackService
 from backend.DTOs.track_dto import TrackDTO
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 track_bp = Blueprint('track_bp', __name__)
 
 @track_bp.route('/track/<id>', methods=['POST'])
+@jwt_required()
 def track_book(id):
     data = request.get_json()
 
-    user_id = 1
+    user_id = get_jwt_identity()
     book_id = id
 
     read_today = data.get('read_today')
@@ -30,6 +32,7 @@ def track_book(id):
         return jsonify({"Error": f"{result}An error occured"}), 500
     
 @track_bp.route('/track/<id>', methods=['PUT'])
+@jwt_required()
 def edit_track(id):
     if TrackService.get_track_by_id(id) == None:
         return jsonify({"Error": "Track does not exist."}), 404
@@ -51,6 +54,7 @@ def edit_track(id):
         return jsonify({"Error": f"{result} An error occured"}), 500
     
 @track_bp.route('/track/<id>', methods=['DELETE'])
+@jwt_required()
 def delete_track(id):
     if TrackService.get_track_by_id(id) == None:
         return jsonify({"Error": "Track does not exist."}), 404
@@ -63,6 +67,7 @@ def delete_track(id):
         return jsonify({"Error": "Could not delete review."}), 500
     
 @track_bp.route('/track/<id>', methods=['GET'])
+@jwt_required()
 def get_track_by_id(id):
     track = TrackService.get_track_by_id(id)
 
@@ -71,20 +76,22 @@ def get_track_by_id(id):
     else:
         return jsonify({"Error": "Track not found!"}), 400
     
-@track_bp.route('/tracks/user/<id>', methods=['GET'])
-def get_tracks_by_user(id):
-    # user_id = 1
-    tracks = TrackService.get_all_tracks_by_user(id)
+@track_bp.route('/tracks/user', methods=['GET'])
+@jwt_required()
+def get_tracks_by_user():
+    user_id = get_jwt_identity()
+    tracks = TrackService.get_all_tracks_by_user(user_id)
 
     if tracks:
         return jsonify([TrackDTO.overview_dict(t) for t in tracks]), 200
     else:
         return jsonify({"Error": "Track not found!"}), 400
 
-@track_bp.route('/tracks/modal/user/<id>', methods=['GET'])
-def get_modal_info_by_user(id):
-    # user_id = 1
-    tracks = TrackService.get_status_by_user(id)
+@track_bp.route('/tracks/modal/user', methods=['GET'])
+@jwt_required()
+def get_modal_info_by_user():
+    user_id = get_jwt_identity()
+    tracks = TrackService.get_status_by_user(user_id)
 
     if tracks:
         return jsonify([TrackDTO.modal_dict(t) for t in tracks]), 200
