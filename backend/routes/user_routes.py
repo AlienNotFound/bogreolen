@@ -44,17 +44,17 @@ def create_user():
     )
 
     if isinstance(result, Userstb):
-        return jsonify({"Success": "User created!"}), 200
+        return jsonify({"Message": "User created!"}), 200
     elif result == -1:
-        return jsonify({"Error": "Password must be the same."}), 409
+        return jsonify({"Message": "Password must be the same."}), 409
     elif result == -2:
-        return jsonify({"Error": "Invaled email format."}), 403
+        return jsonify({"Message": "Invalid email format."}), 403
     elif 'USERNAME_EXISTS' in result:
-        return jsonify({"Error": "Username already exists."}), 409
+        return jsonify({"Message": "Username already exists."}), 409
     elif 'EMAIL_EXISTS' in result:
-        return jsonify({"Error": "Email already exists."}), 409
+        return jsonify({"Message": "Email already exists."}), 409
     else:
-        return jsonify({"Error": "An error occured"}), 500
+        return jsonify({"Message": "An error occured"}), 500
     
 @user_bp.route('/user/<id>', methods=['PUT'])
 @jwt_required()
