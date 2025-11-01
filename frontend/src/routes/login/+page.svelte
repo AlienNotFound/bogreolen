@@ -9,31 +9,40 @@
 </svelte:head>
 
 <h1>Login</h1>
+<form method="post" use:enhance>
+  <label for="username">Email</label>
+  <input type="username" name="username" id="email" required />
 
-<section>
-  <form method="post" use:enhance>
-    <div class="group">
-      <label for="username">Email</label>
-      <input type="username" name="username" id="email" required />
+  <label for="password">Password</label>
+  <input type="password" name="password" id="password" required />
+
+  <button type="submit">Login</button>
+
+  {#if form?.Error}
+    <div class="notice error">
+      {form.Error}
     </div>
+  {/if}
+</form>
 
-    <div class="group">
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required />
-    </div>
+<div class="actions">
+  <p>Don't have an account?</p>
+  <a href="/signup">Sign Up</a>
+</div>
 
-    <div class="submit-container">
-      <button type="submit">Login</button>
-    </div>
+<style>
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    height: 20vh;
+  }
 
-    {#if form?.Error}
-      <div class="notice error">
-        {form.Error}
-      </div>
-    {/if}
-  </form>
+  form input {
+    margin-bottom: 3%;
+  }
 
-  <div class="actions">
-    <a href="/signup">Sign Up</a>
-  </div>
-</section>
+  a {
+    font-weight: 600;
+  }
+</style>
