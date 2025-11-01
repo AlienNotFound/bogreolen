@@ -31,7 +31,7 @@
   {/if}
 </form>
 
-<p>Already have an account? </p>
+<p>Already have an account?</p>
 <a href="/login">Log in</a>
 
 <style>
