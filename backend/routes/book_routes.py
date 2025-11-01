@@ -66,7 +66,7 @@ def create_book():
     if category == None:
         category = CategoryService.create_category(title=category_title)
 
-    result = BookService.create_book(
+    result, message = BookService.create_book(
         title=title,
         authorid=author.authorid,
         image=image,
@@ -75,13 +75,13 @@ def create_book():
         categoryid=category.categoryid
     )
 
-    if listname and result > 0:
-        ListService.add_book(userid=1, bookid=BookService.get_latest_book().bookid, listname=listname)
+    if listname and result:
+        ListService.add_to_list(userid=1, bookid=BookService.get_latest_book().bookid, listname=listname)
 
-    if result > 0:
-        return jsonify({"Success": "Book created!"}), 200
-    elif result == -1:
-        return jsonify({"Error": "Book already exists."}), 409
+    if result:
+        return jsonify({"Success": f"Book created!"}), 200
+    elif not result and message == "Book already exists!":
+        return jsonify({"Error": f"{message}"}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
     

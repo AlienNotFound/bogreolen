@@ -59,6 +59,32 @@ export async function fetchPOSTRequest<T>(route: string, body: any, token: strin
     return result as T;
 }
 
+export async function fetchPOSTImageRequest<T>(route: string, body: any, token: string = ""): Promise<T> {
+    const response = await fetch(API_BASE_URL + route, {
+        method: 'POST',
+        credentials: 'include',
+        body: body,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    let result: any;
+
+    try {
+        result = await response.json()
+    } catch {
+        result = null;
+    }
+
+    if (!response.ok) {
+        const message = result?.Error || result?.message || 'Unknown error';
+        throw new Error(message);
+    }
+
+    return result as T;
+}
+
 export async function fetchPUTRequest<T>(route: string, body: any, token: string = ""): Promise<T> {
     const response = await fetch(API_BASE_URL + route, {
         method: 'PUT',
