@@ -10,10 +10,10 @@ class BookService(BaseService):
     @staticmethod
     def create_book(title, authorid, image, summary, year, categoryid):
         try:
-            existing_book = BookService.get_book_by_id(title)
+            existing_book = BookService.get_book_by_title(title)
             
             if existing_book:
-                return "Book already exists!"
+                return False, "Book already exists!"
             
             book = Bookstb(title=title,
                            authorid=authorid,
@@ -25,7 +25,7 @@ class BookService(BaseService):
 
             success, result = BaseService.commit_session(book)
 
-            return result
+            return success, result
         except Exception as e:
             print(f'Database error: ', e)
     
