@@ -7,7 +7,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
     const token = event.cookies.get('access_token');
-    if (!token && event.url.pathname != "/login") {
+    if (!token && event.url.pathname != "/login" && event.url.pathname != "/signup") {
         console.log(token)
         throw redirect(302, '/login');
     }

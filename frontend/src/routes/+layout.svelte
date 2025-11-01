@@ -9,7 +9,7 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{#if page.url.pathname != "/login"}
+{#if page.url.pathname != "/login" && page.url.pathname != "/signup"}
 	<header>
 		<a href="/">
 			<h1>Bogreolen</h1>
@@ -55,6 +55,11 @@
 	:global(input:focus) {
 		outline: none;
     }
+
+	:global(.error) {
+		color: #bf2b24;
+		font-weight: 800;
+	}
 	header {
 		display: flex;
 		justify-content: space-between;
