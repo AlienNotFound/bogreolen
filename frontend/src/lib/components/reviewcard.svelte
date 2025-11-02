@@ -1,5 +1,6 @@
 <script lang="ts">
   export let username: string;
+  export let user_id: number;
   export let rating: number;
   export let review: string;
   export let title: string | null = null;
@@ -12,7 +13,9 @@
     </h2>
 
   <div class="review-header">
-    <span class="username">{username}</span>
+    <a href="/user/{user_id}">
+      <h3 class="username">{username}</h3>
+    </a>
     <div class="stars">
       {#each Array(rating) as _}
         <span>★</span>
@@ -36,9 +39,9 @@
     justify-content: space-between;
     align-items: center;
   }
-  .username {
+  /* .username {
     font-weight: bold;
-  }
+  } */
   .stars {
     color: gold;
   }

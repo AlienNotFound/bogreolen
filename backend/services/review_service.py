@@ -2,7 +2,6 @@ from backend.connection import db
 from backend.models import Reviewstb
 from backend.services.list_service import ListService
 from backend.services.base_service import BaseService
-from backend.services.user_service import UserService
 from backend.services.validators.uservalidator import UserValidator
 
 class ReviewService(BaseService):
@@ -53,6 +52,10 @@ class ReviewService(BaseService):
 
         reviews = Reviewstb.query.order_by(Reviewstb.reviewid.desc()).filter(Reviewstb.bookid.in_(book_ids)).all()
 
+    
+    @staticmethod
+    def get_reviews_by_user(user_id):
+        reviews = BaseService.get_all_by_id(Reviewstb, Reviewstb.userid, user_id)
         return [
             {
                 "book_id": review.bookid,

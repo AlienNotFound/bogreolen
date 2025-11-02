@@ -37,6 +37,15 @@ def get_reviews_based_on_user_list():
     else:
         return jsonify({"Error": "Reviews not found!"}), 400
     
+@review_bp.route('/reviews_by_user/<user_id>', methods=['GET'])
+def get_reviews_by_user(user_id):
+    reviews = ReviewService.get_reviews_by_user(user_id)
+
+    if reviews:
+        return jsonify([review for review in reviews]), 200
+    else:
+        return jsonify({"Error": "Reviews not found!"}), 400
+    
 @review_bp.route('/review', methods=['POST'])
 @jwt_required()
 def create_review():

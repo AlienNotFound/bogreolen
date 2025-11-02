@@ -14,6 +14,7 @@ type Track = {
 
 type Review = {
     book_id: number,
+    userid: number,
     title: string,
     rating: number,
     username: string,
@@ -30,6 +31,7 @@ type Book = {
 
 type BookDetails = {
     bookid: number,
+    book_id: number,
     title: string,
     author_name: string,
     image: string,
@@ -39,4 +41,10 @@ type BookDetails = {
     reviews: Review[],
     category_title: string,
     book_status: string
+}
+
+type User = {
+    userid: number,
+    username: string,
+    email: string
 }
