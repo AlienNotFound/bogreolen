@@ -9,7 +9,7 @@ type Track = {
     book_id: number,
     title: string,
     book_status: string,
-    date: string
+    date: Date
 }
 
 type Review = {
