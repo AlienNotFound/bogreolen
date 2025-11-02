@@ -25,6 +25,7 @@
 		"@rollup/rollup-linux-x64-musl": "4.9.5"
 	},
 	"dependencies": {
-		"jsonwebtoken": "^9.0.2"
+		"jsonwebtoken": "^9.0.2",
+		"jwt-decode": "^4.0.0"
 	}
 }
