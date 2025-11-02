@@ -1,5 +1,4 @@
 import { browser } from "$app/environment";
-import { fail } from "@sveltejs/kit";
 const LOCAL_API = 'http://localhost:8000/'
 const DOCKER_API = 'http://backend:5000/'
 
@@ -13,7 +12,6 @@ export async function fetchGetRequestById<T>(route: string, id: string, token: s
         headers,
         credentials: 'include'
     })
-    console.log('➡️ URL:', API_BASE_URL + route + id);
 
     const result: T = await response.json();
     return result

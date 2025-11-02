@@ -68,3 +68,15 @@ def get_book_status(book_id):
     else:
         return jsonify({"book_id": book_id, "book_status": None}), 200
     
+@list_bp.route('/list_by_user/<user_id>')
+def get_lists_by_user(user_id):
+    result = ListService.get_lists_by_user(user_id)
+
+    if result:
+        return jsonify([{"user_id": user_id,
+                        "book_id": r.bookid,
+                        "title": r.book.title,
+                        "book_status": f"{r.listname.value}"} for r in result]), 200
+    else:
+        return jsonify({"user_id": None, "book_status": None}), 200
+    

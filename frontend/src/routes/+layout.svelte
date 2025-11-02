@@ -1,8 +1,10 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
+	import type { LayoutProps, PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	let { children } = $props();
+	
+	let { data, children }: LayoutProps = $props();
 </script>
 
 <svelte:head>
@@ -10,14 +12,14 @@
 </svelte:head>
 
 {#if page.url.pathname != "/login" && page.url.pathname != "/signup"}
-	<header>
-		<a href="/">
-			<h1>Bogreolen</h1>
+<header>
+	<a href="/">
+		<h1>Bogreolen</h1>
 		</a>
 		<div id="menu-right">
-			<h2>Profil</h2>
+			<a href="/user/{data.user_id}"><h2>Profile</h2></a>
 			<a href="/book/create"><h2>Create a new book</h2></a>
-			<form method="POST" action="?/logout" use:enhance>
+			<form method="POST" action="/?/logout" use:enhance>
 				<button type="submit">Log ud</button>
 			</form>
 		</div>
