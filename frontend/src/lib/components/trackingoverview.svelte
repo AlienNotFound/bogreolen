@@ -1,39 +1,13 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { fetchGetRequestById, fetchPOSTRequest, fetchGETRequest } from "$lib/api/common";
     import { getCurrentWeek, matchTrackToDate } from "$lib/utils/date";
 
-    let { tracks, modalInfo } = $props<{ tracks: Track[], modalInfo: Book[]}>();
-
+    let { tracks, modalInfo }: {tracks: Track[], modalInfo: Book[] } = $props();
     let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
     let error_message = $state();
     let formData: Record<number, {current_page: number, last_page: number, error_message: string}> = {};
-
-    async function markAsRead(book_id: number) {
-        const data = formData[book_id];
-        try {
-            if (!data.current_page || !data.last_page) {
-                return;
-            }
-
-            if(data.current_page > data.last_page) {
-                data.error_message = "Current page cannot be higher than last page."
-                return;
-            }
-            await fetchPOSTRequest('track/' + book_id,
-                {
-                    "read_today": true,
-                    "current_page": data.current_page,
-                    "last_page": data.last_page
-                }
-            )
-            toggleModal();
-        } catch (err) {
-            console.error(err);
-        }
-    }
 
     onMount(async () => {
         loading = false;
@@ -81,9 +55,11 @@
             <h3>{day.name} {day.date}</h3>
             <div class="trackList">
                 <p>Books you've read:</p>
-                {#each matchTrackToDate(day.raw_date, tracks) as track}
-                <p>{track.title}</p>
-                {/each}
+                {#if tracks.length > 0}
+                    {#each matchTrackToDate(day.raw_date, tracks) as track}
+                        <p>{track.title}</p>
+                    {/each}
+                {/if}
                 <button onclick={() => toggleModal()}
                         style="display: {day.isToday ? 'inline' : 'none'};
                                 width: 100%;
@@ -102,14 +78,17 @@
                 <h3>{info.title}</h3>
                 <img src={info.image} alt="">
                 
-                <form onsubmit={() => markAsRead(info.book_id)}>
+                <form method="POST" action="?/track_book">
+                    <input type="text" name="book_id" value={info.book_id} hidden>
                     <h4>Current page:</h4>
                     <input type="number"
+                    name="current_page"
                     value={formData[info.book_id].current_page ?? ''} 
                     oninput={(e) => updateField(info.book_id, 'current_page', +e.currentTarget.value)}
                     required>
                     <h4>Last page:</h4>
                     <input type="number"
+                    name="last_page"
                     value={formData[info.book_id].last_page ?? ''}
                     oninput={(e) => updateField(info.book_id, 'last_page', +e.currentTarget.value)}>
                     {#if error_message}

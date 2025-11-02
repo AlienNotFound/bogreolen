@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { fetchGETRequest } from '$lib/api/common.js';
+import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
 
 export const load = async ({ cookies }) => {
   const token = cookies.get('access_token');
@@ -43,5 +43,25 @@ export const actions = {
     cookies.delete('access_token', { path: '/'});
 
     throw redirect(307, '/login');
+  },
+  track_book: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const book_id = formData.get('book_id');
+    const current_page = formData.get('current_page');
+    const last_page = formData.get('last_page'); 
+    const token = cookies.get('access_token');
+
+    try {
+      const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('track/' + book_id, {
+                read_today: true,
+                current_page,
+                last_page
+            }, token);
+
+            console.log(response)
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: "Failed to track book." };
+    }
   }
 }
