@@ -19,6 +19,7 @@
 		<div id="menu-right">
 			<a href="/user/{data.user_id}"><h2>Profile</h2></a>
 			<a href="/book/create"><h2>Create a new book</h2></a>
+			<a href="/tracker"><h2>Tracker</h2></a>
 			<form method="POST" action="/?/logout" use:enhance>
 				<button type="submit">Log ud</button>
 			</form>
@@ -71,7 +72,7 @@
 	}
 
 	#menu-right {
-		width: 15vw;
+		width: 20vw;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;

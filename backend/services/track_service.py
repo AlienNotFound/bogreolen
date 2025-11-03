@@ -17,7 +17,7 @@ class TrackService(BaseService):
         return result
     
     @staticmethod
-    def edit_track(track_id, current_page, last_page):
+    def edit_track(track_id, current_page, last_page, date):
         track = BaseService.get_by_id(Trackstb, Trackstb.track_id, track_id)
 
         if track == None:
@@ -25,6 +25,7 @@ class TrackService(BaseService):
         
         track.current_page = current_page
         track.last_page = last_page
+        track.date = date
 
         _, result = BaseService.commit_session(track)
 

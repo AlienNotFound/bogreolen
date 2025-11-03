@@ -41,11 +41,13 @@ def edit_track(id):
 
     current_page = data.get('current_page')
     last_page = data.get('last_page')
+    date = data.get('date')
 
     result = TrackService.edit_track(
         track_id=id, 
         current_page=current_page,
-        last_page=last_page
+        last_page=last_page,
+        date=date
     )
 
     if isinstance(result, Trackstb):

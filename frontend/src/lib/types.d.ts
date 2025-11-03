@@ -7,9 +7,13 @@ type Day = {
 
 type Track = {
     book_id: number,
+    track_id: number,
     title: string,
+    image: string,
     book_status: string,
-    date: Date
+    date: Date,
+    current_page: number,
+    last_page: number
 }
 
 type Review = {
