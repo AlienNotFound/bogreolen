@@ -1,4 +1,5 @@
-import { fetchGETRequest, fetchPOSTRequest, fetchPUTRequest, fetchPOSTImageRequest } from "$lib/api/common";
+import { fetchGETRequest, fetchPOSTRequest, fetchPOSTImageRequest } from "$lib/api/common";
+import { validateToken } from '$lib/server/auth.js';
 import { fail } from "@sveltejs/kit";
 
 export const actions = {
@@ -11,7 +12,7 @@ export const actions = {
         const year = formData.get('year');
         const category_title = formData.get('category_title');
         const book_status = formData.get('book_status');
-        const token = cookies.get('access_token');
+        const token = await validateToken(cookies);
 
         try {
             const uploadData = new FormData();
@@ -44,7 +45,7 @@ export const actions = {
     }
 }
 export const load = async ({ cookies }) => {
-    const token = cookies.get('access_token');
+    const token = await validateToken(cookies);
     try {
         const authors = await fetchGETRequest<{author: string}>('authors', token);
         

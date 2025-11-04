@@ -1,18 +1,5 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
-    import type { PageData, ActionData } from './$types';
-    let { data, form }: { data: PageData, form: ActionData } = $props();
-    
-    // const listMap: Record<string, string> = {
-    //     "Want to read": "WANT_TO_READ",
-    //     "Reading": "READING",
-    //     "Finished": "FINISHED",
-    //     "Didn't finish": "DIDNTFINISH"
-    // };
-
-    // // if (data.book_status) {
-    // //     listval = listMap[data.book_status] ?? '';
-    // // }
 </script>
 
 <h1>Create</h1>

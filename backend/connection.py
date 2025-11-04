@@ -46,7 +46,9 @@ def create_app(test_config = None):
     app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"] 
     app.config["JWT_ACCESS_COOKIE_NAME"] = 'access_token'
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
+
     JWTManager(app)
 
     CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173'],

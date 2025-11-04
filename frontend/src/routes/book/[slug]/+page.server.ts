@@ -1,4 +1,5 @@
 import { fetchGetRequestById, fetchPOSTRequest, fetchPUTRequest } from "$lib/api/common";
+import { validateToken } from '$lib/server/auth.js';
 import { fail } from "@sveltejs/kit";
 
 export const actions = {
@@ -6,7 +7,7 @@ export const actions = {
         const formData = await request.formData();
         const bookid = formData.get('bookid');
         const listname = formData.get('listname');
-        const token = cookies.get('access_token');
+        const token = await validateToken(cookies);
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('add-to-list', {
@@ -21,7 +22,6 @@ export const actions = {
             }
                 
             } catch (error) {
-                console.error(error);
                 return { success: false, error: "Failed to add book to list." };
             }
         },
@@ -29,21 +29,18 @@ export const actions = {
         const formData = await request.formData();
         const bookid = formData.get('bookid');
         const listname = formData.get('listname');
-        const token = cookies.get('access_token');
+        const token = await validateToken(cookies);
         
         try {
             const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('move-to-list/' + bookid, {
                 listname
             }, token);
 
-            console.log(response)
-    
             if (response?.Error) {
                 return fail(400, { success: false, error: response?.Error });
             }
         
         } catch (error) {
-            console.error(error);
             return { success: false, error: "Failed to add book to list." };
         }
     },
@@ -52,7 +49,7 @@ export const actions = {
         const bookid = formData.get('bookid');
         const rating = formData.get('rating');
         const reviewtext = formData.get('reviewtext');
-        const token = cookies.get('access_token');
+        const token = await validateToken(cookies);
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
@@ -75,19 +72,20 @@ export const actions = {
     }
 }
 
-export const load = async ({ params, cookies }) => {
-    const token = cookies.get('access_token');
+export const load = async ({ params, parent }) => {
+    const {token} = await parent();
     try {
-        const book = await fetchGetRequestById<BookDetails>('book/', params.slug, token);
-        const status = await fetchGetRequestById<{book_status: string}>('book-status/', params.slug, token);
+        const book = await fetchGetRequestById<BookDetails>('book/', params.slug, token!);
+        const status = await fetchGetRequestById<{book_status: string}>('book-status/', params.slug, token!);
         
-        return { 
-            ...book,
-            reviews: book.reviews ?? [],
-            book_status: status.book_status
-         }
+        if (book.data && status.data) {
+            return { 
+                ...book.data,
+                reviews: book.data.reviews ?? [],
+                book_status: status.data.book_status
+             }
+        }
     } catch (error) {
-        console.error(error);        
         return {
             book: null,
             reviews: [],

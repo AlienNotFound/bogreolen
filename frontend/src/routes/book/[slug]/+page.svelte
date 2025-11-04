@@ -5,7 +5,6 @@
         let { data, form }: { data: PageData, form: ActionData } = $props();
         let listval = $state();
         const method = data.book_status ? "?/move_to_list" : "?/add_to_list";
-        console.log(data.bookid)
 
         const listMap: Record<string, string> = {
             "Want to read": "WANT_TO_READ",

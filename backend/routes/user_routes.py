@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from backend.models import Userstb
 from backend.services.user_service import UserService
 from backend.DTOs.user_dto import UserDTO
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, set_access_cookies
+from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
 from werkzeug.security import check_password_hash
 
 user_bp = Blueprint('user_bp', __name__)
@@ -124,9 +124,17 @@ def user_login():
     if not user or not check_password_hash(user.passwordhash, password):
         return jsonify({'error': f'Wrong username or password'}), 401
 
-    access_token = create_access_token(identity = str(user.userid))
+    access_token = create_access_token(identity = str(user.userid), fresh = True)
+    refresh_token = create_refresh_token(str(user.userid))
 
-    response = jsonify({'access_token': access_token})
-    # set_access_cookies(response, access_token)
-
+    response = jsonify({'access_token': access_token,
+                        'refresh_token': refresh_token}), 200
     return response
+
+@user_bp.route('/refreshtoken', methods=['POST'])
+@jwt_required(refresh = True)
+def refreshtoken():
+    user_id = get_jwt_identity()
+    new_token = create_access_token(identity = user_id, fresh = False)
+
+    return {"access_token": new_token}, 200
