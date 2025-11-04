@@ -1,9 +1,12 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
     import type { PageData, ActionData } from './$types';
     let { data, form }: { data: PageData, form: ActionData } = $props();
     console.log(form?.Success)
 </script>
+
+<svelte:head>
+  <title>Settings</title>
+</svelte:head>
 
 <h1>Settings</h1>
 {#if data}
