@@ -32,7 +32,7 @@
 </form>
 
 <p>Already have an account?</p>
-<a href="/login">Log in</a>
+<a href="/login">Login</a>
 
 <style>
   form {

@@ -24,6 +24,9 @@
     }
 </script>
 
+<svelte:head>
+  <title>Tracker</title>
+</svelte:head>
 
 {#if showModal}
 <Trackermodal

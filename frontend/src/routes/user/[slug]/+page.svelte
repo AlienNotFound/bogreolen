@@ -6,6 +6,9 @@
     const listnames = ["Want to read", "Reading", "Finished", "Didn't finish"];
 </script>
 
+<svelte:head>
+  <title>{data.username}</title>
+</svelte:head>
 <h1>{data.username}</h1>
 
 <id id="listWrapper">

@@ -19,6 +19,10 @@
 
     </script>
 
+    <svelte:head>
+        <title>{data.title}</title>
+    </svelte:head>
+
     {#if data && data.title}
     <div id="bookWrapper">
             <div id="bookCover">

@@ -2,6 +2,10 @@
     import { enhance } from "$app/forms";
 </script>
 
+<svelte:head>
+  <title>Create new book</title>
+</svelte:head>
+
 <h1>Create</h1>
 <form action="?/create_book" method="post" use:enhance enctype="multipart/form-data">
     <h2>Title</h2>
