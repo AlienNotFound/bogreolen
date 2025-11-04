@@ -31,8 +31,9 @@ class UserService(BaseService):
     def edit_user(id, username, email, password, password_again):
         user = Userstb.query.get(id)
 
-        if not UserValidator.validate_password(password, password_again):
-            return -1
+        if (password and password_again):
+            if not UserValidator.validate_password(password, password_again):
+                return -1
             
         if not UserValidator.validate_email(email):
             return -2
@@ -41,7 +42,9 @@ class UserService(BaseService):
         
         user.username = username
         user.email = email
-        user.passwordhash = hashed_password
+        
+        if (password and password_again):
+            user.passwordhash = hashed_password
 
         success, result = BaseService.commit_session(user)
 
