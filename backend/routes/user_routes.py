@@ -59,15 +59,21 @@ def create_user():
 @user_bp.route('/user/<id>', methods=['PUT'])
 @jwt_required()
 def edit_user(id):
-    if UserService.get_user_by_id(id) == None:
+
+    user = UserService.get_user_by_id(id)
+    if user == None:
         return jsonify({"Error": "User does not exist."}), 404
     
     data = request.get_json()
 
     username = data.get('username')
     email = data.get('email')
+    current_password = data.get('current_password')
     password = data.get('password')
     password_again = data.get('password_again')
+
+    if current_password and not check_password_hash(user.passwordhash, current_password):
+        return ({"Error": "Wrong current password."}), 403
 
     result = UserService.edit_user(
         id=id,
@@ -78,11 +84,11 @@ def edit_user(id):
     )
 
     if isinstance(result, Userstb):
-        return jsonify({"Success": f"User updated!"}), 200
+        return jsonify({"Success": f"User updated."}), 200
     elif result == -1:
         return jsonify({"Error": "Password must be the same."}), 409
     elif result == -2:
-        return jsonify({"Error": "Invaled email format."}), 403
+        return jsonify({"Error": "Invalid email format."}), 403
     elif result == 'USERNAME_EXISTS':
         return jsonify({"Error": "Username already exists."}), 409
     elif result == 'EMAIL_EXISTS':
