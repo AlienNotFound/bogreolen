@@ -1,9 +1,11 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { fetchGetRequestById, fetchPUTRequest } from '$lib/api/common.js';
 import { jwtDecode } from 'jwt-decode';
+import { validateToken } from '$lib/server/auth.js';
 
 export const load = async ({ cookies }) => {
-  const token = cookies.get('access_token');
+  const token = await validateToken(cookies);
+
   if (!token) {
     throw redirect(302, '/login');
   }
@@ -25,7 +27,7 @@ export const load = async ({ cookies }) => {
 
 export const actions = {
   edit_user: async ({ request, cookies }) => {
-    const token = cookies.get('access_token');
+    const token = await validateToken(cookies);
     const formData = await request.formData();
     const user_id = jwtDecode(token!).sub;
     const username = formData.get('username');

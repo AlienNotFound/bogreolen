@@ -52,3 +52,16 @@ type User = {
     username: string,
     email: string
 }
+
+type ResponseMessage<T> = {
+    Error: string,
+    Success: string,
+    status: number,
+    msg: string,
+    ok: boolean,
+    data: T | null;
+}
+
+type LayoutData = {
+    token: string | null;
+}

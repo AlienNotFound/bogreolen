@@ -1,7 +1,8 @@
 import { fetchGETRequest, fetchPUTRequest } from '$lib/api/common';
+import { validateToken } from '$lib/server/auth.js';
 
 export const load = async ({ cookies }) => {
-    const token = cookies.get('access_token');
+    const token = await validateToken(cookies);
     try {
         const tracks = await fetchGETRequest<Track[]>('tracks/user', token);
 
@@ -23,7 +24,7 @@ export const actions = {
     const current_page = formData.get('current_page');
     const last_page = formData.get('last_page'); 
     const date = formData.get('date'); 
-    const token = cookies.get('access_token');
+    const token = await validateToken(cookies);
 
     try {
       const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('track/' + track_id, {

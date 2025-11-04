@@ -1,8 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
+import { validateToken } from '$lib/server/auth.js';
 
-export const load = async ({ cookies }) => {
-  const token = cookies.get('access_token');
+export const load = async ({ parent }) => {
+  const { token } = await parent();
   if (!token) {
     throw redirect(302, '/login');
   }
@@ -11,11 +12,11 @@ export const load = async ({ cookies }) => {
     const tracks = await fetchTracks(token);
     const modalInfo = await fetchModalInfo(token);
     const reviews = await fetchGETRequest<Review[]>('reviews/user', token);
+    
     return { reviews, tracks, modalInfo };
   } catch (error) {
-      console.error("Error loading reviews:", error);
-      return [];
-    }      
+    return { reviews: null };
+  }      
 };
     
 async function fetchTracks(token: string) {
@@ -41,6 +42,7 @@ async function fetchModalInfo(token: string) {
 export const actions = {
   logout: async ({ cookies }) => {
     cookies.delete('access_token', { path: '/'});
+    cookies.delete('refresh_token', { path: '/'});
 
     throw redirect(307, '/login');
   },
@@ -49,7 +51,7 @@ export const actions = {
     const book_id = formData.get('book_id');
     const current_page = formData.get('current_page');
     const last_page = formData.get('last_page'); 
-    const token = cookies.get('access_token');
+    const token = await validateToken(cookies);
 
     try {
       const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('track/' + book_id, {
