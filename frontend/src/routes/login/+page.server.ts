@@ -27,7 +27,7 @@ export const actions: Actions = {
         path: '/',
         secure: false,
         sameSite: 'strict',
-        maxAge: 60 * 60 * 24
+        maxAge: 60 * 60
       });
 
       cookies.set('refresh_token', `${refresh_token}`, {
@@ -35,7 +35,7 @@ export const actions: Actions = {
         path: '/',
         secure: false,
         sameSite: 'strict',
-        maxAge: 60 * 60 * 24
+        maxAge: 60 * 60 * 24 * 7
       });
 
       throw redirect(307, "/");
