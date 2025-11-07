@@ -1,6 +1,6 @@
 <script lang="ts">
   export let username: string;
-  export let user_id: number;
+  export let user_id: string;
   export let rating: number;
   export let review: string;
   export let title: string | null = null;
@@ -11,6 +11,7 @@
     <h2 class="book-title">
       <a href={"/book/" + book_id}>{title}</a>
     </h2>
+
     
     <div class="review-header">
       <a href="/user/{user_id}">
