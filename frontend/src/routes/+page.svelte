@@ -9,7 +9,6 @@
   <title>The Bookshelf</title>
 </svelte:head>
 
-<Searchbar />
 <Trackingoverview tracks={data.tracks ?? []}
                     modalInfo={data.modalInfo ?? []} 
                     />

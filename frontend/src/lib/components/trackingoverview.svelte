@@ -78,7 +78,7 @@
                 <h3>{info.title}</h3>
                 <img src={info.image} alt="">
                 
-                <form method="POST" action="?/track_book">
+                <form id="pagesForm" method="POST" action="?/track_book">
                     <input type="text" name="book_id" value={info.book_id} hidden>
                     <h4>Current page:</h4>
                     <input type="number"
@@ -140,6 +140,10 @@
         height: 100%;
     }
 
+    #trackingOverviewBar {
+        padding: 1% 0;
+    }
+
     #modalWrapper {
         position: absolute;
         top: 0;
@@ -154,30 +158,33 @@
     .modal {
 		background-color: #ccd5ae;
         height: 60vh;
+        width: 45vw;
         padding: 2% 3%;
     }
 
     #modalClose {
-        height: 6vh;
+        height: 4vh;
     }
 
     .books {
+        width: 20vw;
         flex-direction: column;
         padding: 2% 3%;
     }
 
     .books img {
+        max-width: 70%;
         object-fit: contain;
     }
 
     .books input {
         -moz-appearance: textfield;
         appearance: textfield;
+        margin-bottom: 2%;
     }
 
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    #pagesForm {
+        display: flex;
+        flex-direction: column;
     }
 </style>
