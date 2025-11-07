@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .list_model import Liststb
     from .tracks_model import Trackstb
 class Userstb(db.Model):
-    userid: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     passwordhash: Mapped[str] = mapped_column(String(255), nullable=False)

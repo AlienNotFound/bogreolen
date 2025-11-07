@@ -10,14 +10,14 @@ if TYPE_CHECKING:
     from .list_model import Liststb
     from .tracks_model import Trackstb
 class Bookstb(db.Model):
-    bookid: Mapped[int] = mapped_column(primary_key=True)
+    book_id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(30))
-    authorid: Mapped[int] = mapped_column(ForeignKey('authorstb.authorid'), nullable=False)
+    author_id: Mapped[int] = mapped_column(ForeignKey('authorstb.authorid'), nullable=False)
     author: Mapped['Authorstb'] = relationship('Authorstb', back_populates='books')
     image: Mapped[str] = mapped_column(String(200))
     summary: Mapped[str] = mapped_column(String(200))
     year: Mapped[int]
-    categoryid: Mapped[int] = mapped_column(ForeignKey('categoriestb.categoryid'), nullable=False)
+    category_id: Mapped[int] = mapped_column(ForeignKey('categoriestb.categoryid'), nullable=False)
     category: Mapped['Categoriestb'] = relationship('Categoriestb', back_populates='books')
 
     reviews: Mapped[list['Reviewstb']] = relationship('Reviewstb', back_populates='book')

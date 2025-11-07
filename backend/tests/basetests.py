@@ -1,6 +1,6 @@
 import pytest
 from backend.connection import db, create_app
-from backend.models.bookstb import Bookstb
+from backend.models.books_model import Bookstb
 from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .bookstb import Bookstb
+    from .books_model import Bookstb
     from .user_model import Userstb
 
 class Trackstb(db.Model):
