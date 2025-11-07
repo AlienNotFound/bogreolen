@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div id="reviewsSection">
-                <h3>Skriv en anmeldelse</h3>
+                <h3>Write a review</h3>
                 {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
                 <form method="POST" id="createReview" action="?/create_review">
                     <input type="hidden" name="bookid" value={data.bookid}>

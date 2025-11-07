@@ -14,7 +14,7 @@
 {#if page.url.pathname != "/login" && page.url.pathname != "/signup"}
 <header>
 	<a href="/">
-		<h1>Bogreolen</h1>
+		<h1>The Bookshelf</h1>
 		</a>
 		<div id="menu-right">
 			<a href="/user/{data.user_id}"><h2>Profile</h2></a>
