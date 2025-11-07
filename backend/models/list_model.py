@@ -5,7 +5,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .books_model import Bookstb
+    from .book_model import Bookstb
     from .user_model import Userstb
 
 class ListName(Enum):

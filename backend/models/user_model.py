@@ -4,9 +4,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .reviews_model import Reviewstb
+    from .review_model import Reviewstb
     from .list_model import Liststb
-    from .tracks_model import Trackstb
+    from .track_model import Trackstb
 class Userstb(db.Model):
     user_id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)

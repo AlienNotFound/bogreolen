@@ -4,11 +4,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .authors_model import Authorstb
-    from .categories_model import Categoriestb
-    from .reviews_model import Reviewstb
+    from .author_model import Authorstb
+    from .category_model import Categoriestb
+    from .review_model import Reviewstb
     from .list_model import Liststb
-    from .tracks_model import Trackstb
+    from .track_model import Trackstb
 class Bookstb(db.Model):
     book_id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(30))
