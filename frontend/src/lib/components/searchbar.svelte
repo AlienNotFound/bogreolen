@@ -19,8 +19,13 @@
     }
 
     function hideSuggestions() {
+        const inputElement = <HTMLInputElement>document.getElementById("searchInput");
         if (showSuggestions) {
             showSuggestions = false;
+        }
+
+        if (inputElement) {
+            inputElement.value = '';
         }
     }
 
@@ -28,6 +33,7 @@
 
 <div id=searchbarwrapper>
     <input type="text"
+            id="searchInput"
             onkeyup={
                 async (e) => {
                         searchInput = e.currentTarget.value;
