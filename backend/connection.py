@@ -54,6 +54,6 @@ def create_app(test_config = None):
     CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
      supports_credentials=True,
      allow_headers=['Content-Type'],
-     methods=['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT'])
+     methods=['GET', 'POST', 'DELETE', 'PUT'])
 
     return app
