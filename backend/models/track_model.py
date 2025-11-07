@@ -10,9 +10,9 @@ if TYPE_CHECKING:
 
 class Trackstb(db.Model):
     track_id: Mapped[int] = mapped_column(primary_key=True)
-    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.bookid'), nullable=False)
+    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.book_id'), nullable=False)
     book: Mapped['Bookstb'] = relationship('Bookstb', back_populates='tracks')
-    user_id: Mapped[int] = mapped_column(ForeignKey('userstb.userid'), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey('userstb.user_id'), nullable=False)
     user: Mapped['Userstb'] = relationship('Userstb', back_populates='tracks')
     current_page: Mapped[int]
     last_page: Mapped[int]

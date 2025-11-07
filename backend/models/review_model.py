@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class Reviewstb(db.Model):
     review_id: Mapped[int] = mapped_column(primary_key=True)
-    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.bookid'), nullable=False)
+    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.book_id'), nullable=False)
     book: Mapped['Bookstb'] = relationship('Bookstb', back_populates='reviews')
     user_id: Mapped[int] = mapped_column(ForeignKey('userstb.userid'), nullable=False)
     user: Mapped['Userstb'] = relationship('Userstb', back_populates='reviews')

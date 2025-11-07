@@ -2,13 +2,12 @@ from backend.connection import db
 from backend.models import Bookstb
 from backend.services.base_service import BaseService
 from sqlalchemy.sql import text
-from sqlalchemy import func
 from statistics import mean
 
 
 class BookService(BaseService):
     @staticmethod
-    def create_book(title, authorid, image, summary, year, categoryid):
+    def create_book(title, author_id, image, summary, year, category_id):
         try:
             existing_book = BookService.get_book_by_title(title)
             
@@ -16,11 +15,11 @@ class BookService(BaseService):
                 return False, "Book already exists!"
             
             book = Bookstb(title=title,
-                           authorid=authorid,
+                           author_id=author_id,
                            image=image,
                            summary=summary,
                            year=year,
-                           categoryid=categoryid)
+                           category_id=category_id)
             db.session.add(book)
 
             success, result = BaseService.commit_session(book)
@@ -30,19 +29,19 @@ class BookService(BaseService):
             print(f'Database error: ', e)
     
     @staticmethod
-    def edit_book(id, title, authorid, image, summary, year, categoryid):
+    def edit_book(id, title, author_id, image, summary, year, category_id):
         try:
             sql = text("""
-                        CALL UpdateBook(:bookid, :title, :authorid, :image, :summary, :year, :categoryid)
+                        CALL UpdateBook(:book_id, :title, :author_id, :image, :summary, :year, :category_id)
                        """)
             result = db.session.execute(sql, {
-                "bookid": id,
+                "book_id": id,
                 "title": title,
-                "authorid":authorid,
+                "author_id":author_id,
                 "image":image,
                 "summary":summary,
                 "year":year,
-                "categoryid":categoryid,
+                "category_id":category_id,
             })
 
             db.session.commit()
@@ -54,7 +53,7 @@ class BookService(BaseService):
     
     @staticmethod
     def get_book_by_id(id):
-        book = db.session.query(Bookstb).filter_by(bookid=id).first()
+        book = db.session.query(Bookstb).filter_by(book_id=id).first()
         if book:
             return book
         
@@ -80,12 +79,12 @@ class BookService(BaseService):
     
     @staticmethod
     def get_latest_book():
-        return BaseService.get_by_latest(Bookstb, Bookstb.bookid)
+        return BaseService.get_by_latest(Bookstb, Bookstb.book_id)
 
     @staticmethod
-    def get_average_rating(bookid):
+    def get_average_rating(book_id):
         
-        reviews = BookService.get_book_by_id(bookid).reviews
+        reviews = BookService.get_book_by_id(book_id).reviews
         ratings = []
 
         for r in reviews:

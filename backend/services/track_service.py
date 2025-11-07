@@ -1,5 +1,5 @@
 from backend.connection import db
-from backend.models import Trackstb, Liststb, Bookstb
+from backend.models import Trackstb, Liststb
 from backend.services.base_service import BaseService
 from datetime import datetime
 
@@ -45,7 +45,7 @@ class TrackService(BaseService):
     
     @staticmethod
     def get_status_by_user(user_id):
-        lists = BaseService.get_all_by_id(Liststb, Liststb.userid, user_id)
+        lists = BaseService.get_all_by_id(Liststb, Liststb.user_id, user_id)
 
         result = lists
 

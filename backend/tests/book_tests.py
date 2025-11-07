@@ -6,11 +6,11 @@ from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
 
 book = Bookstb(title="Test book",
-                authorid=1,
+                author_id=1,
                 image="imageurl.jpg",
                 summary="This is a summary",
                 year=2000,
-                categoryid=1)
+                category_id=1)
 
 
 @pytest.fixture
@@ -36,19 +36,19 @@ def test_create_book(clean_db):
     with clean_db.app_context():
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
         assert BookService.get_book_by_id(1).title == book.title
-        assert BookService.get_book_by_id(1).authorid == book.authorid
+        assert BookService.get_book_by_id(1).author_id == book.author_id
         assert BookService.get_book_by_id(1).image == book.image
         assert BookService.get_book_by_id(1).summary == book.summary
         assert BookService.get_book_by_id(1).year == book.year
-        assert BookService.get_book_by_id(1).categoryid == book.categoryid
+        assert BookService.get_book_by_id(1).category_id == book.category_id
 
 def test_create_duplicate_fail(clean_db):
     with clean_db.app_context():
@@ -56,20 +56,20 @@ def test_create_duplicate_fail(clean_db):
 
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
         assert len(BookService.get_all_books()) == 1
@@ -82,20 +82,20 @@ def test_book_get_all(clean_db):
 
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
         BookService.create_book(
             book.title + "1",
-            book.authorid + 1,
+            book.author_id + 1,
             book.image + "1",
             book.summary + "1",
             book.year + 1,
-            book.categoryid + 1
+            book.category_id + 1
         )
 
         assert len(BookService.get_all_books()) == 2
@@ -104,32 +104,32 @@ def test_book_get_by_id(clean_db):
     with clean_db.app_context():
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
-        assert BookService.get_book_by_id(1).bookid == 1
+        assert BookService.get_book_by_id(1).book_id == 1
 
 def test_book_edit(clean_db):
     with clean_db.app_context():
         BookService.create_book(
             book.title,
-            book.authorid,
+            book.author_id,
             book.image,
             book.summary,
             book.year,
-            book.categoryid
+            book.category_id
         )
 
     assert BookService.get_book_by_id(1).title == book.title
-    assert BookService.get_book_by_id(1).authorid == book.authorid
+    assert BookService.get_book_by_id(1).author_id == book.author_id
     assert BookService.get_book_by_id(1).image == book.image
     assert BookService.get_book_by_id(1).summary == book.summary
     assert BookService.get_book_by_id(1).year == book.year
-    assert BookService.get_book_by_id(1).categoryid == book.categoryid
+    assert BookService.get_book_by_id(1).category_id == book.category_id
 
     newtitle = "New title"
     newauthor = 2
@@ -149,11 +149,11 @@ def test_book_edit(clean_db):
     )
 
     assert BookService.get_book_by_id(1).title == newtitle
-    assert BookService.get_book_by_id(1).authorid == newauthor
+    assert BookService.get_book_by_id(1).author_id == newauthor
     assert BookService.get_book_by_id(1).image == newimage
     assert BookService.get_book_by_id(1).summary == newsummary
     assert BookService.get_book_by_id(1).year == newyear
-    assert BookService.get_book_by_id(1).categoryid == newcategory
+    assert BookService.get_book_by_id(1).category_id == newcategory
 
 def test_get_average_rating(clean_db):
     pass

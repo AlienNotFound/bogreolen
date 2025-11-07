@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from backend.services.author_service import AuthorService
 from backend.DTOs.author_dto import AuthorDTO
 from flask_jwt_extended import jwt_required

@@ -35,7 +35,7 @@ def get_reviews_based_on_user_list():
     if reviews:
         return jsonify([{"username": r.user.username,
                          "title": r.book.title,
-                         "book_id": r.bookid,
+                         "book_id": r.book_id,
                          "review": r.review,
                          "rating": r.rating
                          } for r in reviews]), 200
@@ -56,14 +56,14 @@ def get_reviews_by_user(user_id):
 def create_review():
     data = request.get_json()
 
-    bookid = data.get('bookid')
-    userid = get_jwt_identity()
+    book_id = data.get('book_id')
+    user_id = get_jwt_identity()
     rating = data.get('rating')
     reviewtext = data.get('reviewtext')
 
     result = ReviewService.create_review(
-        bookid=bookid,
-        userid=userid,
+        book_id=book_id,
+        user_id=user_id,
         rating=rating,
         reviewtext=reviewtext
     )

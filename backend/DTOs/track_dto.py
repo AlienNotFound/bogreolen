@@ -12,7 +12,7 @@ class TrackDTO:
     
     @staticmethod
     def overview_dict(track):
-        user_list = next((list for list in track.book.lists if list.userid == track.user_id), None)
+        user_list = next((list for list in track.book.lists if list.user_id == track.user_id), None)
 
         return {
             "track_id": track.track_id,
@@ -28,8 +28,8 @@ class TrackDTO:
     @staticmethod
     def modal_dict(track):
          return {
-            "book_id": track.bookid,
-            "user_id": track.userid,
+            "book_id": track.book_id,
+            "user_id": track.user_id,
             "title": track.book.title,
             "image": track.book.image,
             "book_status": track.listname.value

@@ -26,14 +26,14 @@ def get_books_by_id(id):
         average_rating = BookService.get_average_rating(id)
         
         return jsonify({
-            "bookid": book.bookid,
+            "book_id": book.book_id,
             "title": book.title,
-            "authorid": book.authorid,
+            "author_id": book.author_id,
             "author_name": book.author.name,
             "image": book.image,
             "summary": book.summary,
             "year": book.year,
-            "categoryid": book.categoryid,
+            "category_id": book.category_id,
             "category_title": book.category.title,
             "average_rating": average_rating,
             "reviews": [
@@ -68,15 +68,15 @@ def create_book():
 
     result, message = BookService.create_book(
         title=title,
-        authorid=author.authorid,
+        author_id=author.author_id,
         image=image,
         summary=summary,
         year=year,
-        categoryid=category.categoryid
+        category_id=category.category_id
     )
 
     if listname and result:
-        ListService.add_to_list(userid=1, bookid=BookService.get_latest_book().bookid, listname=listname)
+        ListService.add_to_list(user_id=1, book_id=BookService.get_latest_book().book_id, listname=listname)
 
     if result:
         return jsonify({"Success": f"Book created!"}), 200
@@ -110,11 +110,11 @@ def edit_book(id):
     result = BookService.edit_book(
         id=id,
         title=title,
-        authorid=author.authorid,
+        author_id=author.author_id,
         image=image,
         summary=summary,
         year=year,
-        categoryid=category.categoryid
+        category_id=category.category_id
     )
 
     if result > 0:

@@ -33,7 +33,7 @@ class AuthorService(BaseService):
     
     @staticmethod
     def get_author_by_id(id):
-        author = db.session.query(Authorstb).filter_by(authorid=id).first()
+        author = db.session.query(Authorstb).filter_by(author_id=id).first()
         if author:
             return author
         

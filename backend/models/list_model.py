@@ -15,8 +15,8 @@ class ListName(Enum):
     FINISHED = 'Finished'
 
 class Liststb(db.Model):
-    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.bookid'), nullable=False, primary_key=True)
+    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.book_id'), nullable=False, primary_key=True)
     book: Mapped['Bookstb'] = relationship('Bookstb', back_populates='lists')
-    user_id: Mapped[int] = mapped_column(ForeignKey('userstb.userid'), nullable=False, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('userstb.user_id'), nullable=False, primary_key=True)
     user: Mapped['Userstb'] = relationship('Userstb', back_populates='lists')
     listname: Mapped[ListName]

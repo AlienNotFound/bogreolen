@@ -32,7 +32,7 @@ class CategoryService:
     
     @staticmethod
     def get_category_by_id(id):
-        category = db.session.query(Categoriestb).filter_by(categoryid=id).first()
+        category = db.session.query(Categoriestb).filter_by(category_id=id).first()
         if category:
             return category
         

@@ -1,4 +1,3 @@
-from sqlalchemy.exc import IntegrityError
 from backend.connection import db
 from backend.models import Userstb
 from backend.services.base_service import BaseService
@@ -55,7 +54,7 @@ class UserService(BaseService):
     
     @staticmethod
     def get_user_by_id(id):
-        return BaseService.get_by_id(Userstb, Userstb.userid, id)
+        return BaseService.get_by_id(Userstb, Userstb.user_id, id)
     
     @staticmethod
     def get_user_by_username(username):
@@ -67,4 +66,4 @@ class UserService(BaseService):
     
     @staticmethod
     def delete_user(id):
-        return BaseService.delete(Userstb, Userstb.userid, id)
+        return BaseService.delete(Userstb, Userstb.user_id, id)

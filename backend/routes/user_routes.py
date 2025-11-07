@@ -124,8 +124,8 @@ def user_login():
     if not user or not check_password_hash(user.passwordhash, password):
         return jsonify({'error': f'Wrong username or password'}), 401
 
-    access_token = create_access_token(identity = str(user.userid), fresh = True)
-    refresh_token = create_refresh_token(str(user.userid))
+    access_token = create_access_token(identity = str(user.user_id), fresh = True)
+    refresh_token = create_refresh_token(str(user.user_id))
 
     response = jsonify({'access_token': access_token,
                         'refresh_token': refresh_token}), 200
