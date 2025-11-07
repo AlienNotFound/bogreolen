@@ -18,32 +18,37 @@
         }
     }
 
-</script>
-<div id="searchbar">
-    <div id=searchbarwrapper>
+    function hideSuggestions() {
+        if (showSuggestions) {
+            showSuggestions = false;
+        }
+    }
 
-        <input type="text"
-                onkeyup={
-                    async (e) => {
-                            searchInput = e.currentTarget.value;
-                            fetchSearch(searchInput);
-                            if (e.currentTarget.value == "") {
-                                showSuggestions = false;
-                            }
+</script>
+
+<div id=searchbarwrapper>
+    <input type="text"
+            onkeyup={
+                async (e) => {
+                        searchInput = e.currentTarget.value;
+                        fetchSearch(searchInput);
+                        if (e.currentTarget.value == "") {
+                            showSuggestions = false;
                         }
                     }
-                style="border-radius: {showSuggestions ? '5px 0 0 0' : '5px 0 0 5px'}"
-                    
-            >
-            <button>Search</button>
-            {#if showSuggestions}
-            <div id="searchSuggestions">
-                {#each searchSuggestions as suggestion}
-                <a href="/book/{suggestion.bookid}">{suggestion.title}</a>
-            {/each}
+                }
+            style="border-radius: {showSuggestions ? '5px 0 0 0' : '5px 0 0 5px'}"
+        >
+        <div id="XButton">
+            <button onclick={() => hideSuggestions()}>X</button>
         </div>
-        {/if}
+        {#if showSuggestions}
+        <div id="searchSuggestions">
+            {#each searchSuggestions as suggestion}
+            <a href="/book/{suggestion.bookid}">{suggestion.title}</a>
+        {/each}
     </div>
+    {/if}
 </div>
 
 <style>
@@ -52,43 +57,36 @@
         display: flex;
         padding-bottom: 2%;
     }   
-    #searchbar {
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-    }
-
-    #searchbar input {
-        width: 25vw;
+    #searchbarwrapper input {
+        width: 100%;
         box-sizing: border-box;
         padding: 4px 10px;
         font-size: 1em;
         border: none;
     }
 
-    #searchbar button {
+    #XButton button {
+        background-color: #fff;
+        color: #aaa;
         border-radius: 0 5px 5px 0;
-        width: 6vw
     }
     #searchSuggestions {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 48%;
+        top: 60%;
         left: 0;
         background-color: #fff;
-        padding: 1%;
+        padding: 2% 0;
         width: 25vw;
         box-sizing: border-box;
         border-radius: 0 0 5px 5px;
     }
-
     #searchSuggestions a {
         color: #000;
         text-decoration: none;
-        padding: 4px 0;
+        padding: 4px 1%;
     }
-
     #searchSuggestions a:hover {
         background-color: #eee;
     }
