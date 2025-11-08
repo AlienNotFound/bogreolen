@@ -5,15 +5,15 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .book_model import Bookstb
-    from .user_model import Userstb
+    from .book_model import Books
+    from .user_model import Users
 
-class Trackstb(db.Model):
+class Tracks(db.Model):
     track_id: Mapped[int] = mapped_column(primary_key=True)
-    book_id: Mapped[int] = mapped_column(ForeignKey('bookstb.book_id'), nullable=False)
-    book: Mapped['Bookstb'] = relationship('Bookstb', back_populates='tracks')
-    user_id: Mapped[int] = mapped_column(ForeignKey('userstb.user_id'), nullable=False)
-    user: Mapped['Userstb'] = relationship('Userstb', back_populates='tracks')
+    book_id: Mapped[int] = mapped_column(ForeignKey('books.book_id', ondelete="CASCADE"), nullable=False)
+    book: Mapped['Books'] = relationship('Books', back_populates='tracks')
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'), nullable=False)
+    user: Mapped['Users'] = relationship('Users', back_populates='tracks')
     current_page: Mapped[int]
     last_page: Mapped[int]
     date: Mapped[datetime] = mapped_column(insert_default=func.now())

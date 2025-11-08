@@ -126,6 +126,21 @@ def edit_book(id):
     else:
         return jsonify({"Error": "An error occured"}), 500
     
+
+
+@book_bp.route('/book/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_book(id):
+    if BookService.get_book_by_id(id) == None:
+        return jsonify({"Error": "Book does not exist."}), 404
+    
+    book = BookService.delete_book(id)
+
+    if book == None:
+        return jsonify({"Success": "Book succesfully deleted!"}), 200
+    else:
+        return jsonify({"Error": "Could not delete book."}), 500
+    
 @book_bp.route('/search/<title>', methods=['GET'])
 @jwt_required()
 def serach_for_book(title):

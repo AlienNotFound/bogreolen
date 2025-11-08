@@ -1,11 +1,11 @@
 import pytest
 from backend.connection import db, create_app
-from backend.models.book_model import Bookstb
+from backend.models.book_model import Books
 from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
 
-book = Bookstb(title="Test book",
+book = Books(title="Test book",
                 author_id=1,
                 image="imageurl.jpg",
                 summary="This is a summary",

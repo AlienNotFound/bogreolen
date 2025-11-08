@@ -27,7 +27,7 @@ def create_app(test_config = None):
     from backend.routes.book_routes import book_bp
     from backend.routes.user_routes import user_bp
     from backend.routes.review_routes import review_bp
-    from backend.routes.list_route import list_bp
+    from backend.routes.list_routes import list_bp
     from backend.routes.track_routes import track_bp
     from backend.routes.image_route import image_bp
     from backend.routes.author_routes import author_bp

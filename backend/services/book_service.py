@@ -1,5 +1,5 @@
 from backend.connection import db
-from backend.models import Bookstb
+from backend.models import Books
 from backend.services.base_service import BaseService
 from sqlalchemy.sql import text
 from statistics import mean
@@ -14,7 +14,7 @@ class BookService(BaseService):
             if existing_book:
                 return False, "Book already exists!"
             
-            book = Bookstb(title=title,
+            book = Books(title=title,
                            author_id=author_id,
                            image=image,
                            summary=summary,
@@ -52,8 +52,12 @@ class BookService(BaseService):
             print(f'Database error: ', e)
     
     @staticmethod
+    def delete_book(id):
+        return BaseService.delete(Books, Books.book_id, id)
+
+    @staticmethod
     def get_book_by_id(id):
-        book = db.session.query(Bookstb).filter_by(book_id=id).first()
+        book = db.session.query(Books).filter_by(book_id=id).first()
         if book:
             return book
         
@@ -61,7 +65,7 @@ class BookService(BaseService):
     
     @staticmethod
     def get_book_by_title(title):
-        book = BaseService.get_by_id(Bookstb, Bookstb.title, title)
+        book = BaseService.get_by_id(Books, Books.title, title)
 
         if book:
             return book
@@ -70,7 +74,7 @@ class BookService(BaseService):
     
     @staticmethod
     def get_all_books():
-        books = db.session.query(Bookstb).all()
+        books = db.session.query(Books).all()
 
         if books:
             return books
@@ -79,7 +83,7 @@ class BookService(BaseService):
     
     @staticmethod
     def get_latest_book():
-        return BaseService.get_by_latest(Bookstb, Bookstb.book_id)
+        return BaseService.get_by_latest(Books, Books.book_id)
 
     @staticmethod
     def get_average_rating(book_id):
@@ -96,4 +100,4 @@ class BookService(BaseService):
     
     @staticmethod
     def search_for_book(search_query):
-        return BaseService.search_for(Bookstb, Bookstb.title, search_query)
+        return BaseService.search_for(Books, Books.title, search_query)

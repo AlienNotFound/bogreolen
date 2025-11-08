@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from backend.models import Liststb
+from backend.models import Lists
 from backend.services.list_service import ListService
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -19,7 +19,7 @@ def add_to_list():
 
     result = ListService.add_to_list(user_id, book_id, listname)
 
-    if isinstance(result, Liststb):
+    if isinstance(result, Lists):
         return jsonify({"Success": f"\'{result.book.title}\' got added to {listname}"}), 200
     else:
         return jsonify({"Error": f"{result}"}), 400
@@ -35,7 +35,7 @@ def move_to_list(id):
 
     result = ListService.move_to_list(user_id, book_id, listname)
 
-    if isinstance(result, Liststb):
+    if isinstance(result, Lists):
         return jsonify({"Success": f"\'{result.book.title}\' got moved to {listname}"}), 200
     else:
         return jsonify({"Error": f"{result}"}), 400
@@ -78,5 +78,5 @@ def get_lists_by_user(user_id):
                         "title": r.book.title,
                         "book_status": f"{r.listname.value}"} for r in result]), 200
     else:
-        return jsonify({"user_id": None, "book_status": None}), 200
+        return jsonify({"message": "User haven't added any books to a list."}), 200
     

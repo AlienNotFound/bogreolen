@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from backend.models import Userstb
+from backend.models import Users
 from backend.services.user_service import UserService
 from backend.DTOs.user_dto import UserDTO
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
@@ -43,7 +43,7 @@ def create_user():
         password_again=password_again
     )
 
-    if isinstance(result, Userstb):
+    if isinstance(result, Users):
         return jsonify({"Message": "User created!"}), 200
     elif result == -1:
         return jsonify({"Message": "Password must be the same."}), 409
@@ -83,7 +83,7 @@ def edit_user(id):
         password_again=password_again
     )
 
-    if isinstance(result, Userstb):
+    if isinstance(result, Users):
         return jsonify({"Success": f"User updated."}), 200
     elif result == -1:
         return jsonify({"Error": "Password must be the same."}), 409

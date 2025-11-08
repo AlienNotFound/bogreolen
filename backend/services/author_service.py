@@ -1,11 +1,11 @@
 from backend.connection import db
-from backend.models import Authorstb
+from backend.models import Authors
 from backend.services.base_service import BaseService
 
 class AuthorService(BaseService):
     @staticmethod
     def create_author(name):
-        author = Authorstb(name=name)
+        author = Authors(name=name)
 
         db.session.add(author)
         db.session.commit()
@@ -14,7 +14,7 @@ class AuthorService(BaseService):
 
     @staticmethod
     def edit_author(id, name):
-        author = Authorstb.query.get(id)
+        author = Authors.query.get(id)
 
         if author:
             author.name = name
@@ -25,7 +25,7 @@ class AuthorService(BaseService):
     
     @staticmethod
     def get_author_by_name(name):
-        author = db.session.query(Authorstb).filter_by(name=name).first()
+        author = db.session.query(Authors).filter_by(name=name).first()
         if author:
             return author
         
@@ -33,7 +33,7 @@ class AuthorService(BaseService):
     
     @staticmethod
     def get_author_by_id(id):
-        author = db.session.query(Authorstb).filter_by(author_id=id).first()
+        author = db.session.query(Authors).filter_by(author_id=id).first()
         if author:
             return author
         
@@ -41,4 +41,4 @@ class AuthorService(BaseService):
 
     @staticmethod
     def get_all_authors():
-        return BaseService.get_all(Authorstb)
+        return BaseService.get_all(Authors)

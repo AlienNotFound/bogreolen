@@ -1,5 +1,5 @@
 from backend.connection import db
-from backend.models import Userstb
+from backend.models import Users
 from backend.services.base_service import BaseService
 from backend.services.validators.uservalidator import UserValidator
 from werkzeug.security import generate_password_hash
@@ -16,7 +16,7 @@ class UserService(BaseService):
 
         hashed_password = generate_password_hash(password)
 
-        user = Userstb(username=username, email=email, passwordhash=hashed_password)
+        user = Users(username=username, email=email, passwordhash=hashed_password)
         db.session.add(user)
 
         success, result = BaseService.commit_session(user)
@@ -28,7 +28,7 @@ class UserService(BaseService):
         
     @staticmethod
     def edit_user(id, username, email, password, password_again):
-        user = Userstb.query.get(id)
+        user = Users.query.get(id)
 
         if (password and password_again):
             if not UserValidator.validate_password(password, password_again):
@@ -54,16 +54,16 @@ class UserService(BaseService):
     
     @staticmethod
     def get_user_by_id(id):
-        return BaseService.get_by_id(Userstb, Userstb.user_id, id)
+        return BaseService.get_by_id(Users, Users.user_id, id)
     
     @staticmethod
     def get_user_by_username(username):
-        return BaseService.get_by_id(Userstb, Userstb.username, username)
+        return BaseService.get_by_id(Users, Users.username, username)
     
     @staticmethod
     def get_all_users():
-        return BaseService.get_all(Userstb)
+        return BaseService.get_all(Users)
     
     @staticmethod
     def delete_user(id):
-        return BaseService.delete(Userstb, Userstb.user_id, id)
+        return BaseService.delete(Users, Users.user_id, id)
