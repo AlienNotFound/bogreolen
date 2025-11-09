@@ -60,7 +60,7 @@ def test_create_book(clean_db):
 
 def test_create_duplicate_fail(clean_db):
     with clean_db.app_context():
-        assert BookService.get_all_books() == None
+        assert BookService.get_all_books() == False, None
 
         BookService.create_book(
             book.title,
@@ -80,11 +80,11 @@ def test_create_duplicate_fail(clean_db):
             book.category_id
         )
 
-        assert len(BookService.get_all_books()) == 1
+        assert len(BookService.get_all_books()) == True, 1
 
 def test_book_get_all(clean_db):
     with clean_db.app_context():
-        assert BookService.get_all_books() == None
+        assert BookService.get_all_books() == False, None
 
         BookService.create_book(
             book.title,
@@ -104,7 +104,7 @@ def test_book_get_all(clean_db):
             book.category_id + 1
         )
 
-        assert len(BookService.get_all_books()) == 2
+        assert len(BookService.get_all_books()) == True, 2
 
 def test_book_get_by_id(clean_db):
     with clean_db.app_context():
