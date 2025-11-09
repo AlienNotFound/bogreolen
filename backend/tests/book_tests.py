@@ -2,7 +2,9 @@ import pytest
 from backend.connection import db, create_app
 from backend.models.book_model import Books
 from backend.services.book_service import BookService
+from backend.services.user_service import UserService
 from backend.services.author_service import AuthorService
+from backend.services.review_service import ReviewService
 from backend.services.category_service import CategoryService
 
 book = Books(title="Test book",
@@ -26,6 +28,9 @@ def clean_db(scope="function"):
 
         CategoryService.create_category('Fantasy')
         CategoryService.create_category('Horror')
+
+        UserService.create_user("test_user1", "test1@test.com", "123", "123")
+        UserService.create_user("test_user2", "test2@test.com", "123", "123")
         
         yield app
         for table in reversed(db.metadata.sorted_tables):
@@ -166,4 +171,19 @@ def test_book_edit(clean_db):
     assert result.category_id == newcategory
 
 def test_get_average_rating(clean_db):
-    pass
+    with clean_db.app_context():
+        BookService.create_book(
+            book.title,
+            book.author_id,
+            book.image,
+            book.summary,
+            book.year,
+            book.category_id
+        )
+        
+        ReviewService.create_review(1, 1, 2, "Test1")
+        ReviewService.create_review(1, 2, 4, "Test2")
+
+    average_rating = BookService.get_average_rating(1)
+
+    assert average_rating == 3.0
