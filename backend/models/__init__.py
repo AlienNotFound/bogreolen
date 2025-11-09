@@ -5,6 +5,7 @@ from backend.models.review_model import Reviews
 from backend.models.user_model import Users
 from backend.models.list_model import Lists
 from backend.models.track_model import Tracks
+from backend.models.comment_model import Comments
 
 __all__ = ["Books",
            "Authors",
@@ -12,4 +13,5 @@ __all__ = ["Books",
            "Reviews",
            "Users",
            "Lists",
-           "Tracks"]
+           "Tracks",
+           "Comments"]
