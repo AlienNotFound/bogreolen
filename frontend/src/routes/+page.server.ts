@@ -32,7 +32,8 @@ async function fetchTracks(token: string) {
 
 async function fetchModalInfo(token: string) {
   try {
-    const modalInfo = await fetchGETRequest<Book[]>('tracks/modal/user', token)
+    const modalInfo = await fetchGETRequest<ResponseMessage<Book[]>>('tracks/modal/user', token)
+    
     return modalInfo;
   } catch (error) {
     console.error("Error loading modal info:", error);

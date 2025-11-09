@@ -6,12 +6,6 @@ import { redirect } from '@sveltejs/kit';
 export const load: LayoutServerLoad = async ({ cookies }) => {
   const token: string | null = await validateToken(cookies) ?? null;
 
-  if (!token) {
-      if (!token) {
-      throw redirect(302, '/login');
-    }
-  }
-
   try {
     let user_id: string | undefined;
     if (token) {

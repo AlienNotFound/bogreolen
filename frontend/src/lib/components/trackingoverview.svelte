@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { getCurrentWeek, matchTrackToDate } from "$lib/utils/date";
 
-    let { tracks, modalInfo }: {tracks: Track[], modalInfo: Book[] } = $props();
+    let { tracks, modalInfo }: {tracks: Track[], modalInfo: ResponseMessage<Book[]> } = $props();
     let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
@@ -14,10 +14,13 @@
     });
 
     function modalFilter(tracks: Book[]): Book[] {
-        const result = tracks
-                        .filter(t => t.book_status === "Reading" || t.book_status === "Want to read")
-                        .map(t => ({book_id: t.book_id, bookid: t.bookid, title: t.title, image: t.image, book_status: t.book_status}));
-        return result
+        if (tracks.length > 0) {
+            const result = tracks
+                            .filter(t => t.book_status === "Reading" || t.book_status === "Want to read")
+                            .map(t => ({book_id: t.book_id, bookid: t.bookid, title: t.title, image: t.image, book_status: t.book_status}));
+            return result
+        }
+        return []
     }
 
     function updateField(book_id: number, field: 'current_page' | 'last_page', value: number) {
@@ -28,8 +31,8 @@
 	}
 
     function toggleModal() {
-        if (!showModal) {
-            modalInfo.forEach((book: Book) => {
+        if (!showModal && !modalInfo.Error && modalInfo.data) {
+            modalInfo.data.forEach((book: Book) => {
                 if (!formData[book.book_id]) {
                     formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
                 }
@@ -77,33 +80,34 @@
                 <button id="modalClose" onclick={() => toggleModal()}>X</button>
             </div>
             <div id="bookList">
-
-                {#each modalFilter(modalInfo) as info}
-                <div class="books">
-                    <h3>{info.title}</h3>
-                <img src={info.image} alt="">
-                
-                <form id="pagesForm" method="POST" action="?/track_book">
-                    <input type="text" name="book_id" value={info.book_id} hidden>
-                    <h4>Current page:</h4>
-                    <input type="number"
-                    name="current_page"
-                    value={formData[info.book_id].current_page ?? ''} 
-                    oninput={(e) => updateField(info.book_id, 'current_page', +e.currentTarget.value)}
-                    required>
-                    <h4>Last page:</h4>
-                    <input type="number"
-                    name="last_page"
-                    value={formData[info.book_id].last_page ?? ''}
-                    oninput={(e) => updateField(info.book_id, 'last_page', +e.currentTarget.value)}>
-                    {#if error_message}
-                    <p class="error">{error_message}</p>
-                    {/if}
-                    <button>Mark as read</button>
-                </form>            
+                {#if modalInfo.data}
+                    {#each modalFilter(modalInfo.data) as info}
+                    <div class="books">
+                        <h3>{info.title}</h3>
+                        <img src={info.image} alt="">
+                    
+                        <form id="pagesForm" method="POST" action="?/track_book">
+                            <input type="text" name="book_id" value={info.book_id} hidden>
+                            <h4>Current page:</h4>
+                            <input type="number"
+                            name="current_page"
+                            value={formData[info.book_id].current_page ?? ''} 
+                            oninput={(e) => updateField(info.book_id, 'current_page', +e.currentTarget.value)}
+                            required>
+                            <h4>Last page:</h4>
+                            <input type="number"
+                            name="last_page"
+                            value={formData[info.book_id].last_page ?? ''}
+                            oninput={(e) => updateField(info.book_id, 'last_page', +e.currentTarget.value)}>
+                            {#if error_message}
+                            <p class="error">{error_message}</p>
+                            {/if}
+                            <button>Mark as read</button>
+                        </form>            
+                    </div>
+                    {/each}
+                {/if}
             </div>
-            {/each}
-        </div>
         </div>
     </div>
 {/if}
