@@ -11,7 +11,7 @@ book_bp = Blueprint('book_bp', __name__)
 @book_bp.route('/books', methods=['GET'])
 @jwt_required()
 def get_all_books():
-    books = BookService.get_all_books()
+    _, books = BookService.get_all_books()
 
     if books != None:
         return jsonify([BookDTO.to_dict(book) for book in books]), 200
