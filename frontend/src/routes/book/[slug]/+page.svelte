@@ -70,6 +70,7 @@
                 {#each data.reviews as review}
                 <Reviewcard
                     username={review.username}
+                    user_id={review.user_id}
                     rating={review.rating}
                     review={review.review}
                     />
