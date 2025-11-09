@@ -1,3 +1,4 @@
+from backend.DTOs.comment_dto import CommentDTO
 class ReviewDTO:
     @staticmethod
     def to_dict(review):
@@ -8,6 +9,9 @@ class ReviewDTO:
             "title": review.book.title,
             "review": review.review,
             "rating": review.rating,
+            "comments": [
+                CommentDTO.to_dict(comment) for comment in review.comments
+            ]
         }
     
     @staticmethod

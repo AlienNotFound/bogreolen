@@ -17,7 +17,7 @@ class Reviews(db.Model):
     rating: Mapped[float] = mapped_column(nullable=False)
     review: Mapped[str] = mapped_column(String(300))
 
-    commets: Mapped[list['Comments']] = relationship(back_populates='review', cascade="all, delete-orphan")
+    comments: Mapped[list['Comments']] = relationship('Comments', back_populates='review', cascade="all, delete-orphan")
 
     def to_dict(self):
         reviews = {field.name:getattr(self, field.name) for field in self.__table__.c}

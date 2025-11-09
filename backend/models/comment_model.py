@@ -13,5 +13,5 @@ class Comments(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'), nullable=False)
     comment: Mapped[str] = mapped_column(String(150))
 
-    # user: Mapped['Users'] = relationship('Users', back_populates='comments')
-    # review: Mapped['Reviews'] = relationship(back_populates='comments')
+    user: Mapped['Users'] = relationship('Users', back_populates='comments')
+    review: Mapped['Reviews'] = relationship('Reviews', back_populates='comments')
