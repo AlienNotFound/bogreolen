@@ -3,7 +3,8 @@ from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
 from backend.services.list_service import ListService
-from flask_jwt_extended import jwt_required
+from backend.DTOs.book_dto import BookDTO
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 book_bp = Blueprint('book_bp', __name__)
 
@@ -13,33 +14,17 @@ def get_all_books():
     books = BookService.get_all_books()
 
     if books != None:
-        return jsonify([book.to_dict() for book in books]), 200
+        return jsonify([BookDTO.to_dict(book) for book in books]), 200
     else:
         return jsonify({"Error": "Books not found"}), 400
     
 @book_bp.route('/book/<id>', methods=['GET'])
 @jwt_required()
 def get_books_by_id(id):
-    book = BookService.get_book_by_id(id)
-
-    if book != None:
-        average_rating = BookService.get_average_rating(id)
+    result, book = BookService.get_book_by_id(id)
         
-        return jsonify({
-            "book_id": book.book_id,
-            "title": book.title,
-            "author_id": book.author_id,
-            "author_name": book.author.name,
-            "image": book.image,
-            "summary": book.summary,
-            "year": book.year,
-            "category_id": book.category_id,
-            "category_title": book.category.title,
-            "average_rating": average_rating,
-            "reviews": [
-                    r.to_dict() for r in book.reviews
-                ]
-        }), 200
+    if result:        
+        return jsonify(BookDTO.to_dict(book)), 200
     else:
         return jsonify({"Error": "Book not found"}), 400
     
@@ -47,6 +32,8 @@ def get_books_by_id(id):
 @jwt_required()
 def create_book():
     data = request.get_json()
+
+    user_id = get_jwt_identity()
 
     title = data.get('title')
     author_name = data.get('author_name')
@@ -76,11 +63,11 @@ def create_book():
     )
 
     if listname and result:
-        ListService.add_to_list(user_id=1, book_id=BookService.get_latest_book().book_id, listname=listname)
+        ListService.add_to_list(user_id=user_id, book_id=BookService.get_latest_book().book_id, listname=listname)
 
     if result:
         return jsonify({"Success": f"Book created!"}), 200
-    elif not result and message == "Book already exists!":
+    elif not result and message == "Book already exists.":
         return jsonify({"Error": f"{message}"}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
@@ -107,7 +94,7 @@ def edit_book(id):
     if category == None:
         category = CategoryService.create_category(title=category_title)
     
-    result = BookService.edit_book(
+    result, message = BookService.edit_book(
         id=id,
         title=title,
         author_id=author.author_id,
@@ -117,16 +104,14 @@ def edit_book(id):
         category_id=category.category_id
     )
 
-    if result > 0:
-        return jsonify({"Success": "Book editted!"}), 200
-    elif result == -1:
-        return jsonify({"Error": "Book not found."}), 404
-    elif result == -2:
-        return jsonify({"Error": "Book already exists."}), 409
+    if result:
+        return jsonify({"Success": "Book editted."}), 200
+    elif message == "Book does not exist.":
+        return jsonify({"Error": f'{message}'}), 404
+    elif message == "Book already exists.":
+        return jsonify({"Error": f'{message}'}), 409
     else:
         return jsonify({"Error": "An error occured"}), 500
-    
-
 
 @book_bp.route('/book/<id>', methods=['DELETE'])
 @jwt_required()
@@ -134,16 +119,21 @@ def delete_book(id):
     if BookService.get_book_by_id(id) == None:
         return jsonify({"Error": "Book does not exist."}), 404
     
-    book = BookService.delete_book(id)
+    result, message = BookService.delete_book(id)
 
-    if book == None:
-        return jsonify({"Success": "Book succesfully deleted!"}), 200
+    if result:
+        return jsonify({"Success": f'{message}'}), 200
+    elif message == "Book does not exist.":
+        return jsonify({"Error": f'{message}'}), 404
     else:
         return jsonify({"Error": "Could not delete book."}), 500
     
 @book_bp.route('/search/<title>', methods=['GET'])
 @jwt_required()
-def serach_for_book(title):
-    book = BookService.search_for_book(title)
+def search_for_book(title):
+    success, result = BookService.search_for_book(title)
 
-    return jsonify([b.to_dict() for b in book])
+    if success:
+        return jsonify([BookDTO.to_dict(book) for book in result])
+    else:
+        return jsonify({"Error": "An error occured."}), 500

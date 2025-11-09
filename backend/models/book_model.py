@@ -23,11 +23,3 @@ class Books(db.Model):
     reviews: Mapped[list['Reviews']] = relationship('Reviews', back_populates='book', cascade="all, delete-orphan")
     lists: Mapped[list['Lists']] = relationship('Lists', back_populates='book', cascade="all, delete-orphan")
     tracks: Mapped[list['Tracks']] = relationship('Tracks', back_populates='book', cascade="all, delete-orphan")
-
-    def to_dict(self):
-        books = {field.name:getattr(self, field.name) for field in self.__table__.c}
-        books['author'] = self.author.name
-        books['category'] = self.category.title
-        books['reviews'] = [r.to_dict() for r in self.reviews]
-
-        return books

@@ -1,7 +1,7 @@
 from backend.connection import db
 from backend.models import Books
 from backend.services.base_service import BaseService
-from sqlalchemy.sql import text
+from backend.services.validators.general_validators import GeneralValidator
 from statistics import mean
 
 
@@ -12,7 +12,7 @@ class BookService(BaseService):
             existing_book = BookService.get_book_by_title(title)
             
             if existing_book:
-                return False, "Book already exists!"
+                return False, "Book already exists."
             
             book = Books(title=title,
                            author_id=author_id,
@@ -20,9 +20,8 @@ class BookService(BaseService):
                            summary=summary,
                            year=year,
                            category_id=category_id)
-            db.session.add(book)
-
-            success, result = BaseService.commit_session(book)
+            
+            success, result = BaseService.add_entry(book)
 
             return success, result
         except Exception as e:
@@ -30,38 +29,45 @@ class BookService(BaseService):
     
     @staticmethod
     def edit_book(id, title, author_id, image, summary, year, category_id):
-        try:
-            sql = text("""
-                        CALL UpdateBook(:book_id, :title, :author_id, :image, :summary, :year, :category_id)
-                       """)
-            result = db.session.execute(sql, {
-                "book_id": id,
-                "title": title,
-                "author_id":author_id,
-                "image":image,
-                "summary":summary,
-                "year":year,
-                "category_id":category_id,
-            })
+        success, book = BookService.get_book_by_id(id)
+        compared_book = BookService.get_book_by_title(title)
+                
+        if not success:
+            return False, "Book does not exist."
+        
+        if compared_book:
+            if (str(compared_book.book_id) != id) and (str(compared_book.author_id) != author_id):
+                return False, "Book already exists."
+        
+        book.title = title
+        book.author_id = author_id        
+        book.image = image
+        book.summary = summary
+        book.year = year
+        book.category_id = category_id
 
-            db.session.commit()
+        success, result = BaseService.commit_session(book)
 
-            return result.fetchone()[0]
-
-        except Exception as e:
-            print(f'Database error: ', e)
+        return result, success
     
     @staticmethod
     def delete_book(id):
-        return BaseService.delete(Books, Books.book_id, id)
+        success, _ = BookService.get_book_by_id(id)
+        
+        if success:
+            BaseService.delete(Books, Books.book_id, id)
+            return success, "Book deleted."
+        else:
+            return False, "Book does not exist."
 
     @staticmethod
     def get_book_by_id(id):
-        book = db.session.query(Books).filter_by(book_id=id).first()
+        book = BaseService.get_by_id(Books, Books.book_id, id)
+
         if book:
-            return book
-        
-        return None
+            return True, book
+        else:
+            return False, "Book does not exist."
     
     @staticmethod
     def get_book_by_title(title):
@@ -88,10 +94,10 @@ class BookService(BaseService):
     @staticmethod
     def get_average_rating(book_id):
         
-        reviews = BookService.get_book_by_id(book_id).reviews
+        _, book = BookService.get_book_by_id(book_id)
         ratings = []
 
-        for r in reviews:
+        for r in book.reviews:
             ratings.append(r.rating)
 
         avg = mean(ratings) if ratings else 0
@@ -100,4 +106,9 @@ class BookService(BaseService):
     
     @staticmethod
     def search_for_book(search_query):
-        return BaseService.search_for(Books, Books.title, search_query)
+        result = BaseService.search_for(Books, Books.title, search_query)
+
+        if result:
+            return True, result
+        else:
+            return True, ''
