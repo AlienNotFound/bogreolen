@@ -33,12 +33,7 @@ def get_reviews_based_on_user_list():
     reviews = ReviewService.get_reviews_based_on_user_list(user_id)
 
     if reviews:
-        return jsonify([{"username": r.user.username,
-                        #  "title": r.book.title,
-                         "book_id": r.book_id,
-                         "review": r.review,
-                         "rating": r.rating
-                         } for r in reviews]), 200
+        return jsonify([ReviewDTO.to_dict(r) for r in reviews]), 200
     else:
         return jsonify({"Error": "Reviews not found!"}), 400
     

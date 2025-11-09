@@ -1,6 +1,6 @@
 <script lang="ts">
   export let username: string;
-  export let user_id: number;
+  export let user_id: string;
   export let rating: number;
   export let review: string;
   export let title: string | null = null;
@@ -12,15 +12,17 @@
       <a href={"/book/" + book_id}>{title}</a>
     </h2>
 
-  <div class="review-header">
-    <a href="/user/{user_id}">
-      <h3 class="username">{username}</h3>
-    </a>
-    <div class="stars">
-      {#each Array(rating) as _}
-        <span>★</span>
-      {/each}
-    </div>
+    
+    <div class="review-header">
+      <a href="/user/{user_id}">
+        <h3 class="username">{username}</h3>
+      </a>
+      <h3 class="spacer">·</h3>
+      <div class="stars">
+        {#each Array(rating) as _}
+          <span>★</span>
+        {/each}
+      </div>  
   </div>
 
   <p class="review-text">{review}</p>
@@ -36,13 +38,20 @@
   }
   .review-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
-  /* .username {
-    font-weight: bold;
-  } */
+  .review-header .spacer {
+    width: 1vw;
+    text-align: center;
+  }
+
   .stars {
+    width: 4vw;
     color: gold;
+    font-size: 2em;
+  }
+
+  .review-text {
+    padding-bottom: 1vw;
   }
 </style>

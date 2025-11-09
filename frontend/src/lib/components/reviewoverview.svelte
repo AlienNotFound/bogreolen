@@ -6,11 +6,11 @@
 </script>
 
 <div id="reviewCardHolder">
-    <h2>Nyeste anmeldelser på bøger du er interesserede i</h2>
+    <h2>Recent reviews of books you're interested in</h2>
     {#each reviews as review}
         <Reviewcard 
                 username={review.username}
-                user_id={review.userid}
+                user_id={review.user_id}
                 rating={review.rating}
                 review={review.review}
                 title={review.title}

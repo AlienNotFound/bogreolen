@@ -56,12 +56,13 @@
                     </form>
                 </div>
             </div>
+            <div></div>
             <div id="reviewsSection">
-                <h3>Skriv en anmeldelse</h3>
+                <h3>Write a review</h3>
                 {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
                 <form method="POST" id="createReview" action="?/create_review">
                     <input type="hidden" name="bookid" value={data.bookid}>
-                    <input name="rating" type="number">
+                    <h4>Rating</h4><input name="rating" type="number">
                     <textarea name="reviewtext" id="" rows="10"></textarea>
                     <button>Submit</button>
                 </form>
@@ -84,6 +85,11 @@
     {/if}
 
     <style>
+        #bookCover {
+            justify-content: center;
+            display: flex;
+            grid-area: cover;
+        }
 
         #bookCover img {
             max-width: 100%;
@@ -91,7 +97,14 @@
         }
         #bookWrapper {
             display: grid;
-            grid-template-columns: 35% 45%;
+            grid-template-columns: 35% 32%;
+            grid-template-areas:
+                    "cover info" 
+                    "cover review";
+        }
+
+        #bookDetails {
+            grid-area: info;
         }
 
         #subHeader {
@@ -100,9 +113,36 @@
             flex-direction: row;
             justify-content: space-between;
         }
+        #lists {
+            background-color: #fff;
+            width: 15vw;
+            box-sizing: border-box;
+            border-radius: 5px;
+            padding: 7px 10px;
+            font-size: 1em;
+            border: none;
+        }
+
+        #reviewsSection {
+            grid-area: review;
+        }
 
         #createReview {
             display: flex;
             flex-direction: column;
+        }
+
+        #createReview button, #createReview input, #createReview textarea {
+            margin-bottom: 2%;
+        }
+
+        #createReview input::-webkit-outer-spin-button,
+        #createReview input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #createReview input {
+            -moz-appearance: textfield;
+            appearance: textfield;
         }
     </style>

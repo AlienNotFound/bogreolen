@@ -1,8 +1,9 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import type { LayoutProps, PageProps } from './$types';
+	import type { LayoutProps } from './$types';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
+    import Searchbar from '$lib/components/searchbar.svelte';
 	
 	let { data, children }: LayoutProps = $props();
 </script>
@@ -13,19 +14,22 @@
 
 {#if page.url.pathname != "/login" && page.url.pathname != "/signup"}
 <header>
-	<a href="/">
-		<h1>Bogreolen</h1>
-		</a>
-		<div id="menu-right">
-			<a href="/user/{data.user_id}"><h2>Profile</h2></a>
-			<a href="/book/create"><h2>Create a new book</h2></a>
-			<a href="/tracker"><h2>Tracker</h2></a>
-			<a href="/settings"><h2>Settings</h2></a>
-			<form method="POST" action="/?/logout" use:enhance>
-				<button type="submit">Sign out</button>
-			</form>
-		</div>
-	</header>
+	<a href="/"><h1>The Bookshelf</h1></a>
+
+	<div id="menu-center">
+		<Searchbar />
+	</div>
+
+	<div id="menu-right">
+		<a href="/user/{data.user_id}"><h2>Profile</h2></a>
+		<a href="/book/create" style="width: 40vw"><h2>Create a new book</h2></a>
+		<a href="/tracker"><h2>Tracker</h2></a>
+		<a href="/settings"><h2>Settings</h2></a>
+		<form method="POST" action="/?/logout" use:enhance>
+			<button id="signoutButton" type="submit">Sign out</button>
+		</form>
+	</div>
+</header>
 {/if}
 
 <main>
@@ -72,19 +76,34 @@
 	header {
 		display: flex;
 		justify-content: space-between;
-		align-content: center;
+		align-items: center;
 		box-sizing: border-box;
 		padding: 0 1%;
 	}
 
-	#menu-right {
+	header a {
 		width: 25vw;
+	}
+
+	#menu-center {
+		width: 25vw;
+	}
+
+	#menu-right {
+		width: 30vw;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 	}
 
+	#menu-right a {
+		text-align: center;
+	}
+
+	#signoutButton {
+		width: 4vw;
+	}
 	main {
 		padding: 0 1%;
 	}

@@ -28,6 +28,7 @@
 {#if data.reviews.length > 0}
     {#each data.reviews as review}
         <Reviewcard
+            title={review.title}
             username={review.username}
             user_id={data.userid!}
             rating={review.rating}

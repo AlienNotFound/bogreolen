@@ -73,12 +73,17 @@
 {#if showModal}
     <div id="modalWrapper">
         <div class="modal">
-            {#each modalFilter(modalInfo) as info}
-            <div class="books">
-                <h3>{info.title}</h3>
+            <div id="modalHeader">
+                <button id="modalClose" onclick={() => toggleModal()}>X</button>
+            </div>
+            <div id="bookList">
+
+                {#each modalFilter(modalInfo) as info}
+                <div class="books">
+                    <h3>{info.title}</h3>
                 <img src={info.image} alt="">
                 
-                <form method="POST" action="?/track_book">
+                <form id="pagesForm" method="POST" action="?/track_book">
                     <input type="text" name="book_id" value={info.book_id} hidden>
                     <h4>Current page:</h4>
                     <input type="number"
@@ -98,7 +103,7 @@
                 </form>            
             </div>
             {/each}
-            <button id="modalClose" onclick={() => toggleModal()}>X</button>
+        </div>
         </div>
     </div>
 {/if}
@@ -108,7 +113,9 @@
     .trackCard,
     .trackList,
     #modalWrapper,
+    #modalHeader,
     .modal,
+    #bookList,
     .books {
         display: flex;
     }
@@ -118,12 +125,16 @@
         justify-content: space-between;
     }
 
+    .trackCard,
+    .modal {
+        flex-direction: column;
+    }
+
     .error {
         color: rgb(173, 46, 23);
     }
     
     .trackCard {
-        flex-direction: column;
         align-items: center;
         padding: 2%;
     }
@@ -140,6 +151,10 @@
         height: 100%;
     }
 
+    #trackingOverviewBar {
+        padding: 1% 0;
+    }
+
     #modalWrapper {
         position: absolute;
         top: 0;
@@ -153,31 +168,45 @@
 
     .modal {
 		background-color: #ccd5ae;
-        height: 60vh;
+        height: 64vh;
+        width: 55vw;
         padding: 2% 3%;
     }
+    
+    #bookList {
+        overflow-x: scroll;
+        overflow-y: hidden;      
+        flex-direction: row;  
+    }
 
+    #modalHeader {
+        align-self: end;
+    }
     #modalClose {
-        height: 6vh;
+        height: 4vh;
     }
 
     .books {
+        min-width: 15vw;
+        max-width: 15vw;
         flex-direction: column;
-        padding: 2% 3%;
+        padding: 1% 3% 2% 3%;
     }
 
     .books img {
+        max-width: 100%;
         object-fit: contain;
+        margin-bottom: 4%;
     }
 
     .books input {
         -moz-appearance: textfield;
         appearance: textfield;
+        margin-bottom: 2%;
     }
 
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    #pagesForm {
+        display: flex;
+        flex-direction: column;
     }
 </style>

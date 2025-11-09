@@ -12,7 +12,7 @@ export const load = async ({ parent }) => {
     const tracks = await fetchTracks(token);
     const modalInfo = await fetchModalInfo(token);
     const reviews = await fetchGETRequest<Review[]>('reviews/user', token);
-    
+
     return { reviews, tracks, modalInfo };
   } catch (error) {
     return { reviews: null };
