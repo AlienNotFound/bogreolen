@@ -1,5 +1,4 @@
     <script lang="ts">
-        import { enhance } from '$app/forms';
         import type { PageData, ActionData } from './$types';
         import Reviewcard from '$lib/components/reviewcard.svelte';
         let { data, form }: { data: PageData, form: ActionData } = $props();
@@ -41,9 +40,9 @@
                 </div>
                 <p>{data.summary}</p>
                 <div id="addToListWrapper">
-                    <form method="POST" action={method} use:enhance>
+                    <form method="POST" action={method}>
                         {#if form?.duplicate_error}<p class="error">You've already added this book to a list.</p>{/if}
-                        <input type="hidden" name="bookid" value={data.bookid}>
+                        <input type="hidden" name="book_id" value={data.book_id}>
                         
                         <select name="listname" id="lists" bind:value={listval}>
                             <option value="WANT_TO_READ">Want to read</option>
@@ -61,7 +60,7 @@
                 <h3>Write a review</h3>
                 {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
                 <form method="POST" id="createReview" action="?/create_review">
-                    <input type="hidden" name="bookid" value={data.bookid}>
+                    <input type="hidden" name="book_id" value={data.book_id}>
                     <h4>Rating</h4><input name="rating" type="number">
                     <textarea name="reviewtext" id="" rows="10"></textarea>
                     <button>Submit</button>
@@ -71,7 +70,6 @@
                 {#each data.reviews as review}
                 <Reviewcard
                     username={review.username}
-                    user_id={review.userid}
                     rating={review.rating}
                     review={review.review}
                     />

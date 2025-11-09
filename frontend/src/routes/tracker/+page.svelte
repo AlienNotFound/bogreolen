@@ -11,12 +11,16 @@
 	
 	const calendarCells = trackerCalendarCells();
 	const trackDates: (Date | null)[] = []
-	
-	data.tracks.forEach(date => {
-		const convertedDate = new Date(date.date)
-		trackDates.push(convertedDate);
-	});
-	
+
+	console.log(data)
+
+	if (data.tracks.length > 0) {
+		data.tracks.forEach(date => {
+			const convertedDate = new Date(date.date)
+			trackDates.push(convertedDate);
+		});
+	}
+		
 	function toggleModal(info: Track | null, date: string) {
 		newModalInfo = info,
 		selectedDate = date;

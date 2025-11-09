@@ -5,13 +5,13 @@ import { fail } from "@sveltejs/kit";
 export const actions = {
     add_to_list: async ({ request, cookies }) => {
         const formData = await request.formData();
-        const bookid = formData.get('bookid');
+        const book_id = formData.get('book_id');
         const listname = formData.get('listname');
         const token = await validateToken(cookies);
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('add-to-list', {
-                bookid,
+                book_id,
                 listname
             }, token);
                 
@@ -27,12 +27,12 @@ export const actions = {
         },
     move_to_list: async ({ request, cookies }) => {
         const formData = await request.formData();
-        const bookid = formData.get('bookid');
+        const book_id = formData.get('book_id');
         const listname = formData.get('listname');
         const token = await validateToken(cookies);
         
         try {
-            const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('move-to-list/' + bookid, {
+            const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('move-to-list/' + book_id, {
                 listname
             }, token);
 
@@ -46,14 +46,14 @@ export const actions = {
     },
     create_review: async ({ request, cookies }) => {
         const formData = await request.formData();
-        const bookid = formData.get('bookid');
+        const book_id = formData.get('book_id');
         const rating = formData.get('rating');
         const reviewtext = formData.get('reviewtext');
         const token = await validateToken(cookies);
 
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
-                bookid,
+                book_id,
                 rating,
                 reviewtext
             }, token)
@@ -72,8 +72,9 @@ export const actions = {
     }
 }
 
-export const load = async ({ params, parent }) => {
-    const {token} = await parent();
+export const load = async ({ params, cookies }) => {
+    const token: string | null = await validateToken(cookies) ?? null;
+
     try {
         const book = await fetchGetRequestById<BookDetails>('book/', params.slug, token!);
         const status = await fetchGetRequestById<{book_status: string}>('book-status/', params.slug, token!);

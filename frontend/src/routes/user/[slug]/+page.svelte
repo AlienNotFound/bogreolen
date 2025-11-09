@@ -28,9 +28,10 @@
 {#if data.reviews.length > 0}
     {#each data.reviews as review}
         <Reviewcard
+            book_id={review.book_id}
             title={review.title}
             username={review.username}
-            user_id={data.userid!}
+            user_id={data.user_id!}
             rating={review.rating}
             review={review.review}
         />
