@@ -3,6 +3,11 @@ from backend.connection import db
 
 class BaseService:
     @staticmethod
+    def add_entry(model):
+        db.session.add(model)
+        return BaseService.commit_session(model)
+
+    @staticmethod
     def get_by_latest(model, id_column):
         return db.session.query(model).order_by(id_column.desc()).first()
 

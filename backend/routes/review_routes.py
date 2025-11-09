@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from backend.models import Reviewstb
+from backend.models import Reviews
 from backend.services.review_service import ReviewService
 from backend.DTOs.review_dto import ReviewDTO
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -51,19 +51,19 @@ def get_reviews_by_user(user_id):
 def create_review():
     data = request.get_json()
 
-    bookid = data.get('bookid')
-    userid = get_jwt_identity()
+    book_id = data.get('book_id')
+    user_id = get_jwt_identity()
     rating = data.get('rating')
     reviewtext = data.get('reviewtext')
 
     result = ReviewService.create_review(
-        bookid=bookid,
-        userid=userid,
+        book_id=book_id,
+        user_id=user_id,
         rating=rating,
         reviewtext=reviewtext
     )
 
-    if isinstance(result, Reviewstb):
+    if isinstance(result, Reviews):
         return jsonify({"Success": "Review created!"}), 200
     if result == 'You\'ve already reviewed this book':
         return jsonify({"Error": f"{result}"}), 409
@@ -87,7 +87,7 @@ def edit_review(id):
         reviewtext=reviewtext
     )
 
-    if isinstance(result, Reviewstb):
+    if isinstance(result, Reviews):
         return jsonify({"Success": f"Review updated!"}), 200
     else:
         return jsonify({"Error": "An error occured"}), 500

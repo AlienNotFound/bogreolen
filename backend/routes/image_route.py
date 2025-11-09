@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from backend.services.image_service import ImageService
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 image_bp = Blueprint('image_bp', __name__)
 

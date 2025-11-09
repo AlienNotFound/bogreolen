@@ -2,8 +2,9 @@ import { redirect } from '@sveltejs/kit';
 import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
 import { validateToken } from '$lib/server/auth.js';
 
-export const load = async ({ parent }) => {
-  const { token } = await parent();
+export const load = async ({ cookies }) => {
+  const token: string | null = await validateToken(cookies) ?? null;
+
   if (!token) {
     throw redirect(302, '/login');
   }

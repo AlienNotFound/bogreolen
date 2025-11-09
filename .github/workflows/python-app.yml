@@ -81,4 +81,4 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_HOST: 127.0.0.1
       run: |
-        pytest ./backend/tests/basetests.py -v
+        pytest ./backend/tests/book_tests.py -v

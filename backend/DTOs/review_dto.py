@@ -3,8 +3,8 @@ class ReviewDTO:
     def to_dict(review):
         return {
             "username": review.user.username,
-            "user_id": review.user.userid,
-            "book_id": review.bookid,
+            "user_id": review.user.user_id,
+            "book_id": review.book_id,
             "title": review.book.title,
             "review": review.review,
             "rating": review.rating,
@@ -13,6 +13,6 @@ class ReviewDTO:
     @staticmethod
     def overview_dict(review):
         return {
-            "reviewid": review.reviewid,
-            "booktitle": review.book.title
+            "review_id": review.review_id,
+            "book_title": review.book.title
         }

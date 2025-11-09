@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from backend.models import Trackstb
+from backend.models import Tracks
 from backend.services.track_service import TrackService
 from backend.DTOs.track_dto import TrackDTO
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -26,7 +26,7 @@ def track_book(id):
         last_page=last_page
     )
 
-    if isinstance(result, Trackstb):
+    if isinstance(result, Tracks):
         return jsonify({"Success": "Book tracked!"}), 200
     else:
         return jsonify({"Error": f"{result}An error occured"}), 500
@@ -50,7 +50,7 @@ def edit_track(id):
         date=date
     )
 
-    if isinstance(result, Trackstb):
+    if isinstance(result, Tracks):
         return jsonify({"Success": f"Track updated!"}), 200
     else:
         return jsonify({"Error": f"{result} An error occured"}), 500

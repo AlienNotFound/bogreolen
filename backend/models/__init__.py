@@ -1,15 +1,15 @@
-from backend.models.bookstb import Bookstb
-from backend.models.authors_model import Authorstb
-from backend.models.categories_model import Categoriestb
-from backend.models.reviews_model import Reviewstb
-from backend.models.user_model import Userstb
-from backend.models.list_model import Liststb
-from backend.models.tracks_model import Trackstb
+from backend.models.book_model import Books
+from backend.models.author_model import Authors
+from backend.models.category_model import Categories
+from backend.models.review_model import Reviews
+from backend.models.user_model import Users
+from backend.models.list_model import Lists
+from backend.models.track_model import Tracks
 
-__all__ = ["Bookstb",
-           "Authorstb",
-           "Categoriestb",
-           "Reviewstb",
-           "Userstb",
-           "Liststb",
-           "Trackstb"]
+__all__ = ["Books",
+           "Authors",
+           "Categories",
+           "Reviews",
+           "Users",
+           "Lists",
+           "Tracks"]
