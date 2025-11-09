@@ -83,9 +83,9 @@ class BookService(BaseService):
         books = db.session.query(Books).all()
 
         if books:
-            return books
+            return True, books
         
-        return None
+        return False, "Books not found."
     
     @staticmethod
     def get_latest_book():
