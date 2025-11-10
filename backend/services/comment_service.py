@@ -6,13 +6,16 @@ from backend.services.review_service import ReviewService
 class CommentService:
     @staticmethod
     def create_comment(user_id, review_id, comment_text):
+        if not comment_text:
+            return False, "Comment cannot be empty.";
+
         comment = Comments(user_id=user_id,
                            review_id=review_id,
                            comment=comment_text)
         
         success, result = BaseService.add_entry(comment)
 
-        return success, result
+        return success, "Comment created."
 
     @staticmethod
     def edit_comment(id, comment_text):

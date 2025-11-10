@@ -56,13 +56,4 @@ class ReviewService(BaseService):
     @staticmethod
     def get_reviews_by_user(user_id):
         reviews = BaseService.get_all_by_id(Reviews, Reviews.user_id, user_id)
-        return [
-            {
-                "book_id": review.book_id,
-                "title": review.book.title,
-                "rating": review.rating,
-                "username": review.user.username,
-                "review": review.review
-            }
-            for review in reviews
-        ]
+        return reviews

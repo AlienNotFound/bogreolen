@@ -34,6 +34,7 @@
             user_id={data.user_id!}
             rating={review.rating}
             review={review.review}
+            comments={review.comments}
         />
     {/each}
 {/if}

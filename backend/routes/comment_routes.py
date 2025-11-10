@@ -21,7 +21,7 @@ def create_comment():
     )
 
     if result:
-        return jsonify({'Success': 'Comment created!'}), 200
+        return jsonify({'Success': f'{message}'}), 200
     else:
         return jsonify({'Error': f'{message}'}), 500
 

@@ -50,14 +50,14 @@ export const actions = {
         const rating = formData.get('rating');
         const reviewtext = formData.get('reviewtext');
         const token = await validateToken(cookies);
-
+         
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
                 book_id,
                 rating,
                 reviewtext
             }, token)
-
+            
             if (response?.Error == "Error: You've already reviewed this book") {
                 return fail(40, { success: false, duplicate_error: response?.Error });
             } else if (response?.Error) {
@@ -68,6 +68,27 @@ export const actions = {
                 return fail(409, { success: false, duplicate_error: error.message });
             }
             return { success: false, error: "Failed to add review." };
+        }
+    },
+    create_comment: async ({ request, cookies}) => {
+        const formData = await request.formData();
+        const review_id = formData.get('review_id');
+        const comment_text = formData.get('comment_text');
+        const token = await validateToken(cookies);
+        
+        try {
+            const response = await fetchPOSTRequest<string>('comment', {
+                review_id,
+                comment_text
+            }, token);
+
+            if (response == "Comment cannot be empty.") {
+                return fail(400, {success: false, error: response})
+            }
+            return response;
+            
+        } catch (error) {
+            return { error: "An error occured."}
         }
     }
 }
