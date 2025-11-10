@@ -110,7 +110,7 @@ export async function fetchPUTRequest<T>(route: string, body: any, token: string
     
     if (!response.ok) {
         const message = result?.Error || result?.message || 'Unknown error';
-        throw new Error(message);
+        return message
     }
     
     return result as T;
@@ -136,7 +136,6 @@ export async function fetchDELETERequest<T>(route: string, token: string = ""): 
     
     if (!response.ok) {
         const message = result?.Error;
-        // throw new Error(message);
         return message;
     }
     

@@ -21,6 +21,9 @@ class CommentService:
     def edit_comment(id, comment_text):
         success, result = CommentService.get_comments_by_id(id)
 
+        if not comment_text:
+            return False, "Comment cannot be empty.";
+
         if not success:
             return success, result
         

@@ -4,6 +4,7 @@
   export let review_id: number | string | null = null;
   export let username: string;
   export let user_id: number | string | null = null;
+  export let current_user_id: number | string | null = null;
   export let rating: number;
   export let review: string;
   export let title: string | null = null;
@@ -11,13 +12,10 @@
   export let comments: ReviewComment[] | null;
   export let submitResponse: string | any | null;
 
-  let method:string = "";
-
+  let method: string = "";
+  let editting: boolean = false;
   let commentArrow: string = "v";
 
-  console.log(submitResponse);
-  
-  
   function commentFoldToggle() {
     if (commentArrow == ">") {
       commentArrow = "v";
@@ -28,7 +26,9 @@
   
   function switchMethod(val: string) {
     if (val == "edit") {
-      method = "?/edit_comment";
+      if (editting) {
+        method = "?/edit_comment";
+      }
     } else if (val == "delete") {
       method = "?/delete_comment";
     }
@@ -58,31 +58,50 @@
       <button onclick={() => commentFoldToggle()}>{commentArrow}</button>
       <h3>Comments ({comments?.length})</h3>
     </div>
+
     <div id="commentContent" style="display: {commentArrow == "v" ? "flex" : "none"}">
       {#each [...(comments ?? [])].reverse() as comment }
         <div class="comment">
+          <form action={method} id="commentEditDeleteForm" method="post" use:enhance={({ cancel, submitter }) => { 
+            if (submitter?.dataset.action === "delete") {
+              if (!window.confirm("Are you sure you want to delete this comment? This cannot be undone!")) {
+                cancel();
+                return;
+              }
+            } else if (submitter?.dataset.action === "save") {
+              editting = false;
+              return;
+            }
+            
+            return async ({ update }) => {
+              update({ reset: false });
+            };
+          }}>
+          
           <div class="commentHeader">
             <h3>{comment.username}</h3>
-            {#if user_id == comment.user_id}
-            <form action={method} id="commentEditDeleteForm" method="post" use:enhance={({ cancel, submitter }) => { 
-              if (submitter?.dataset.action === "delete") {
-                if (!window.confirm("Are you sure you want to delete this comment? This cannot be undone!")) {
-                  cancel();
-                  return;
-                }
-              }
-              
-              return async ({ update }) => {
-                update({ reset: false });
-              };
-            }}>
-              <input type="text" name="comment_id" value={comment.comment_id} >
-              <button data-action="edit" onclick={() => switchMethod("edit")}>✏️</button>
-              <button data-action="delete"onclick={() => switchMethod("delete")}>🗑️</button>
-            </form>
-            {/if}
+            <div>
+          
+              {#if current_user_id == comment.user_id}
+              <input type="hidden" name="comment_id" value={comment.comment_id}>
+              {#if editting}
+              <button data-action="save" onclick={() => switchMethod("edit")}>💾</button>
+              {:else}
+              <button data-action="edit" onclick={() => editting = true}>✏️</button>
+              {/if}
+              <button data-action="delete" onclick={() => switchMethod("delete")}>🗑️</button>
+              {/if}
+          
+            </div>
           </div>
-          <p>{comment.comment_text}</p>
+
+            {#if editting && current_user_id == comment.user_id}
+            <textarea name="comment_text_edit" value={comment.comment_text}></textarea>
+            {:else}
+            <p>{comment.comment_text}</p>
+            {/if}
+          
+          </form>
         </div>
       {/each}
     </div>
@@ -92,7 +111,7 @@
         update({ reset: false });
       };
     }}>
-      <input type="text" name="review_id" value={review_id} hidden>
+      <input type="hidden" name="review_id" value={review_id}>
       <textarea name="comment_text"></textarea>
       <button>Add a comment</button>
 
@@ -101,6 +120,7 @@
           {submitResponse.error}
         </div>
       {/if}
+      
     </form>
   </div>
 </div>

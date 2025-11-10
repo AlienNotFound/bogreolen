@@ -41,6 +41,8 @@ def edit_comment(id):
         return jsonify({"Success": "Comment editted."}), 200
     elif message == 'Comment does not exist.':
         return jsonify({"Error": f'{message}'}), 404
+    elif message == 'Comment cannot be empty.':
+        return jsonify({"Error": f'{message}'}), 400
     else:
         return jsonify({"Error": 'An error occured'}), 500
 

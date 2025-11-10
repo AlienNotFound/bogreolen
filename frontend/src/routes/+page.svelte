@@ -20,6 +20,7 @@
                 review_id={review.review_id}
                 username={review.username}
                 user_id={review.user_id}
+                current_user_id={data.user_id}
                 rating={review.rating}
                 review={review.review}
                 title={review.title}
