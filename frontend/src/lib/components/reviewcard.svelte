@@ -48,7 +48,7 @@
       <h3>Comments ({comments?.length})</h3>
     </div>
     <div id="commentContent" style="display: {commentArrow == "v" ? "flex" : "none"}">
-      {#each comments as comment }
+      {#each [...(comments ?? [])].reverse() as comment }
         <div class="comment">
           <h3>{comment.username}</h3>
           <p>{comment.comment_text}</p>
@@ -56,7 +56,7 @@
       {/each}
     </div>
 
-    <form action="/book?/create_comment" id="commentForm" method="post" use:enhance={() => {
+    <form action="?/create_comment" id="commentForm" method="post" use:enhance={() => {
       return async ({ update }) => {
         update({ reset: false });
       };

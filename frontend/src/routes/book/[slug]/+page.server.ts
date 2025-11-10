@@ -82,6 +82,7 @@ export const actions = {
                 comment_text
             }, token);
 
+            // console.log(response)
             if (response == "Comment cannot be empty.") {
                 return fail(400, {success: false, error: response})
             }

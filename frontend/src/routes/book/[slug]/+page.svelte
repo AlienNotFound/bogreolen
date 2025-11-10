@@ -16,6 +16,7 @@
             listval = listMap[data.book_status] ?? '';
         }
 
+        // console.log(form)
     </script>
 
     <svelte:head>
