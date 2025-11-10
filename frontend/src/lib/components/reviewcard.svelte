@@ -11,15 +11,26 @@
   export let comments: ReviewComment[] | null;
   export let submitResponse: string | any | null;
 
+  let method:string = "";
+
   let commentArrow: string = "v";
 
-  console.log(submitResponse)
-
+  console.log(submitResponse);
+  
+  
   function commentFoldToggle() {
     if (commentArrow == ">") {
       commentArrow = "v";
     } else if (commentArrow == "v") {
       commentArrow = ">";
+    }
+  }
+  
+  function switchMethod(val: string) {
+    if (val == "edit") {
+      method = "?/edit_comment";
+    } else if (val == "delete") {
+      method = "?/delete_comment";
     }
   }
 </script>
@@ -50,7 +61,27 @@
     <div id="commentContent" style="display: {commentArrow == "v" ? "flex" : "none"}">
       {#each [...(comments ?? [])].reverse() as comment }
         <div class="comment">
-          <h3>{comment.username}</h3>
+          <div class="commentHeader">
+            <h3>{comment.username}</h3>
+            {#if user_id == comment.user_id}
+            <form action={method} id="commentEditDeleteForm" method="post" use:enhance={({ cancel, submitter }) => { 
+              if (submitter?.dataset.action === "delete") {
+                if (!window.confirm("Are you sure you want to delete this comment? This cannot be undone!")) {
+                  cancel();
+                  return;
+                }
+              }
+              
+              return async ({ update }) => {
+                update({ reset: false });
+              };
+            }}>
+              <input type="text" name="comment_id" value={comment.comment_id} >
+              <button data-action="edit" onclick={() => switchMethod("edit")}>✏️</button>
+              <button data-action="delete"onclick={() => switchMethod("delete")}>🗑️</button>
+            </form>
+            {/if}
+          </div>
           <p>{comment.comment_text}</p>
         </div>
       {/each}
@@ -117,6 +148,12 @@
     margin-bottom: 1%;
   }
 
+  .commentHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
   .comment {
     background-color: #fefae0;
     padding: 2%;

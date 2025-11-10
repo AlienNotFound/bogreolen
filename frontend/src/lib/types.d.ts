@@ -56,8 +56,10 @@ type User = {
 }
 
 type ReviewComment = {
+    comment_id: number,
+    comment_text: string,
+    user_id: number,
     username: string,
-    comment_text: string
 }
 
 type ResponseMessage<T> = {

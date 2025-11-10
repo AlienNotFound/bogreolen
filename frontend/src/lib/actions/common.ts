@@ -1,4 +1,4 @@
-import { fetchPOSTRequest } from "$lib/api/common";
+import { fetchPOSTRequest, fetchPUTRequest, fetchDELETERequest } from "$lib/api/common";
 import { fail } from "@sveltejs/kit";
 
 export async function createComment(formData: FormData, token: string) {
@@ -10,7 +10,38 @@ export async function createComment(formData: FormData, token: string) {
         comment_text
     }, token)
 
+    console.log(response);
     if (response == "Comment cannot be empty.") {
+        return fail(400, {success: false, error: response})
+    }
+}
+
+export async function editComment(formData: FormData, token: string) {
+    const comment_id = formData.get('comment_id');
+
+    const response = await fetchPUTRequest<string>('comment/' + comment_id, {
+        comment_id
+    }, token)
+
+    console.log(response);
+
+    if (response == "Comment cannot be empty.") {
+        return fail(400, {success: false, error: response})
+    }
+}
+
+export async function deleteComment(formData: FormData, token: string) {
+    const comment_id = formData.get('comment_id');
+
+    const response = await fetchDELETERequest<string>('comment/' + comment_id, token)
+        
+    console.log(response);
+    console.log(
+        response.Error == "Comment does not exist."
+
+    );
+        
+    if (response == "Comment does not exist.") {
         return fail(400, {success: false, error: response})
     }
 }

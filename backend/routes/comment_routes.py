@@ -50,8 +50,8 @@ def delete_comment(id):
     result, message = CommentService.delete_comment(id=id)
 
     if result:
-        return jsonify({"Success": f'{message}'})
-    elif message == 'Comment does not exist.':
-        return jsonify({"Error": f'{message}'})
+        return jsonify({"Success": f'{message}'}), 200
+    elif message == "Comment does not exist.":
+        return jsonify({"Error": f'{message}'}), 404
     else:
-        return jsonify({"Error": 'An error occured'})
+        return jsonify({"Error": 'An error occured'}), 500

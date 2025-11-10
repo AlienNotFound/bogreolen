@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
-import { createComment } from '$lib/actions/common.js';
+import { createComment, editComment, deleteComment } from '$lib/actions/common.js';
 import { validateToken } from '$lib/server/auth.js';
 import { fail } from '@sveltejs/kit';
 
@@ -73,12 +73,34 @@ export const actions = {
   create_comment: async ({ request, cookies }) => {
     const formData = await request.formData();
     const token = await validateToken(cookies);
-
+    
     try {
       const response = await createComment(formData, token);
       return response;          
     } catch (error) {
-      return { error: "An error occured."}
+      return { error: "An error occured."};
+    }
+  },
+  edit_comment: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const token = await validateToken(cookies);
+
+    try {
+      const response = await editComment(formData, token);
+      return response;
+    } catch (error) {
+      return { error: "An error occured."};
+    }
+  },
+  delete_comment: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const token = await validateToken(cookies);
+
+    try {
+      const response = await deleteComment(formData, token);
+      return response;      
+    } catch (error) {
+      return { error: "An error occured."};
     }
   }
 }
