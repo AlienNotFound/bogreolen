@@ -1,4 +1,5 @@
 import { fetchGetRequestById, fetchPOSTRequest, fetchPUTRequest } from "$lib/api/common";
+import { createComment } from "$lib/actions/common.js";
 import { validateToken } from '$lib/server/auth.js';
 import { fail } from "@sveltejs/kit";
 
@@ -70,24 +71,13 @@ export const actions = {
             return { success: false, error: "Failed to add review." };
         }
     },
-    create_comment: async ({ request, cookies}) => {
+    create_comment: async ({ request, cookies }) => {
         const formData = await request.formData();
-        const review_id = formData.get('review_id');
-        const comment_text = formData.get('comment_text');
         const token = await validateToken(cookies);
         
         try {
-            const response = await fetchPOSTRequest<string>('comment', {
-                review_id,
-                comment_text
-            }, token);
-
-            // console.log(response)
-            if (response == "Comment cannot be empty.") {
-                return fail(400, {success: false, error: response})
-            }
-            return response;
-            
+          const response = await createComment(formData, token);
+          return response;          
         } catch (error) {
             return { error: "An error occured."}
         }

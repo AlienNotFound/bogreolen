@@ -1,7 +1,9 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+    import type { PageData, ActionData } from './$types';
     import Reviewcard from '$lib/components/reviewcard.svelte';
-    let { data }: { data: PageData } = $props();
+    let { data, form }: { data: PageData, form: ActionData } = $props();
+    console.log(form);
+    
 
     const listnames = ["Want to read", "Reading", "Finished", "Didn't finish"];
 </script>
@@ -28,6 +30,7 @@
 {#if data.reviews.length > 0}
     {#each data.reviews as review}
         <Reviewcard
+            review_id={review.review_id}
             book_id={review.book_id}
             title={review.title}
             username={review.username}
@@ -35,6 +38,7 @@
             rating={review.rating}
             review={review.review}
             comments={review.comments}
+            submitResponse={form}
         />
     {/each}
 {/if}
