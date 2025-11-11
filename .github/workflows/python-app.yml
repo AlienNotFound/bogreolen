@@ -57,6 +57,7 @@ jobs:
       env:
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
         MYSQL_HOST: mysql
       run: |
         mysql -h127.0.0.1 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} ${{ secrets.MYSQL_DATABASE }} < backend/sql/bogreolen_database_bookstb.sql
@@ -79,6 +80,7 @@ jobs:
       env:
         MYSQL_DATABASE: bogreolen_database
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
         MYSQL_HOST: 127.0.0.1
       run: |
         pytest ./backend/tests/book_tests.py -v
