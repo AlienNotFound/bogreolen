@@ -18,7 +18,7 @@ db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + MYSQL_RAILWAY
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:PNjPqAkIQVKSuHdbnreytveDckfWCkUe@mainline.proxy.rlwy.net:30201/railway'
 
 
     if test_config:
@@ -57,7 +57,7 @@ def create_app(test_config = None):
 
     CORS(app, origins=['https://bogreolen.vercel.app'],
      supports_credentials=True,
-     allow_headers=['Content-Type'],
+     allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'])
 
     return app
