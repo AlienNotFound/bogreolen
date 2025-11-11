@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { fetchGETRequest } from "$lib/api/common";
     let searchInput = $state<string>();
     let searchSuggestions = $state<Book[]>([]);
     let showSuggestions = $state(false);
     
     async function fetchSearch(query: string) {
-        try {
-            if (query) {
-                const result = await fetchGETRequest<Book[]>('search/' + searchInput);
-                searchSuggestions = result;
-                if (searchSuggestions) {
-                    showSuggestions = true;
-                }
-            }
-        } catch (err) {
-            console.error(err)
+        if (query == "") {
+            searchSuggestions = [];
+            return;
+        }
+
+        const result = await fetch(`api/search?query=${encodeURIComponent(query)}`);
+        if (result.ok) {
+            
+            searchSuggestions = await result.json();
+            showSuggestions = true;
         }
     }
 
@@ -33,10 +32,11 @@
 
 <div id=searchbarwrapper>
     <input type="text"
-            id="searchInput"
-            onkeyup={
+        name="searchInput"
+        id="searchInput"
+        onkeyup={
                 async (e) => {
-                        searchInput = e.currentTarget.value;
+                    searchInput = e.currentTarget.value;
                         fetchSearch(searchInput);
                         if (e.currentTarget.value == "") {
                             showSuggestions = false;
@@ -45,13 +45,13 @@
                 }
             style="border-radius: {showSuggestions ? '5px 0 0 0' : '5px 0 0 5px'}"
         >
-        <div id="XButton">
-            <button onclick={() => hideSuggestions()}>X</button>
-        </div>
-        {#if showSuggestions}
-        <div id="searchSuggestions">
-            {#each searchSuggestions as suggestion}
-            <a href="/book/{suggestion.book_id}">{suggestion.title}</a>
+    <div id="XButton">
+        <button onclick={() => hideSuggestions()}>X</button>
+    </div>
+    {#if showSuggestions}
+    <div id="searchSuggestions">
+        {#each searchSuggestions as suggestion}
+        <a href="/book/{suggestion.book_id}">{suggestion.title}</a>
         {/each}
     </div>
     {/if}
