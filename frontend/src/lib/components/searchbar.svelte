@@ -51,7 +51,7 @@
     {#if showSuggestions}
     <div id="searchSuggestions">
         {#each searchSuggestions as suggestion}
-        <a href="/book/{suggestion.book_id}">{suggestion.title}</a>
+        <a href="/book/{suggestion.book_id}" onclick={() => hideSuggestions()}>{suggestion.title}</a>
         {/each}
     </div>
     {/if}
