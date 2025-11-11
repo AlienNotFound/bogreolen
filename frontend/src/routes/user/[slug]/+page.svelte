@@ -2,8 +2,6 @@
     import type { PageData, ActionData } from './$types';
     import Reviewcard from '$lib/components/reviewcard.svelte';
     let { data, form }: { data: PageData, form: ActionData } = $props();
-    console.log(form);
-    
 
     const listnames = ["Want to read", "Reading", "Finished", "Didn't finish"];
 </script>
@@ -35,6 +33,7 @@
             title={review.title}
             username={review.username}
             user_id={data.user_id!}
+            current_user_id={data.user_id}
             rating={review.rating}
             review={review.review}
             comments={review.comments}

@@ -4,7 +4,7 @@
   export let review_id: number | string | null = null;
   export let username: string;
   export let user_id: number | string | null = null;
-  export let current_user_id: number | string | null = null;
+  export let current_user_id: number | string | null | undefined;
   export let rating: number;
   export let review: string;
   export let title: string | null = null;
