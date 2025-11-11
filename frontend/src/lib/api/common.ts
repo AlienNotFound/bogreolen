@@ -1,6 +1,20 @@
-const PROD_API = import.meta.env.VITE_API_BASE_URL
+import { browser } from "$app/environment";
+const PRODUCTION_API = import.meta.env.VITE_API_BASE_URL;
+const LOCAL_API = import.meta.env.VITE_LOCAL_API;
+const DOCKER_API = import.meta.env.VITE_DOCKER_API;
+const mode = import.meta.env.MODE;
+export let API_BASE_URL = "";
 
-export const API_BASE_URL = "https://bogreolen.onrender.com/";
+if (mode == "development") {
+    if (browser) {
+        API_BASE_URL = LOCAL_API;
+    } else {
+        API_BASE_URL = DOCKER_API;
+    }
+} else if (mode == "production") {
+    API_BASE_URL = PRODUCTION_API;
+}
+
 export async function fetchGetRequestById<T>(route: string, id: string, token: string = ""): Promise<ResponseMessage<T>> {
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
