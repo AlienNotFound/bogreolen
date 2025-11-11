@@ -13,6 +13,7 @@ MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
 MYSQL_USER = os.getenv('MYSQL_USER')
 DATABASE_URL = os.getenv('DATABASE_URL')
+MYSQL_RAILWAY = os.getenv('MYSQL_RAILWAY')
 
 db = SQLAlchemy()
 
@@ -45,8 +46,8 @@ def create_app(test_config = None):
     app.register_blueprint(comment_bp)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config["JWT_COOKIE_SECURE"] = False
-    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+    app.config["JWT_COOKIE_SECURE"] = True
+    app.config["JWT_COOKIE_SAMESITE"] = "None"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"] 
     app.config["JWT_ACCESS_COOKIE_NAME"] = 'access_token'
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
@@ -55,9 +56,9 @@ def create_app(test_config = None):
 
     JWTManager(app)
 
-    CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173'],
+    CORS(app, origins=['https://bogreolen.vercel.app'],
      supports_credentials=True,
-     allow_headers=['Content-Type'],
+     allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'])
 
     return app
