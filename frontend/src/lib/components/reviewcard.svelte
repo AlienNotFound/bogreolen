@@ -14,13 +14,13 @@
 
   let method: string = "";
   let editting: boolean = false;
-  let commentArrow: string = "v";
+  let commentArrow: string = "⮞";
 
   function commentFoldToggle() {
-    if (commentArrow == ">") {
-      commentArrow = "v";
-    } else if (commentArrow == "v") {
-      commentArrow = ">";
+    if (commentArrow == "⮞") {
+      commentArrow = "⮟";
+    } else if (commentArrow == "⮟") {
+      commentArrow = "⮞";
     }
   }
   
@@ -55,11 +55,11 @@
   <p class="review-text">{review}</p>
   <div id="commentsWrapper">
     <div id="commentsHeader">
-      <button onclick={() => commentFoldToggle()}>{commentArrow}</button>
+      <button id="arrowButton" onclick={() => commentFoldToggle()}>{commentArrow}</button>
       <h3>Comments ({comments?.length})</h3>
     </div>
 
-    <div id="commentContent" style="display: {commentArrow == "v" ? "flex" : "none"}">
+    <div id="commentContent" style="display: {commentArrow == "⮟" ? "flex" : "none"}">
       {#each [...(comments ?? [])].reverse() as comment }
         <div class="comment">
           <form action={method} id="commentEditDeleteForm" method="post" use:enhance={({ cancel, submitter }) => { 
@@ -155,10 +155,16 @@
     width: 25vw;
   }
   #commentsHeader {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    display: grid;
+    align-items: baseline;
     margin-bottom: 1%;
+    grid-template-columns: 7% 42%;
+    grid-gap: 2%;
+  }
+
+  #arrowButton {
+    text-align: center;
+    line-height: 1.5em;
   }
   
   #commentContent {
