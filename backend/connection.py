@@ -12,13 +12,13 @@ MYSQL_HOST = os.getenv('MYSQL_HOST', 'db')
 MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
 MYSQL_USER = os.getenv('MYSQL_USER')
-MYSQL_RAILWAY = os.getenv('MYSQL_RAILWAY')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + MYSQL_RAILWAY
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + DATABASE_URL
 
 
     if test_config:
