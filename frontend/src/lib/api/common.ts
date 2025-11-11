@@ -1,12 +1,9 @@
 import { browser } from "$app/environment";
-const PRODUCTION_API = import.meta.env.VITE_API_BASE_URL
-const LOCAL_API = import.meta.env.VITE_LOCAL_API
-const DOCKER_API = import.meta.env.VITE_DOCKER_API
-const mode = import.meta.env.MODE
-export let API_BASE_URL = ""; //mode = "development" browser ? LOCAL_API : DOCKER_API;
-
-console.log(LOCAL_API);
-
+const PRODUCTION_API = import.meta.env.VITE_API_BASE_URL;
+const LOCAL_API = import.meta.env.VITE_LOCAL_API;
+const DOCKER_API = import.meta.env.VITE_DOCKER_API;
+const mode = import.meta.env.MODE;
+export let API_BASE_URL = "";
 
 if (mode == "development") {
     if (browser) {
@@ -17,7 +14,6 @@ if (mode == "development") {
 } else if (mode == "production") {
     API_BASE_URL = PRODUCTION_API;
 }
-console.log(API_BASE_URL);
 
 export async function fetchGetRequestById<T>(route: string, id: string, token: string = ""): Promise<ResponseMessage<T>> {
     const headers: Record<string, string> = {};
