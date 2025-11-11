@@ -1,13 +1,4 @@
-import { browser } from "$app/environment";
-import { error, redirect } from "@sveltejs/kit";
-import { jwtDecode } from "jwt-decode";
-const LOCAL_API = import.meta.env.LOCAL_API_BASE_URL;
-const DOCKER_API = 'http://backend:5000/'
 const PROD_API = import.meta.env.VITE_API_BASE_URL
-const mode = import.meta.env.MODE
-
-console.log(mode);
-console.log(import.meta.env);
 
 export const API_BASE_URL = PROD_API;
 export async function fetchGetRequestById<T>(route: string, id: string, token: string = ""): Promise<ResponseMessage<T>> {
