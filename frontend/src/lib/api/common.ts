@@ -1,6 +1,6 @@
 const PROD_API = import.meta.env.VITE_API_BASE_URL
 
-export const API_BASE_URL = PROD_API;
+export const API_BASE_URL = "https://bogreolen.onrender.com/";
 export async function fetchGetRequestById<T>(route: string, id: string, token: string = ""): Promise<ResponseMessage<T>> {
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
