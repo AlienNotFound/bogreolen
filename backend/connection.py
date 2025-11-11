@@ -55,7 +55,7 @@ def create_app(test_config = None):
 
     JWTManager(app)
 
-    CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173'],
+    CORS(app, origins=['https://bogreolen.vercel.app'],
      supports_credentials=True,
      allow_headers=['Content-Type'],
      methods=['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'])
