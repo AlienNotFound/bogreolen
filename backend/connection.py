@@ -18,7 +18,7 @@ db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + MYSQL_RAILWAY
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:' + MYSQL_ROOT_PASSWORD + '@' + MYSQL_HOST + ':3306/' + MYSQL_DATABASE
 
 
     if test_config:
@@ -45,8 +45,8 @@ def create_app(test_config = None):
     app.register_blueprint(comment_bp)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config["JWT_COOKIE_SECURE"] = False
-    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+    app.config["JWT_COOKIE_SECURE"] = True
+    app.config["JWT_COOKIE_SAMESITE"] = "None"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"] 
     app.config["JWT_ACCESS_COOKIE_NAME"] = 'access_token'
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
