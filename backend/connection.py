@@ -18,7 +18,7 @@ db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:' + MYSQL_ROOT_PASSWORD + '@' + MYSQL_HOST + ':3306/' + MYSQL_DATABASE
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + MYSQL_RAILWAY
 
 
     if test_config:
