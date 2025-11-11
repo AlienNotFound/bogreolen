@@ -10,13 +10,15 @@ load_dotenv()
 
 MYSQL_HOST = os.getenv('MYSQL_HOST', 'db')
 MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
-MYSQL_DATABASE= os.getenv('MYSQL_DATABASE')
+MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
+MYSQL_USER = os.getenv('MYSQL_USER')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:' + MYSQL_ROOT_PASSWORD + '@' + MYSQL_HOST + ':3306/' + MYSQL_DATABASE
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + DATABASE_URL
 
 
     if test_config:
@@ -53,9 +55,9 @@ def create_app(test_config = None):
 
     JWTManager(app)
 
-    CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
+    CORS(app, origins=['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173'],
      supports_credentials=True,
      allow_headers=['Content-Type'],
-     methods=['GET', 'POST', 'DELETE', 'PUT'])
+     methods=['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'])
 
     return app
