@@ -17,12 +17,14 @@ type Track = {
 }
 
 type Review = {
+    review_id: number,
     book_id: number,
     user_id: number,
     title: string,
     rating: number,
     username: string,
-    review: string
+    review: string,
+    comments: ReviewComment[];
 }
 
 type Book = {
@@ -51,6 +53,13 @@ type User = {
     userid: number,
     username: string,
     email: string
+}
+
+type ReviewComment = {
+    comment_id: number,
+    comment_text: string,
+    user_id: number,
+    username: string,
 }
 
 type ResponseMessage<T> = {

@@ -1,4 +1,5 @@
 import { fetchGetRequestById, fetchPOSTRequest, fetchPUTRequest } from "$lib/api/common";
+import { createComment } from "$lib/actions/common.js";
 import { validateToken } from '$lib/server/auth.js';
 import { fail } from "@sveltejs/kit";
 
@@ -50,14 +51,14 @@ export const actions = {
         const rating = formData.get('rating');
         const reviewtext = formData.get('reviewtext');
         const token = await validateToken(cookies);
-
+         
         try {
             const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
                 book_id,
                 rating,
                 reviewtext
             }, token)
-
+            
             if (response?.Error == "Error: You've already reviewed this book") {
                 return fail(40, { success: false, duplicate_error: response?.Error });
             } else if (response?.Error) {
@@ -68,6 +69,17 @@ export const actions = {
                 return fail(409, { success: false, duplicate_error: error.message });
             }
             return { success: false, error: "Failed to add review." };
+        }
+    },
+    create_comment: async ({ request, cookies }) => {
+        const formData = await request.formData();
+        const token = await validateToken(cookies);
+        
+        try {
+          const response = await createComment(formData, token);
+          return response;          
+        } catch (error) {
+            return { error: "An error occured."}
         }
     }
 }

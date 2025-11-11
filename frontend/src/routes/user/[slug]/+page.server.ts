@@ -1,4 +1,6 @@
 import { fetchGetRequestById } from "$lib/api/common";
+import { createComment } from "$lib/actions/common";
+import { validateToken } from "$lib/server/auth";
 
 export const load = async ({ params, parent }) => {
     const { token } = await parent();
@@ -18,6 +20,20 @@ export const load = async ({ params, parent }) => {
             user: null,
             reviews: [],
             books: []
+        }
+    }
+}
+
+export const actions = {
+    create_comment: async ({ request, cookies }) => {
+        const formData = await request.formData();
+        const token = await validateToken(cookies);
+
+        try {
+            const response = await createComment(formData, token);
+            return response;          
+        } catch (error) {
+            return { error: "An error occured."}
         }
     }
 }

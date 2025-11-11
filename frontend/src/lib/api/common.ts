@@ -110,7 +110,33 @@ export async function fetchPUTRequest<T>(route: string, body: any, token: string
     
     if (!response.ok) {
         const message = result?.Error || result?.message || 'Unknown error';
-        throw new Error(message);
+        return message
+    }
+    
+    return result as T;
+}
+
+export async function fetchDELETERequest<T>(route: string, token: string = ""): Promise<T> {
+    const response = await fetch(API_BASE_URL + route, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    
+    let result: any;
+
+    try {
+        result = await response.json()
+    } catch {
+        result = null;
+    }
+    
+    if (!response.ok) {
+        const message = result?.Error;
+        return message;
     }
     
     return result as T;

@@ -1,4 +1,5 @@
 from backend.services.book_service import BookService
+from backend.DTOs.review_dto import ReviewDTO
 class BookDTO:
     @staticmethod
     def to_dict(book):
@@ -16,6 +17,6 @@ class BookDTO:
             "category_title": book.category.title,
             "average_rating": average_rating,
             "reviews": [
-                review.to_dict() for review in book.reviews
+                ReviewDTO.to_dict(review) for review in book.reviews
             ]
         }

@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
+import { createComment, editComment, deleteComment } from '$lib/actions/common.js';
 import { validateToken } from '$lib/server/auth.js';
 
 export const load = async ({ cookies }) => {
@@ -32,7 +33,8 @@ async function fetchTracks(token: string) {
 
 async function fetchModalInfo(token: string) {
   try {
-    const modalInfo = await fetchGETRequest<Book[]>('tracks/modal/user', token)
+    const modalInfo = await fetchGETRequest<ResponseMessage<Book[]>>('tracks/modal/user', token)
+    
     return modalInfo;
   } catch (error) {
     console.error("Error loading modal info:", error);
@@ -65,6 +67,39 @@ export const actions = {
     } catch (error) {
       console.error(error);
       return { success: false, error: "Failed to track book." };
+    }
+  },
+  create_comment: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const token = await validateToken(cookies);
+    
+    try {
+      const response = await createComment(formData, token);
+      return response;          
+    } catch (error) {
+      return { error: "An error occured."};
+    }
+  },
+  edit_comment: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const token = await validateToken(cookies);
+    
+    try {
+      const response = await editComment(formData, token);
+      return response;
+    } catch (error) {
+      return { error: "An error occured..."};
+    }
+  },
+  delete_comment: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const token = await validateToken(cookies);
+
+    try {
+      const response = await deleteComment(formData, token);
+      return response;      
+    } catch (error) {
+      return { error: "An error occured."};
     }
   }
 }

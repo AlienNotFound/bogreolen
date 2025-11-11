@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from .review_model import Reviews
     from .list_model import Lists
     from .track_model import Tracks
+    from .comment_model import Comments
 class Users(db.Model):
     user_id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
@@ -16,6 +17,7 @@ class Users(db.Model):
     reviews: Mapped[list['Reviews']] = relationship('Reviews', back_populates='user', cascade="all, delete-orphan")
     lists: Mapped[list['Lists']] = relationship('Lists', back_populates='user', cascade="all, delete-orphan")
     tracks: Mapped[list['Tracks']] = relationship('Tracks', back_populates='user', cascade="all, delete-orphan")
+    comments: Mapped[list['Comments']] = relationship('Comments', back_populates='user')
 
     def to_dict(self):
         reviews = {field.name:getattr(self, field.name) for field in self.__table__.c}

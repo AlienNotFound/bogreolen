@@ -42,7 +42,7 @@ def get_reviews_by_user(user_id):
     reviews = ReviewService.get_reviews_by_user(user_id)
 
     if reviews:
-        return jsonify([review for review in reviews]), 200
+        return jsonify([ReviewDTO.to_dict(review) for review in reviews]), 200
     else:
         return jsonify({"Error": "Reviews not found!"}), 400
     
