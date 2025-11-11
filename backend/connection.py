@@ -8,17 +8,13 @@ from datetime import timedelta
 
 load_dotenv()
 
-MYSQL_HOST = os.getenv('MYSQL_HOST', 'db')
-MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
-MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
-MYSQL_USER = os.getenv('MYSQL_USER')
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql' + DATABASE_URL
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 
 
     if test_config:
@@ -45,8 +41,8 @@ def create_app(test_config = None):
     app.register_blueprint(comment_bp)
 
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config["JWT_COOKIE_SECURE"] = True
-    app.config["JWT_COOKIE_SAMESITE"] = "None"
+    app.config["JWT_COOKIE_SECURE"] = os.getenv("JWT_COOKIE_SECURE")
+    app.config["JWT_COOKIE_SAMESITE"] = os.getenv("JWT_COOKIE_SAMESITE")
     app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"] 
     app.config["JWT_ACCESS_COOKIE_NAME"] = 'access_token'
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
@@ -55,7 +51,7 @@ def create_app(test_config = None):
 
     JWTManager(app)
 
-    CORS(app, origins=['https://bogreolen.vercel.app'],
+    CORS(app, origins=[os.getenv("CORS_ORIGIN")],
      supports_credentials=True,
      allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'])
