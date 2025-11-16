@@ -7,8 +7,10 @@ from statistics import mean
 
 class BookService(BaseService):
     @staticmethod
-    def create_book(title, author_id, image, summary, year, category_id):
+    def create_book(title, author_id, image, summary, year: int, category_id):
         try:
+            if not type(year) == int:
+                return False, f'Year must be a number.'
             existing_book = BookService.get_book_by_title(title)
             
             if existing_book:

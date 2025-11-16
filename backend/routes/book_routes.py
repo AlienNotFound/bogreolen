@@ -3,6 +3,7 @@ from backend.services.book_service import BookService
 from backend.services.author_service import AuthorService
 from backend.services.category_service import CategoryService
 from backend.services.list_service import ListService
+from backend.services.validators.general_validators import GeneralValidator
 from backend.DTOs.book_dto import BookDTO
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -43,6 +44,13 @@ def create_book():
     category_title = data.get('category_title')
     listname = data.get('listname')
 
+    required_fields = ['title', 'author_name', 'image', 'summary', 'year', 'category_title']
+
+    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, data)
+
+    if not no_empty_fields:
+        return jsonify({'error': f'{empty_fields} cannot be empty.'}), 404
+
     author = AuthorService.get_author_by_name(author_name)
 
     if author == None:
@@ -58,7 +66,7 @@ def create_book():
         author_id=author.author_id,
         image=image,
         summary=summary,
-        year=year,
+        year=int(year),
         category_id=category.category_id
     )
 
@@ -66,11 +74,13 @@ def create_book():
         ListService.add_to_list(user_id=user_id, book_id=BookService.get_latest_book().book_id, listname=listname)
 
     if result:
-        return jsonify({"Success": f"Book created!"}), 200
-    elif not result and message == "Book already exists.":
-        return jsonify({"Error": f"{message}"}), 409
+        return jsonify({"message": f"Book created!"}), 200
+    elif message == "Book already exists.":
+        return jsonify({"error": f"{message}"}), 409
+    elif message == 'Year must be a number.':
+        return jsonify({'error': f'{message}'}), 409
     else:
-        return jsonify({"Error": "An error occured"}), 500
+        return jsonify({"error": "An error occured"}), 500
     
 @book_bp.route('/book/<id>', methods=['PUT'])
 @jwt_required()

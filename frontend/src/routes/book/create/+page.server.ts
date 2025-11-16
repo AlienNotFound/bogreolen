@@ -11,7 +11,7 @@ export const actions = {
         const summary = formData.get('summary');
         const year = formData.get('year');
         const category_title = formData.get('category_title');
-        const book_status = formData.get('book_status');
+        const listname = formData.get('listname');
         const token = await validateToken(cookies);
 
         try {
@@ -20,40 +20,36 @@ export const actions = {
 
             const image_response = await fetchPOSTImageRequest<{ Error?: string, Success?: boolean, URL?: string}>('image', uploadData, token);
 
-            console.log(image_response.URL)
-            const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('book', {
+            const response = await fetchPOSTRequest<{ error?: string, Success?: boolean}>('book', {
                 title,
                 author_name,
-                image: image_response.URL,
+                image: //image_response.URL,
                 summary,
                 year,
                 category_title,
-                book_status
+                listname
             }, token);
                 
-            if (response?.Error == 'This book is already exists!') {
-                return fail(400, { success: false, duplicate_error: response?.Error });
-            } else 
-            if (response?.Error) {
-                return fail(400, { success: false, error: response?.Error });
-            }
-                
             } catch (error) {
-                console.error(error);
-                return { success: false, error: "Failed to add book to list." };
+                if (error instanceof Error) {
+                    console.error(error);
+                    return { error: error.message };
+                }
             }
     }
 }
 export const load = async ({ cookies }) => {
     const token = await validateToken(cookies);
     try {
-        const authors = await fetchGETRequest<{author: string}>('authors', token);
+        const authors = await fetchGETRequest<Author[]>('authors', token);
+        const categories = await fetchGETRequest<Catorgory[]>('categories', token);
         
-        return { authors }
+        return { authors, categories }
     } catch (error) {
         console.error(error);        
         return {
-            authors: null
+            authors: null,
+            categories: null
         }
     }
 }

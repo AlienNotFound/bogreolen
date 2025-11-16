@@ -1,5 +1,6 @@
 from backend.connection import db
 from backend.models import Categories
+from backend.services.base_service import BaseService
 
 class CategoryService:
     @staticmethod
@@ -35,5 +36,14 @@ class CategoryService:
         category = db.session.query(Categories).filter_by(category_id=id).first()
         if category:
             return category
+        
+        return None
+    
+    @staticmethod
+    def get_all_categories():
+        categories = BaseService.get_all(Categories)
+
+        if categories:
+            return categories
         
         return None
