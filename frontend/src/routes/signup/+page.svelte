@@ -1,7 +1,8 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import type { PageData, ActionData } from './$types';
-    let { data, form }: { data: PageData, form: ActionData } = $props();
+    import { goto } from '$app/navigation';
+    let { form }: { form: ActionData } = $props();
 </script>
 
 <svelte:head>
@@ -9,7 +10,18 @@
 </svelte:head>
 
 <h1>Sign up</h1>
-<form method="post" use:enhance>
+<form method="POST" use:enhance={() => {
+  return async ({ result, update }) => {
+    console.log(result);
+    
+  if (result.type === 'redirect') {
+    goto(result.location);
+    return;
+  }
+  
+    update({ reset: false });
+  }
+}}>
     <label for="username">Username</label>
     <input type="username" name="username" id="username" required />
   
@@ -24,9 +36,9 @@
 
     <button type="submit">Sign up</button>
 
-  {#if form?.Error}
+  {#if form?.error}
     <div class="error">
-        <p>{form.Error}</p>
+        <p>{form.error}</p>
     </div>
   {/if}
 </form>

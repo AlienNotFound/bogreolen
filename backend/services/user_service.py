@@ -9,22 +9,24 @@ class UserService(BaseService):
     def create_user(username, email, password, password_again):
 
         if not UserValidator.validate_password(password, password_again):
-            return -1
+            return 'INVALID_PASSWORD'
         
         if not UserValidator.validate_email(email):
-            return -2
+            return 'INVALID_EMAIL'
 
         hashed_password = generate_password_hash(password)
 
+        if UserService.get_user_by_username(username):
+            return False, 'USERNAME_EXISTS'
+        
+        if UserService.get_user_by_email(email):
+            return False, 'EMAIL_EXISTS'
+        
         user = Users(username=username, email=email, passwordhash=hashed_password)
-        db.session.add(user)
 
-        success, result = BaseService.commit_session(user)
+        success, result = BaseService.add_entry(user)
 
-        if not success:
-            return UserValidator.check_for_duplicate(result)
-
-        return result
+        return success, result
         
     @staticmethod
     def edit_user(id, username, email, password, password_again):
@@ -45,11 +47,8 @@ class UserService(BaseService):
         if (password and password_again):
             user.passwordhash = hashed_password
 
-        success, result = BaseService.commit_session(user)
+        _, result = BaseService.commit_session(user)
 
-        if not success:
-            return UserValidator.check_for_duplicate(result)
-        
         return result
     
     @staticmethod
@@ -59,6 +58,10 @@ class UserService(BaseService):
     @staticmethod
     def get_user_by_username(username):
         return BaseService.get_by_id(Users, Users.username, username)
+
+    @staticmethod
+    def get_user_by_email(email):
+        return BaseService.get_by_id(Users, Users.email, email)
     
     @staticmethod
     def get_all_users():
