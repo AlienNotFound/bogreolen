@@ -30,7 +30,7 @@
     </datalist>
 
     <h2>Cover</h2>
-    <!-- <input type="file" name="image" required /> -->
+    <input type="file" name="image" required />
 
     <h2>Summary</h2>
     <textarea name="summary" id="" rows="10" required></textarea>
