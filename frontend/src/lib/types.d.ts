@@ -66,7 +66,7 @@ type ResponseMessage<T> = {
     Error: string,
     Success: string,
     status: number,
-    msg: string,
+    message: string,
     ok: boolean,
     data: T | null;
 }

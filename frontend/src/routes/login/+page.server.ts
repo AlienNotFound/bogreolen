@@ -8,37 +8,39 @@ export const actions: Actions = {
     const username = formData.get('username');
     const password = formData.get('password');
 
-    if (!username || !password) {
-      return fail(400, {
-        Error: 'Missing username or password'
-      });
-    }
-
-    const response = await fetchPOSTRequest<{ access_token?: string | null, refresh_token?: string | null }>('/login', {
-        username,
-        password
-    })
-
-    if (response.access_token) {
-      const access_token = response.access_token;
-      const refresh_token = response.refresh_token;
-      cookies.set('access_token', `${access_token}`, {
-        httpOnly: true,
-        path: '/',
-        secure: false,
-        sameSite: 'strict',
-        maxAge: 60 * 60
-      });
-
-      cookies.set('refresh_token', `${refresh_token}`, {
-        httpOnly: true,
-        path: '/',
-        secure: false,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7
-      });
-
-      throw redirect(307, "/");
+    try {
+      const response = await fetchPOSTRequest<{ access_token?: string | null, refresh_token?: string | null, errors?: Object | null}>('/login', {
+          username,
+          password
+      })
+  
+      if (response.access_token) {
+        const access_token = response.access_token;
+        const refresh_token = response.refresh_token;
+        cookies.set('access_token', `${access_token}`, {
+          httpOnly: true,
+          path: '/',
+          secure: false,
+          sameSite: 'strict',
+          maxAge: 60 * 60
+        });
+  
+        cookies.set('refresh_token', `${refresh_token}`, {
+          httpOnly: true,
+          path: '/',
+          secure: false,
+          sameSite: 'strict',
+          maxAge: 60 * 60 * 24 * 7
+        });
+  
+        redirect(307, "/");
+      }
+    } catch (error) {      
+      if (error instanceof Error) {
+        return { error: error.message }
+      } else {
+        throw error;
+      }
     }
   }
 };

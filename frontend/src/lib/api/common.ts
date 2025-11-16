@@ -66,8 +66,8 @@ export async function fetchPOSTRequest<T>(route: string, body: any, token: strin
     }
 
     if (!response.ok) {
-        const message = result?.Error || result?.Message || 'Unknown error';
-        return message;
+        const message = result?.error || 'Unknown error';
+        throw Error(message);
     }
 
     return result as T;

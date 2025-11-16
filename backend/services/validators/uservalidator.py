@@ -1,15 +1,6 @@
-from sqlalchemy.exc import IntegrityError
-from backend.connection import db
 from re import match
 
-class UserValidator:
-    @staticmethod
-    def check_for_duplicate(message):
-        if 'username' in message:
-            return 'USERNAME_EXISTS'
-        elif 'email' in message:
-            return 'EMAIL_EXISTS'
-        
+class UserValidator:        
     @staticmethod
     def validate_email(email):
         EMAIL_REGEX = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
