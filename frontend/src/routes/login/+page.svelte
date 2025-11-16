@@ -10,17 +10,17 @@
 
 <h1>Login</h1>
 <form method="post" use:enhance>
-  <label for="username">Email</label>
-  <input type="username" name="username" id="email" required />
+  <label for="username">Username</label>
+  <input type="username" name="username" id="username" required/>
 
   <label for="password">Password</label>
-  <input type="password" name="password" id="password" required />
+  <input type="password" name="password" id="password" required/>
 
   <button type="submit">Login</button>
 
-  {#if form?.Error}
+  {#if form && form.error}
     <div class="notice error">
-      {form.Error}
+      {form.error}
     </div>
   {/if}
 </form>

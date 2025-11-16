@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from backend.models import Users
 from backend.services.user_service import UserService
+from backend.services.validators.general_validators import GeneralValidator
 from backend.DTOs.user_dto import UserDTO
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
 from werkzeug.security import check_password_hash
@@ -116,10 +117,15 @@ def user_login():
     username = data.get('username')
     password = data.get('password')
 
+    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(data)
+
+    if not no_empty_fields:
+        return jsonify({'error': f'{empty_fields} cannot be empty.' }), 404
+
     user = UserService.get_user_by_username(username)
 
     if not user:
-        return jsonify({'Error': 'User not found.'}), 404
+        return jsonify({'error': 'User doesn\'t exist.'}), 404
     
     if not user or not check_password_hash(user.passwordhash, password):
         return jsonify({'error': f'Wrong username or password'}), 401
@@ -127,9 +133,8 @@ def user_login():
     access_token = create_access_token(identity = str(user.user_id), fresh = True)
     refresh_token = create_refresh_token(str(user.user_id))
 
-    response = jsonify({'access_token': access_token,
-                        'refresh_token': refresh_token}), 200
-    return response
+    return jsonify({'access_token': access_token,
+                    'refresh_token': refresh_token}), 200
 
 @user_bp.route('/refreshtoken', methods=['POST'])
 @jwt_required(refresh = True)
