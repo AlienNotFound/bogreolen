@@ -74,3 +74,13 @@ type ResponseMessage<T> = {
 type LayoutData = {
     token: string | null;
 }
+
+type Catorgory = {
+    category_id: number,
+    title: string
+}
+
+type Author = {
+    author_id: number,
+    name: string
+}

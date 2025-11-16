@@ -38,7 +38,9 @@ def create_user():
     password = data.get('password')
     password_again = data.get('password_again')
 
-    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(data)
+    required_fields = ['username', 'email', 'password', 'password_again']
+
+    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, data)
 
     if not no_empty_fields:
         return jsonify({'error': f'{empty_fields} cannot be empty.' }), 404
@@ -123,7 +125,9 @@ def user_login():
     username = data.get('username')
     password = data.get('password')
 
-    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(data)
+    required_fields = ['username', 'password']
+
+    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, data)
 
     if not no_empty_fields:
         return jsonify({'error': f'{empty_fields} cannot be empty.' }), 404

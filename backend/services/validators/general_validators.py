@@ -10,13 +10,14 @@ class GeneralValidator(BaseService):
             return True, entry
         
     @staticmethod
-    def validate_required_fields(fields):
+    def validate_required_fields(required, fields):
         empty_fields_array = []
         empty_fields_string = ""
 
         for input in fields:
-            if not fields.get(input):
-                empty_fields_array.append(input)
+            for name in required:
+                if name == input and not fields.get(input):
+                    empty_fields_array.append(input)
 
         if len(empty_fields_array) > 0:
             for index, input in enumerate(empty_fields_array):
