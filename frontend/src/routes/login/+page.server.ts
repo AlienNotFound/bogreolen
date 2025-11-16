@@ -33,11 +33,13 @@ export const actions: Actions = {
           maxAge: 60 * 60 * 24 * 7
         });
   
-        throw redirect(307, "/");
+        redirect(307, "/");
       }
     } catch (error) {      
       if (error instanceof Error) {
         return { error: error.message }
+      } else {
+        throw error;
       }
     }
   }
