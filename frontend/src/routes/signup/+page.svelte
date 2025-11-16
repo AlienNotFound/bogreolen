@@ -12,8 +12,6 @@
 <h1>Sign up</h1>
 <form method="POST" use:enhance={() => {
   return async ({ result, update }) => {
-    console.log(result);
-    
   if (result.type === 'redirect') {
     goto(result.location);
     return;

@@ -2,9 +2,6 @@
     import type { PageData, ActionData } from './$types';
     let { data, form }: { data: PageData, form: ActionData } = $props();
     import { enhance } from "$app/forms";
-
-    console.log(form);
-    
 </script>
 
 <svelte:head>
