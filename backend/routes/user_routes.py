@@ -40,7 +40,7 @@ def create_user():
 
     required_fields = ['username', 'email', 'password', 'password_again']
 
-    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, ata)
+    no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, data)
 
     if not no_empty_fields:
         return jsonify({'error': f'{empty_fields} cannot be empty.' }), 404
