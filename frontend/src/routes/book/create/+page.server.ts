@@ -20,19 +20,19 @@ export const actions = {
 
             const image_response = await fetchPOSTImageRequest<{ Error?: string, Success?: boolean, URL?: string}>('image', uploadData, token);
 
-            const response = await fetchPOSTRequest<{ error?: string, Success?: boolean}>('book', {
+            const response = await fetchPOSTRequest<{ error?: string, message?: string}>('book', {
                 title,
                 author_name,
-                image: //image_response.URL,
+                image: image_response.URL,
                 summary,
                 year,
                 category_title,
                 listname
             }, token);
-                
+
+            return response.message;
             } catch (error) {
                 if (error instanceof Error) {
-                    console.error(error);
                     return { error: error.message };
                 }
             }
@@ -46,7 +46,6 @@ export const load = async ({ cookies }) => {
         
         return { authors, categories }
     } catch (error) {
-        console.error(error);        
         return {
             authors: null,
             categories: null

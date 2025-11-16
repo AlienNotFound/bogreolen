@@ -2,6 +2,8 @@
     import type { PageData, ActionData } from './$types';
     let { data, form }: { data: PageData, form: ActionData } = $props();
     import { enhance } from "$app/forms";
+    console.log(form);
+    
 </script>
 
 <svelte:head>
@@ -21,14 +23,14 @@
     <input name="author_name" list="author_list" required />
     <datalist id="author_list">
         {#if data.authors}
-            {#each data.authors as autgor}
-                <option value={autgor.name} />
+            {#each data.authors as author}
+                <option value={author.name} />
             {/each}
         {/if}
     </datalist>
 
     <h2>Cover</h2>
-    <input type="file" name="image" required />
+    <!-- <input type="file" name="image" required /> -->
 
     <h2>Summary</h2>
     <textarea name="summary" id="" rows="10" required></textarea>
@@ -60,7 +62,11 @@
     <div class="error">
         <p>{form.error}</p>
     </div>
-  {/if}
+    {:else if !form?.error}
+    <div class="success">
+        <p>{form}</p>
+    </div>
+    {/if}
 </form>
 
 <style>
