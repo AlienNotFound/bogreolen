@@ -9,10 +9,10 @@ class UserService(BaseService):
     def create_user(username, email, password, password_again):
 
         if not UserValidator.validate_password(password, password_again):
-            return 'INVALID_PASSWORD'
+            return False, 'INVALID_PASSWORD'
         
         if not UserValidator.validate_email(email):
-            return 'INVALID_EMAIL'
+            return False, 'INVALID_EMAIL'
 
         hashed_password = generate_password_hash(password)
 
