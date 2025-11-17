@@ -15,7 +15,7 @@ export const load = async ({ cookies }) => {
 
     if (user_id) {
         const user = await fetchGetRequestById<User>('user/', user_id, token);
-        return { ...user };
+        return { ...user.data };
     }
 
   } catch (error) {
@@ -37,7 +37,7 @@ export const actions = {
     const current_password = formData.get('current_password'); 
 
     try {
-        const response = await fetchPUTRequest<{ Error: string, Success: string }>('user/' + user_id, {
+        const response = await fetchPUTRequest<ResponseMessage<User>>('user/' + user_id, {
                 username,
                 email,
                 password,
@@ -47,6 +47,8 @@ export const actions = {
         console.log(response)
         return response
     } catch (error) {
+      console.log(error);
+      
         if (error instanceof Error) {
             return { success: false, error: error.message };
         }

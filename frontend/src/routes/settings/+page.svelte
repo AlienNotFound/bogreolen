@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { enhance } from '$app/forms';
     import type { PageData, ActionData } from './$types';
     let { data, form }: { data: PageData, form: ActionData } = $props();
-    console.log(form?.Success)
+    
 </script>
 
 <svelte:head>
@@ -10,12 +11,16 @@
 
 <h1>Settings</h1>
 {#if data}
-{#if form?.error}
-    <p class="error">{form.error}</p>
-{:else if form?.Success}
-    <p class="success">{form.Success}</p>
-{/if}
-    <form action="?/edit_user" method="post">
+    {#if form?.error}
+        <p class="error">{form.error}</p>
+    {:else if form?.Success}
+        <p class="success">{form.Success}</p>
+    {/if}
+    <form action="?/edit_user" method="post" use:enhance={() => {
+                                return async ({ update }) => {
+                                    update({ reset: false });
+                                }
+                            }}>
         <h2>Username</h2>
         <input type="text" name="username" value={data.username} required>
         <h2>Email</h2>
