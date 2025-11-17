@@ -27,10 +27,16 @@ class TrackDTO:
     
     @staticmethod
     def modal_dict(track):
-         return {
-            "book_id": track.book_id,
-            "user_id": track.user_id,
-            "title": track.book.title,
-            "image": track.book.image,
-            "book_status": track.listname.value
+        user_list = next((list for list in track.Books.lists if list.user_id == track.Users.user_id), None)
+
+        return {
+            "book_id": track.Books.book_id,
+            "user_id": track.Users.user_id,
+            "track_id": track.Tracks.track_id,
+            "title": track.Books.title,
+            "image": track.Books.image,
+            "listname": user_list.listname.value if user_list else None,
+            "current_page": track.Tracks.current_page,
+            "last_page": track.Tracks.last_page,
+            "date": track.Tracks.date,
         }

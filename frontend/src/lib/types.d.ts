@@ -16,6 +16,16 @@ type Track = {
     last_page: number
 }
 
+type TrackModal = {
+    book_id: number,
+    track_id: number,
+    title: string,
+    image: string,
+    listname: string,
+    current_page: number,
+    last_page: number
+}
+
 type Review = {
     review_id: number,
     book_id: number,
@@ -32,7 +42,7 @@ type Book = {
     bookid: number,
     title: string,
     image: string,
-    book_status: string
+    book_status: string,
 }
 
 type BookDetails = {

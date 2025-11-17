@@ -41,7 +41,7 @@ export async function fetchGETRequest<T>(route: string, token: string = ""): Pro
         headers,
         credentials: 'include'
     })
-    
+
     const result: T = await response.json();
     return result
 }

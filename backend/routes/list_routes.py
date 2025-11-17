@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from backend.models import Lists
 from backend.services.list_service import ListService
+from backend.services.track_service import TrackService
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 list_bp = Blueprint('list_bp', __name__)
@@ -20,6 +21,7 @@ def add_to_list():
     result = ListService.add_to_list(user_id, book_id, listname)
 
     if isinstance(result, Lists):
+        TrackService.track_book(user_id, book_id, False, 0, 0)
         return jsonify({"Success": f"\'{result.book.title}\' got added to {listname}"}), 200
     else:
         return jsonify({"Error": f"{result}"}), 400

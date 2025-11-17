@@ -1,8 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { getCurrentWeek, matchTrackToDate } from "$lib/utils/date";
+    import type { ActionData } from "../../routes/$types";
+    import { enhance } from "$app/forms";
 
-    let { tracks, modalInfo }: {tracks: Track[], modalInfo: ResponseMessage<Book[]> } = $props();
+    let { tracks, modalInfo, form }: {tracks: Track[], modalInfo: TrackModal[], form: ActionData } = $props();
     let showModal = $state(false)
     let loading = $state(true);
     let week = $state(getCurrentWeek());
@@ -13,11 +15,11 @@
         loading = false;
     });
 
-    function modalFilter(tracks: Book[]): Book[] {
+    function modalFilter(tracks: TrackModal[]): TrackModal[] {
         if (tracks.length > 0) {
             const result = tracks
-                            .filter(t => t.book_status === "Reading" || t.book_status === "Want to read")
-                            .map(t => ({book_id: t.book_id, bookid: t.bookid, title: t.title, image: t.image, book_status: t.book_status}));
+                            .filter(t => t.listname === "Reading" || t.listname === "Want to read")
+                            .map(t => ({track_id: t.track_id, book_id: t.book_id, title: t.title, image: t.image, listname: t.listname, current_page: t.current_page, last_page: t.last_page}));
             return result
         }
         return []
@@ -31,13 +33,6 @@
 	}
 
     function toggleModal() {
-        if (!showModal && !modalInfo.Error && modalInfo.data) {
-            modalInfo.data.forEach((book: Book) => {
-                if (!formData[book.book_id]) {
-                    formData[book.book_id] = {current_page: 0, last_page: 0, error_message: ''};
-                }
-            });
-        }
         showModal = !showModal;
 
         if (showModal) {
@@ -80,24 +75,29 @@
                 <button id="modalClose" onclick={() => toggleModal()}>X</button>
             </div>
             <div id="bookList">
-                {#if modalInfo.data}
-                    {#each modalFilter(modalInfo.data) as info}
+                {#if modalInfo}
+                    {#each modalFilter(modalInfo) as info}
                     <div class="books">
                         <h3>{info.title}</h3>
                         <img src={info.image} alt="">
                     
-                        <form id="pagesForm" method="POST" action="?/track_book">
+                        <form id="pagesForm" method="POST" action="?/track_book" use:enhance={() => {
+                                                            return async ({ update }) => {
+                                                                update({ reset: false });
+                                                            }
+                                                            }}>
                             <input type="text" name="book_id" value={info.book_id} hidden>
                             <h4>Current page:</h4>
                             <input type="number"
                             name="current_page"
-                            value={formData[info.book_id].current_page ?? ''} 
+                            value={info.current_page ?? 0} 
                             oninput={(e) => updateField(info.book_id, 'current_page', +e.currentTarget.value)}
                             required>
+                            
                             <h4>Last page:</h4>
                             <input type="number"
                             name="last_page"
-                            value={formData[info.book_id].last_page ?? ''}
+                            value={info.last_page ?? ''}
                             oninput={(e) => updateField(info.book_id, 'last_page', +e.currentTarget.value)}>
                             {#if error_message}
                             <p class="error">{error_message}</p>
@@ -107,7 +107,13 @@
                     </div>
                     {/each}
                 {/if}
+
             </div>
+            {#if form?.error}
+                <div class="error">
+                    <p>{form?.error}</p>
+                </div>
+            {/if}
         </div>
     </div>
 {/if}

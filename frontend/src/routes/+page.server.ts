@@ -33,7 +33,7 @@ async function fetchTracks(token: string) {
 
 async function fetchModalInfo(token: string) {
   try {
-    const modalInfo = await fetchGETRequest<ResponseMessage<Book[]>>('tracks/modal/user', token)
+    const modalInfo = await fetchGETRequest<TrackModal[]>('tracks/modal/user', token)
     
     return modalInfo;
   } catch (error) {
@@ -57,16 +57,16 @@ export const actions = {
     const token = await validateToken(cookies);
 
     try {
-      const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('track/' + book_id, {
+      const response = await fetchPOSTRequest<ResponseMessage<TrackModal[]>>('track/' + book_id, {
                 read_today: true,
                 current_page,
                 last_page
             }, token);
 
-            console.log(response)
-    } catch (error) {
-      console.error(error);
-      return { success: false, error: "Failed to track book." };
+          } catch (error) {
+            if (error instanceof Error) {
+        return { error: error.message };
+      }
     }
   },
   create_comment: async ({ request, cookies }) => {
