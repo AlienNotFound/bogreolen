@@ -10,7 +10,8 @@
 </svelte:head>
 
 <Trackingoverview tracks={data.tracks ?? []}
-                    modalInfo={data.modalInfo ?? []} 
+                    modalInfo={data.modalInfo ?? []}
+                    form={form} 
                     />
 
 <div id="reviewCardHolder">

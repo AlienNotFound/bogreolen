@@ -18,18 +18,20 @@ def track_book(id):
     current_page = data.get('current_page')
     last_page = data.get('last_page')
 
-    result = TrackService.track_book(
+    success, message = TrackService.track_book(
         user_id=user_id,
         book_id=book_id,
         read_today=read_today,
-        current_page=current_page,
-        last_page=last_page
+        current_page=int(current_page),
+        last_page=int(last_page)
     )
 
-    if isinstance(result, Tracks):
-        return jsonify({"Success": "Book tracked!"}), 200
+    if success:
+        return jsonify({'message': "Book tracked!"}), 200
+    elif message == 'Current page cannot be higher than Last page.':
+        return jsonify({'error': f'{message}'}), 403
     else:
-        return jsonify({"Error": f"{result}An error occured"}), 500
+        return jsonify({'error': f"An error occured"}), 500
     
 @track_bp.route('/track/<id>', methods=['PUT'])
 @jwt_required()
@@ -93,7 +95,7 @@ def get_tracks_by_user():
 @jwt_required()
 def get_modal_info_by_user():
     user_id = get_jwt_identity()
-    tracks = TrackService.get_status_by_user(user_id)
+    tracks = TrackService.get_modal_tracks(user_id)
 
     if tracks:
         return jsonify([TrackDTO.modal_dict(t) for t in tracks]), 200
