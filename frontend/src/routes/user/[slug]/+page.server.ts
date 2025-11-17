@@ -1,6 +1,7 @@
 import { fetchGetRequestById } from "$lib/api/common";
 import { createComment } from "$lib/actions/common";
 import { validateToken } from "$lib/server/auth";
+import { fail } from "@sveltejs/kit";
 
 export const load = async ({ params, parent }) => {
     const { token } = await parent();
@@ -30,10 +31,11 @@ export const actions = {
         const token = await validateToken(cookies);
 
         try {
-            const response = await createComment(formData, token);
-            return response;          
+            await createComment(formData, token);      
         } catch (error) {
-            return { error: "An error occured."}
+            if (error instanceof Error) {
+                return fail(409, { comment_error: error.message })
+            }
         }
     }
 }

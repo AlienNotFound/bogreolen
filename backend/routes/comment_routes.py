@@ -21,9 +21,9 @@ def create_comment():
     )
 
     if result:
-        return jsonify({'Success': f'{message}'}), 200
+        return jsonify({'message': f'{message}'}), 200
     else:
-        return jsonify({'Error': f'{message}'}), 500
+        return jsonify({'error': f'{message}'}), 409
 
 @comment_bp.route('/comment/<id>', methods=['PUT'])
 @jwt_required()

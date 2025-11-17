@@ -64,11 +64,11 @@ def create_review():
     )
 
     if isinstance(result, Reviews):
-        return jsonify({"Success": "Review created!"}), 200
+        return jsonify({"message": "Review created!"}), 200
     if result == 'You\'ve already reviewed this book':
-        return jsonify({"Error": f"{result}"}), 409
+        return jsonify({"error": f"{result}"}), 409
     else:
-        return jsonify({"Error": f"{result}An error occured"}), 500
+        return jsonify({"error": f"An error occured"}), 500
     
 @review_bp.route('/review/<id>', methods=['PUT'])
 @jwt_required()

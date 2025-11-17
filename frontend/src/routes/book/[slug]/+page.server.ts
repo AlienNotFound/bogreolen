@@ -53,22 +53,16 @@ export const actions = {
         const token = await validateToken(cookies);
          
         try {
-            const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('review', {
+            await fetchPOSTRequest<ResponseMessage<Review>>('review', {
                 book_id,
                 rating,
                 reviewtext
             }, token)
-            
-            if (response?.Error == "Error: You've already reviewed this book") {
-                return fail(40, { success: false, duplicate_error: response?.Error });
-            } else if (response?.Error) {
-                return fail(400, { success: false, error: response?.Error });
+    
+        } catch (error) {
+            if (error instanceof Error) {
+                return fail(409, { error: error.message });
             }
-        } catch (error: any) {
-            if (error.message.includes("You've already reviewed this book")) {
-                return fail(409, { success: false, duplicate_error: error.message });
-            }
-            return { success: false, error: "Failed to add review." };
         }
     },
     create_comment: async ({ request, cookies }) => {
@@ -76,10 +70,11 @@ export const actions = {
         const token = await validateToken(cookies);
         
         try {
-          const response = await createComment(formData, token);
-          return response;          
+            await createComment(formData, token);      
         } catch (error) {
-            return { error: "An error occured."}
+            if (error instanceof Error) {
+                return fail(409, { comment_error: error.message })
+            }
         }
     }
 }
