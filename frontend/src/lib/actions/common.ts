@@ -5,15 +5,12 @@ export async function createComment(formData: FormData, token: string) {
     const review_id = formData.get('review_id');
     const comment_text = formData.get('comment_text');
 
-    const response = await fetchPOSTRequest<string>('comment', {
+    const response = await fetchPOSTRequest<{error?:string}>('comment', {
         review_id,
         comment_text
     }, token)
 
-    console.log(response);
-    if (response == "Comment cannot be empty.") {
-        return fail(400, {success: false, error: response})
-    }
+    return response;
 }
 
 export async function editComment(formData: FormData, token: string) {

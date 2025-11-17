@@ -21,19 +21,22 @@ class TrackService(BaseService):
         return success, result
     
     @staticmethod
-    def edit_track(track_id, current_page, last_page, date):
+    def edit_track(track_id, current_page: int, last_page: int, date):
         track = BaseService.get_by_id(Tracks, Tracks.track_id, track_id)
 
         if track == None:
             return f'Track entry not found'
+
+        if current_page > last_page:
+            return False, 'Current page cannot be higher than Last page.'
         
         track.current_page = current_page
         track.last_page = last_page
         track.date = date
 
-        _, result = BaseService.commit_session(track)
+        success, result = BaseService.commit_session(track)
 
-        return result
+        return success, result
     
     @staticmethod
     def delete_track(track_id):

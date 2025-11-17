@@ -15,8 +15,6 @@
         if (data.book_status) {
             listval = listMap[data.book_status] ?? '';
         }
-
-        // console.log(form)
     </script>
 
     <svelte:head>
@@ -42,7 +40,6 @@
                 <p>{data.summary}</p>
                 <div id="addToListWrapper">
                     <form method="POST" action={method}>
-                        {#if form?.duplicate_error}<p class="error">You've already added this book to a list.</p>{/if}
                         <input type="hidden" name="book_id" value={data.book_id}>
                         
                         <select name="listname" id="lists" bind:value={listval}>
@@ -59,12 +56,16 @@
             <div></div>
             <div id="reviewsSection">
                 <h3>Write a review</h3>
-                {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
                 <form method="POST" id="createReview" action="?/create_review">
                     <input type="hidden" name="book_id" value={data.book_id}>
-                    <h4>Rating</h4><input name="rating" type="number">
+                    <h4>Rating</h4><input name="rating" type="number" max="5" min="0" required >
                     <textarea name="reviewtext" id="" rows="10"></textarea>
                     <button>Submit</button>
+                    {#if form?.error}
+                        <div class="notice error">
+                            {form?.error}
+                        </div>
+                    {/if}
                 </form>
                 
                 {#if data.reviews.length > 0}

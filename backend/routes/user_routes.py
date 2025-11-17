@@ -41,7 +41,11 @@ def create_user():
     required_fields = ['username', 'email', 'password', 'password_again']
 
     no_empty_fields, empty_fields = GeneralValidator.validate_required_fields(required_fields, data)
+    
+    valid, message = UserValidator.validate_password_regex(password)
 
+    if not valid:
+        return jsonify({"error": f"Password must contain {message}"}), 400
     if not no_empty_fields:
         return jsonify({'error': f'{empty_fields} cannot be empty.' }), 404
     
@@ -71,7 +75,7 @@ def edit_user(id):
 
     user = UserService.get_user_by_id(id)
     if user == None:
-        return jsonify({"Error": "User does not exist."}), 404
+        return jsonify({"error": "User does not exist."}), 404
     
     data = request.get_json()
 
@@ -82,9 +86,14 @@ def edit_user(id):
     password_again = data.get('password_again')
 
     if current_password and not check_password_hash(user.passwordhash, current_password):
-        return ({"Error": "Wrong current password."}), 403
+        return jsonify({"error": "Current password is invalid."}), 403
+    
+    valid, message = UserValidator.validate_password_regex(password)
 
-    result = UserService.edit_user(
+    if not valid:
+        return jsonify({"error": f"Password must contain {message}"}), 400
+
+    success, message = UserService.edit_user(
         id=id,
         username=username,
         email=email,
@@ -92,18 +101,18 @@ def edit_user(id):
         password_again=password_again
     )
 
-    if isinstance(result, Users):
-        return jsonify({"Success": f"User updated."}), 200
-    elif result == -1:
-        return jsonify({"Error": "Password must be the same."}), 409
-    elif result == -2:
-        return jsonify({"Error": "Invalid email format."}), 403
-    elif result == 'USERNAME_EXISTS':
-        return jsonify({"Error": "Username already exists."}), 409
-    elif result == 'EMAIL_EXISTS':
-        return jsonify({"Error": "Email already exists."}), 409
+    if success:
+        return jsonify({"message": "User updated."}), 200
+    elif message == 'INVALID_PASSWORD':
+        return jsonify({"error": "Password must be the same."}), 403
+    elif message == 'INVALID_EMAIL':
+        return jsonify({"error": "Invalid email format."}), 403
+    elif message == 'USERNAME_EXISTS':
+        return jsonify({"error": "Username already exists."}), 409
+    elif message == 'EMAIL_EXISTS':
+        return jsonify({"error": "Email already exists."}), 409
     else:
-        return jsonify({"Error": "An error occured"}), 500
+        return jsonify({"error": f"An error occured"}), 500
 
 @user_bp.route('/user/<id>', methods=['DELETE'])
 @jwt_required()

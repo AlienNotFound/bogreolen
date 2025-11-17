@@ -1,5 +1,6 @@
 import { fetchGETRequest, fetchPUTRequest } from '$lib/api/common';
 import { validateToken } from '$lib/server/auth.js';
+import { fail } from '@sveltejs/kit';
 
 export const load = async ({ cookies }) => {
     const token = await validateToken(cookies);
@@ -27,17 +28,19 @@ export const actions = {
     const token = await validateToken(cookies);
 
     try {
-      const response = await fetchPUTRequest<{ Error?: string, Success?: boolean}>('track/' + track_id, {
+      const response = await fetchPUTRequest<ResponseMessage<Track>>('track/' + track_id, {
                 read_today: true,
                 current_page,
                 last_page,
                 date
             }, token);
 
-            console.log(response)
+      return response;
+
     } catch (error) {
-      console.error(error);
-      return { success: false, error: "Failed to update track." };
+      if (error instanceof Error) {
+        return fail(409, {error: error.message });
+      }
     }
   }
 }

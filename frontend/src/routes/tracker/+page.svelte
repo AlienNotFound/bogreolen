@@ -1,25 +1,20 @@
 <script lang="ts">	
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 	import { trackerCalendarCells } from '$lib/utils/date';
 	import Trackermodal from '$lib/components/trackermodal.svelte';
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: PageData, form: ActionData } = $props();
 	const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 	const currentMonth: string = new Date().toLocaleString('default', { month: "long"});
     let showModal = $state(false);
-	let selectedDate: string = $state("");
+	let selectedDate = $state("");
 	let newModalInfo: Track | null = $state(null);
 	
 	const calendarCells = trackerCalendarCells();
-	const trackDates: (Date | null)[] = []
-
-	console.log(data)
-
-	if (data.tracks.length > 0) {
-		data.tracks.forEach(date => {
-			const convertedDate = new Date(date.date)
-			trackDates.push(convertedDate);
-		});
-	}
+	let trackDates = $derived(
+		data.tracks.map(date => 
+			new Date(date.date)
+		)
+	)
 		
 	function toggleModal(info: Track | null, date: string) {
 		newModalInfo = info,
@@ -34,9 +29,10 @@
 
 {#if showModal}
 <Trackermodal
-modalInfo={newModalInfo}
-selectedDate={selectedDate}
-bind:showModal={showModal} />
+	modalInfo={newModalInfo}
+	bind:selectedDate={selectedDate}
+	bind:showModal={showModal} 
+	error_message={form?.error || ''}/>
 {/if}
 
 <div id="calendarWrapper">

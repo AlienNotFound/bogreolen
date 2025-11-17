@@ -112,12 +112,12 @@
       };
     }}>
       <input type="hidden" name="review_id" value={review_id}>
-      <textarea name="comment_text"></textarea>
+      <textarea name="comment_text" required ></textarea>
       <button>Add a comment</button>
 
       {#if submitResponse}
         <div class="notice error">
-          {submitResponse.error}
+          {submitResponse.comment_error}
         </div>
       {/if}
       

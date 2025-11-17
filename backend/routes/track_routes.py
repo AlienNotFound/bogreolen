@@ -45,17 +45,19 @@ def edit_track(id):
     last_page = data.get('last_page')
     date = data.get('date')
 
-    result = TrackService.edit_track(
+    success, message = TrackService.edit_track(
         track_id=id, 
-        current_page=current_page,
-        last_page=last_page,
+        current_page=int(current_page),
+        last_page=int(last_page),
         date=date
     )
 
-    if isinstance(result, Tracks):
-        return jsonify({"Success": f"Track updated!"}), 200
+    if success:
+        return jsonify({"message": f"Track updated!"}), 200
+    elif message == 'Current page cannot be higher than Last page.':
+        return jsonify({'error': f'{message}'}), 409
     else:
-        return jsonify({"Error": f"{result} An error occured"}), 500
+        return jsonify({"error": f"An error occured"}), 500
     
 @track_bp.route('/track/<id>', methods=['DELETE'])
 @jwt_required()

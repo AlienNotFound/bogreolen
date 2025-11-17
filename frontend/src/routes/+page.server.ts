@@ -2,6 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { fetchGETRequest, fetchPOSTRequest } from '$lib/api/common.js';
 import { createComment, editComment, deleteComment } from '$lib/actions/common.js';
 import { validateToken } from '$lib/server/auth.js';
+import { fail } from '@sveltejs/kit';
 
 export const load = async ({ cookies }) => {
   const token: string | null = await validateToken(cookies) ?? null;
@@ -74,10 +75,11 @@ export const actions = {
     const token = await validateToken(cookies);
     
     try {
-      const response = await createComment(formData, token);
-      return response;          
+        await createComment(formData, token);      
     } catch (error) {
-      return { error: "An error occured."};
+      if (error instanceof Error) {
+        return fail(409, { comment_error: error.message })
+      }
     }
   },
   edit_comment: async ({ request, cookies }) => {
