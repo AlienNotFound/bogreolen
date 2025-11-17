@@ -1,8 +1,8 @@
 <script lang="ts">
-    let { modalInfo, selectedDate, showModal = $bindable() }: { modalInfo: Track | null, selectedDate: string, showModal: boolean } = $props();
+    import { enhance } from "$app/forms";
+    let { modalInfo, selectedDate = $bindable(), showModal = $bindable(), error_message }: { modalInfo: Track | null, selectedDate: string, showModal: boolean, error_message: string } = $props();
     let formData: Record<number, {current_page: number, last_page: number, error_message: string}> = {};
     const infoDate = new Date(modalInfo!.date).toISOString().split('T')[0]
-
     function toggleModal() {
         showModal = !showModal;
     }
@@ -19,7 +19,15 @@
             <div class="books">
                 <img src={modalInfo.image} alt="Book cover">
             </div>
-            <form method="POST" action="?/edit_track">
+            <form method="POST" action="?/edit_track" use:enhance={() => {
+                    return async({ update, result }) => {
+                        update({ reset: false })
+                        
+                        
+                        if (result.type === "success") {
+                            showModal = false;
+                        }
+                    }}}>
                 <input type="text" name="track_id" value={modalInfo.track_id} hidden>
                 <h4>Date:</h4>
                 <input type="date" name="date" value={infoDate} required>
@@ -35,6 +43,9 @@
                 required/>
                 <button>Mark as read</button>
             </form>            
+            {#if error_message}
+                <p class="error">{error_message}</p>
+            {/if}
         {/if}
     </div>
 </div>

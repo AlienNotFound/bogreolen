@@ -95,7 +95,7 @@ export async function fetchPOSTImageRequest<T>(route: string, body: any, token: 
         const message = result?.Error || result?.message || 'Unknown error';
         throw new Error(message);
     }
-
+    
     return result as T;
 }
 
@@ -111,7 +111,7 @@ export async function fetchPUTRequest<T>(route: string, body: any, token: string
     })
     
     let result: any;
-
+    
     try {
         result = await response.json()
     } catch {
@@ -119,8 +119,8 @@ export async function fetchPUTRequest<T>(route: string, body: any, token: string
     }
     
     if (!response.ok) {
-        const message = result?.Error || result?.message || 'Unknown error';
-        return message
+        const message = result?.error || 'Unknown error';
+        throw new Error(message);
     }
     
     return result as T;
