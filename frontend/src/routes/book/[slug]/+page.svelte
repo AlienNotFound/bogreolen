@@ -62,7 +62,7 @@
                 {#if form?.duplicate_error}<p class="error">You've already reviewed this book</p>{/if}
                 <form method="POST" id="createReview" action="?/create_review">
                     <input type="hidden" name="book_id" value={data.book_id}>
-                    <h4>Rating</h4><input name="rating" type="number">
+                    <h4>Rating</h4><input name="rating" type="number" max="5" min="0" required >
                     <textarea name="reviewtext" id="" rows="10"></textarea>
                     <button>Submit</button>
                 </form>
