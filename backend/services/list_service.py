@@ -9,9 +9,9 @@ class ListService(BaseService):
         list = Lists(user_id=user_id, book_id=book_id, listname=listname)
         db.session.add(list)
 
-        _, result = BaseService.commit_session(list)
+        success, result = BaseService.commit_session(list)
 
-        return result
+        return success, result
         
     @staticmethod
     def move_to_list(user_id, book_id, listname):
@@ -30,7 +30,7 @@ class ListService(BaseService):
         return result
     
     @staticmethod
-    def delete_book_from_lists(book_id, user_id):
+    def delete_book_from_lists(user_id, book_id):
         success, result = BaseService.delete_by_composite(Lists, {"user_id": user_id, "book_id": book_id})
 
         return result if not success else None

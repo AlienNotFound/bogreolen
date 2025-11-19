@@ -16,15 +16,15 @@ def add_to_list():
     user_id = get_jwt_identity()
 
     if (ListService.get_list_by_user_and_book(user_id, book_id)):
-        return jsonify({"Error": "This book is already on a list!"})
+        return jsonify({"error": "This book is already on a list!"})
 
-    result = ListService.add_to_list(user_id, book_id, listname)
+    success, message = ListService.add_to_list(user_id, book_id, listname)
 
-    if isinstance(result, Lists):
+    if success:
         TrackService.track_book(user_id, book_id, False, 0, 0)
-        return jsonify({"Success": f"\'{result.book.title}\' got added to {listname}"}), 200
+        return jsonify({"message": f"\'{message.book.title}\' got added to {listname}"}), 200
     else:
-        return jsonify({"Error": f"{result}"}), 400
+        return jsonify({"error": f"{message}"}), 400
 
 @list_bp.route('/move-to-list/<id>', methods=['PUT'])
 @jwt_required()

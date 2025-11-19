@@ -9,13 +9,13 @@
 	let selectedDate = $state("");
 	let newModalInfo: Track | null = $state(null);
 	
+	let test: Date[] = []
 	const calendarCells = trackerCalendarCells();
 	let trackDates = $derived(
-		data.tracks.map(date => 
-			new Date(date.date)
+		data.tracks.map(date => new Date(date.date)
 		)
 	)
-		
+
 	function toggleModal(info: Track | null, date: string) {
 		newModalInfo = info,
 		selectedDate = date;
@@ -36,6 +36,7 @@
 {/if}
 
 <div id="calendarWrapper">
+	{test[0]}
 	<h1>Tracker - {currentMonth}</h1>
 	<div id="trackerCalendar">
 		{#each days as day}
@@ -43,18 +44,17 @@
 			<h2>{day}</h2>
 		</div>
 		{/each}
-		
+
 		{#each calendarCells as cell}
 			<div class="grid">
 				<p>{cell?.getDate()}</p>
-				
-				{#each trackDates as dates, i}
-					{#if cell?.toDateString() == dates?.toDateString()}
+					{#each trackDates as dates, i}
+						{#if cell?.toDateString() == dates?.toDateString()}
 						<button class="gridButton" onclick={() => toggleModal(data.tracks[i], cell!.toDateString())}>
 							{data.tracks[i].title}					
 						</button>
-					{/if}
-				{/each}
+						{/if}
+					{/each}
 			</div>
 		{/each}
 	</div>

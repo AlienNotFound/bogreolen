@@ -11,7 +11,7 @@ export const actions = {
         const token = await validateToken(cookies);
 
         try {
-            const response = await fetchPOSTRequest<{ Error?: string, Success?: boolean}>('add-to-list', {
+            const response = await fetchPOSTRequest<ResponseMessage<Book>>('add-to-list', {
                 book_id,
                 listname
             }, token);
@@ -23,7 +23,7 @@ export const actions = {
             }
                 
             } catch (error) {
-                return { success: false, error: "Failed to add book to list." };
+                return { success: false, error: error.message };
             }
         },
     move_to_list: async ({ request, cookies }) => {
