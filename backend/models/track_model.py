@@ -16,4 +16,4 @@ class Tracks(db.Model):
     user: Mapped['Users'] = relationship('Users', back_populates='tracks')
     current_page: Mapped[int]
     last_page: Mapped[int]
-    date: Mapped[datetime] = mapped_column(insert_default=func.now())
+    date: Mapped[datetime] = mapped_column()

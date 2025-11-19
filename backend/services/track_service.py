@@ -9,6 +9,8 @@ class TrackService(BaseService):
     def track_book(user_id, book_id, read_today: bool, current_page: int, last_page: int):
         if read_today:
             date_read = datetime.now().strftime("%Y-%m-%d")
+        else:
+            date_read = None
 
         if current_page > last_page:
             return False, 'Current page cannot be higher than Last page.'
