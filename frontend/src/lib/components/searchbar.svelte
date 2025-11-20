@@ -9,7 +9,7 @@
             return;
         }
 
-        const result = await fetch(`api/search?query=${encodeURIComponent(query)}`);
+        const result = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
         if (result.ok) {
             
             searchSuggestions = await result.json();
